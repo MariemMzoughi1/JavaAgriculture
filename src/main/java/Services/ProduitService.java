@@ -38,25 +38,29 @@ public class ProduitService implements InterfaceCRUD<Produit> {
 
     @Override
     public void update(Produit produit) {
-        String req = "UPDATE produit SET "
-                + "nom = '" + produit.getNom() + "', "
-                + "description = '" + produit.getDescription() + "', "
-                + "categorie = '" + produit.getCategorie() + "', "
-                + "prix_unitaire = " + produit.getPrix_unitaire() + ", "
-                + "quantite_stock = " + produit.getQuantite_stock() + ", "
-                + "image = '" + produit.getImage() + "', "
-                + "agriculteur_id = " + produit.getAgriculteur_id() + ", "
-                + "date_ajout = '" + produit.getDate_ajout() + "' "
-                + "WHERE id = " + produit.getId();
+        String sql = "UPDATE produit SET nom = ?, description = ?, prix_unitaire = ?, quantite_stock = ? WHERE id = ?";
 
-        try {
-            Statement st = con.createStatement();
-            st.executeUpdate(req);
-            System.out.println("Produit mis à jour avec succès !");
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, produit.getNom());
+            stmt.setString(2, produit.getDescription());
+            stmt.setDouble(3, produit.getPrix_unitaire());
+            stmt.setInt(4, produit.getQuantite_stock());
+            stmt.setInt(5, produit.getId());
+
+            int rowsUpdated = stmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Produit mis à jour avec succès !");
+            } else {
+                System.out.println("Aucun produit mis à jour. ID non trouvé ?");
+            }
+
         } catch (SQLException e) {
-            System.out.println("Erreur SQL : " + e.getMessage());
+            System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
         }
     }
+
 
     @Override
     public void delete(Produit produit) {

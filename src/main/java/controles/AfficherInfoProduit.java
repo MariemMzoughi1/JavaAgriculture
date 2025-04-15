@@ -1,46 +1,32 @@
 package controles;
 
 import Entites.Produit;
+import Services.ProduitService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 public class AfficherInfoProduit {
 
-    @FXML
-    private Label labelId;
+    @FXML private Label labelId, labelNom, labelDate, labelDescription, labelCategorie;
+    @FXML private Label labelPrix, labelQuantiteStock, labelAgriculteurId;
 
-    @FXML
-    private Label labelNom;
+    @FXML private Button btnSave, btnCancel, btnEdit;
 
-    @FXML
-    private Label labelDate;
+    private TextField textFieldNom, textFieldDescription, textFieldPrix, textFieldQuantiteStock;
 
-    @FXML
-    private Label labelDescription;
+    private Produit produit;
 
-    @FXML
-    private Label labelCategorie;
+    private ProduitUpdateListener updateListener;
 
-    @FXML
-    private Label labelPrix;
+    // Pour recevoir la référence du listener
+    public void setProduitUpdateListener(ProduitUpdateListener listener) {
+        this.updateListener = listener;
+    }
 
-    @FXML
-    private Label labelQuantiteStock;
-
-    @FXML
-    private Label labelAgriculteurId;
-
-    // Champs de texte pour modification
-    private TextField textFieldNom;
-    private TextField textFieldDescription;
-    private TextField textFieldPrix;
-    private TextField textFieldQuantiteStock;
-
-    // Cette méthode initialise les informations du produit
+    // Initialise les données du produit
     public void initialize(Produit produit) {
+        this.produit = produit;
         if (produit != null) {
             labelId.setText(String.valueOf(produit.getId()));
             labelNom.setText(produit.getNom());
@@ -53,57 +39,113 @@ public class AfficherInfoProduit {
         }
     }
 
-    // Méthode pour fermer la fenêtre
+    // Fermer la fenêtre
     @FXML
     private void onClose() {
-        Stage stage = (Stage) labelNom.getScene().getWindow();
-        stage.close();
+        ((Stage) labelNom.getScene().getWindow()).close();
     }
 
-    // Méthode pour activer la modification des informations du produit
+    // Activer le mode édition
     @FXML
     private void onEditClicked() {
-        // Remplacer les labels par des champs de texte pour modification
         textFieldNom = new TextField(labelNom.getText());
         textFieldDescription = new TextField(labelDescription.getText());
         textFieldPrix = new TextField(labelPrix.getText());
         textFieldQuantiteStock = new TextField(labelQuantiteStock.getText());
 
-        // Remplacer les labels par des champs de texte dans l'interface
         labelNom.setGraphic(textFieldNom);
         labelDescription.setGraphic(textFieldDescription);
         labelPrix.setGraphic(textFieldPrix);
         labelQuantiteStock.setGraphic(textFieldQuantiteStock);
 
-        // Créer un bouton pour sauvegarder les modifications
-        Button saveButton = new Button("Sauvegarder");
-        saveButton.setOnAction(e -> saveChanges());
-        // Ajouter le bouton dans le layout (par exemple, à côté des champs)
-        // Ajouter le bouton "Sauvegarder" à un conteneur (HBox ou VBox) dans ton FXML
+        btnSave.setVisible(true);
+        btnCancel.setVisible(true);
+        btnEdit.setVisible(false);
     }
 
-    // Méthode pour sauvegarder les modifications
+    // Enregistrer les modifications
     @FXML
     private void saveChanges() {
-        // Récupérer les valeurs modifiées
-        String newNom = textFieldNom.getText();
-        String newDescription = textFieldDescription.getText();
-        String newPrix = textFieldPrix.getText();
-        String newQuantiteStock = textFieldQuantiteStock.getText();
+        String newNom = textFieldNom.getText().trim();
+        String newDescription = textFieldDescription.getText().trim();
+        String prixStr = textFieldPrix.getText().trim();
+        String quantiteStr = textFieldQuantiteStock.getText().trim();
 
-        // Mettre à jour les labels avec les nouvelles valeurs
-        labelNom.setText(newNom);
-        labelDescription.setText(newDescription);
-        labelPrix.setText(newPrix);
-        labelQuantiteStock.setText(newQuantiteStock);
+        if (newNom.isEmpty() || newDescription.isEmpty() || prixStr.isEmpty() || quantiteStr.isEmpty()) {
+            showAlert("Veuillez remplir tous les champs.", Alert.AlertType.WARNING);
+            return;
+        }
 
-        // Mettre à jour le produit dans la base de données ou le modèle
-        // Produit produit = ... // Récupérer l'objet produit et mettre à jour ses informations
+        try {
+            double prix = Double.parseDouble(prixStr);
+            int quantite = Integer.parseInt(quantiteStr);
 
-        // Revenir aux labels après la modification
+            if (prix < 0 || quantite < 0) {
+                showAlert("Le prix et la quantité doivent être positifs.", Alert.AlertType.WARNING);
+                return;
+            }
+
+            // Mise à jour de l'objet produit
+            produit.setNom(newNom);
+            produit.setDescription(newDescription);
+            produit.setPrix_unitaire((int) prix);
+            produit.setQuantite_stock(quantite);
+
+            // Mise à jour dans la base de données
+            new ProduitService().update(produit);
+
+            // Mise à jour des labels
+            labelNom.setText(newNom);
+            labelDescription.setText(newDescription);
+            labelPrix.setText(String.valueOf(prix));
+            labelQuantiteStock.setText(String.valueOf(quantite));
+
+            // Nettoyage des TextFields
+            labelNom.setGraphic(null);
+            labelDescription.setGraphic(null);
+            labelPrix.setGraphic(null);
+            labelQuantiteStock.setGraphic(null);
+
+            btnSave.setVisible(false);
+            btnCancel.setVisible(false);
+            btnEdit.setVisible(true);
+
+            // Appeler le listener pour rafraîchir la liste principale
+            if (updateListener != null) {
+                updateListener.onProduitUpdated();
+            }
+
+            showAlert("Modification enregistrée avec succès !", Alert.AlertType.INFORMATION);
+
+        } catch (NumberFormatException e) {
+            showAlert("Le prix doit être un nombre décimal et la quantité un entier.", Alert.AlertType.ERROR);
+        }
+    }
+
+    // Annuler les modifications
+    @FXML
+    private void cancelChanges() {
         labelNom.setGraphic(null);
         labelDescription.setGraphic(null);
         labelPrix.setGraphic(null);
         labelQuantiteStock.setGraphic(null);
+
+        btnSave.setVisible(false);
+        btnCancel.setVisible(false);
+        btnEdit.setVisible(true);
+    }
+
+    // Méthode utilitaire pour afficher une alerte
+    private void showAlert(String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // Interface pour le callback
+    public interface ProduitUpdateListener {
+        void onProduitUpdated();
     }
 }
