@@ -7,8 +7,30 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.Region?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controles.CommandeController" style="-fx-background-color: #f4f4f9;">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controles.CommandeController"
+            style="-fx-background-color: #f4f4f9;">
+
+    <!-- En-tête avec bouton retour et titre -->
+    <HBox alignment="CENTER_LEFT" spacing="20" layoutX="20" layoutY="20">
+        <!-- Bouton Retour -->
+        <Button fx:id="btnRetour" text="↩ Retour"
+                onAction="#retourAfficherProduit"
+                style="-fx-background-color: #3498db;
+                       -fx-text-fill: white;
+                       -fx-font-weight: bold;
+                       -fx-padding: 6px 12px;
+                       -fx-background-radius: 15;
+                       -fx-cursor: hand;
+                       -fx-font-size: 13px;" />
+
+        <Label fx:id="labelTitre"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               text="📦 Liste des Produits" />
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
 
     <!-- Bouton Panier en haut à droite -->
     <Button fx:id="btnPanier" text="🛒 Panier" layoutX="700" layoutY="20" onAction="#ouvrirPanier" style="
@@ -34,5 +56,4 @@
         -fx-text-fill: #FF5722;
         -fx-font-weight: bold;">
     </Label>
-
 </AnchorPane>

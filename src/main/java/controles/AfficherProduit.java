@@ -4,12 +4,14 @@ import Entites.Produit;
 import Services.ProduitService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -64,6 +66,23 @@ public class AfficherProduit {
 
         chargerProduits();
     }
+    @FXML
+    private void ouvrirCommandes(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/commande.fxml"));
+            AnchorPane commandeView = loader.load();
+
+            Scene scene = new Scene(commandeView);
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Commandes");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     // ✅ Méthode pour recharger les données de la table
     private void chargerProduits() {

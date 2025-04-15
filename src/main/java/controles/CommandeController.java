@@ -44,6 +44,21 @@ public class CommandeController {
         afficherProduits();
         mettreAJourPanierMessage(); // Met à jour l'état initial du panier
     }
+    @FXML
+    private void retourAfficherProduit(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/afficherproduit.fxml"));
+            AnchorPane view = loader.load();
+
+            Scene scene = new Scene(view);
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Produits");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void afficherProduits() {
         produitsContainer.getChildren().clear();
