@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controlles.ListeGranges"
+            prefHeight="450.0" prefWidth="650.0"
+            style="-fx-background-color: #f0f4f8;">
+
+    <children>
+        <Label text="📋 Liste des Granges" layoutX="20" layoutY="10"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+        <TableView fx:id="tableGranges"
+                   layoutX="20" layoutY="50"
+                   prefWidth="610.0" prefHeight="320.0"
+                   fixedCellSize="40.0"
+                   style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5;">
+            <columns>
+                <TableColumn fx:id="colType" text="Type" prefWidth="200"/>
+                <TableColumn fx:id="colCapacite" text="Capacité" prefWidth="150"/>
+                <TableColumn fx:id="colActions" text="Actions" prefWidth="180"/>
+            </columns>
+        </TableView>
+
+        <Button fx:id="btnRetour" text="↩ Retour à l'accueil" layoutX="20" layoutY="390"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;"
+                onAction="#retourAccueil"/>
+
+        <Button fx:id="btnAjouter" text="➕ Ajouter une Grange" layoutX="430" layoutY="390"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;"
+                onAction="#ajouterGrange"/>
+    </children>
+</AnchorPane>

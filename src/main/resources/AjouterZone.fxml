@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="450.0" prefWidth="650.0" style="-fx-background-color: #f4fbe5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.AjouterZone">
+
+    <children>
+
+        <Text fill="#3e8e41" layoutX="220.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Créer une nouvelle zone">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Text>
+
+
+        <Label layoutX="80.0" layoutY="100.0" text="Superficie de la zone" textFill="#333" />
+        <Label layoutX="80.0" layoutY="170.0" text="Nom de la zone" textFill="#333" />
+        <Label layoutX="80.0" layoutY="240.0" text="Localisation de la zone" textFill="#333" />
+
+
+        <TextField fx:id="superficieTextField" layoutX="80.0" layoutY="120.0" prefWidth="490.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
+
+        <TextField fx:id="nomzoneTextField" layoutX="80.0" layoutY="190.0" prefWidth="490.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
+
+        <TextField fx:id="localisationTextField" layoutX="80.0" layoutY="260.0" prefWidth="490.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
+
+
+        <Button layoutX="256.0" layoutY="312.0" onAction="#AjouterZone" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="Ajouter Zone" />
+
+
+        <Button layoutX="245.0" layoutY="383.0" onAction="#retourliste" style="-fx-background-color: #FF6347; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="Retour à la liste de zone" />
+
+    </children>
+</AnchorPane>
