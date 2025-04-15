@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.HBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.ModifierPost"
+      alignment="CENTER" spacing="10" style="-fx-padding: 20;" prefWidth="600" prefHeight="600">
+
+    <Label text="Modifier le Post" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <TextField fx:id="titreField" promptText="Titre du post" />
+    <TextArea fx:id="contenuArea" promptText="Contenu" wrapText="true" prefHeight="200" />
+    <ImageView fx:id="imageView" fitWidth="400" preserveRatio="true" />
+    <Button fx:id="boutonImage" text="Choisir une image" onAction="#handleChoisirImage" />
+
+    <HBox spacing="20">
+        <Button text="Enregistrer" onAction="#handleEnregistrer" />
+        <Button text="Annuler" onAction="#handleAnnuler" />
+    </HBox>
+
+</VBox>
