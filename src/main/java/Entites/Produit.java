@@ -102,4 +102,6 @@ public class Produit {
     public int hashCode() {
         return Objects.hash(id, nom, description, categorie, prix_unitaire, quantite_stock, image, agriculteur_id, date_ajout);
     }
+
+
 }

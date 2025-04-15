@@ -38,12 +38,36 @@ public class ProduitService implements InterfaceCRUD<Produit> {
 
     @Override
     public void update(Produit produit) {
-        // à implémenter
+        String req = "UPDATE produit SET "
+                + "nom = '" + produit.getNom() + "', "
+                + "description = '" + produit.getDescription() + "', "
+                + "categorie = '" + produit.getCategorie() + "', "
+                + "prix_unitaire = " + produit.getPrix_unitaire() + ", "
+                + "quantite_stock = " + produit.getQuantite_stock() + ", "
+                + "image = '" + produit.getImage() + "', "
+                + "agriculteur_id = " + produit.getAgriculteur_id() + ", "
+                + "date_ajout = '" + produit.getDate_ajout() + "' "
+                + "WHERE id = " + produit.getId();
+
+        try {
+            Statement st = con.createStatement();
+            st.executeUpdate(req);
+            System.out.println("Produit mis à jour avec succès !");
+        } catch (SQLException e) {
+            System.out.println("Erreur SQL : " + e.getMessage());
+        }
     }
 
     @Override
     public void delete(Produit produit) {
-        // à implémenter
+        String req = "DELETE FROM produit WHERE id = " + produit.getId();
+        try {
+            Statement st = con.createStatement();
+            st.executeUpdate(req);
+            System.out.println("Produit supprimé avec succès !");
+        } catch (SQLException e) {
+            System.out.println("Erreur SQL : " + e.getMessage());
+        }
     }
 
     @Override

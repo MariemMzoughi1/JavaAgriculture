@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" stylesheets="@styleaffiche.css"
+            style="-fx-background-color: #f4f4f4;"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controles.AfficherProduit">
+
+    <VBox fx:id="container"
+          spacing="20"
+          AnchorPane.topAnchor="20"
+          AnchorPane.leftAnchor="25"
+          AnchorPane.rightAnchor="25"
+          AnchorPane.bottomAnchor="20">
+
+        <!-- Titre + bouton -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="📦 Liste des Produits" fx:id="labelTitre" styleClass="titre-label"/>
+            <Button text="Ajouter un produit"
+                    fx:id="btnAjouter"
+                    styleClass="btn-ajouter"
+                    onAction="#ajouterProduit"/>
+        </HBox>
+
+        <!-- TableView -->
+        <TableView fx:id="tableProduits"
+                   VBox.vgrow="ALWAYS"
+                   styleClass="custom-table">
+            <columns>
+                <TableColumn fx:id="colNom"
+                             text="Nom"
+                             prefWidth="120"
+                             style="-fx-alignment: CENTER-LEFT;" />
+
+                <TableColumn fx:id="colDate"
+                             text="Date d'ajout"
+                             prefWidth="100"
+                             style="-fx-alignment: CENTER;" />
+            </columns>
+        </TableView>
+    </VBox>
+</AnchorPane>

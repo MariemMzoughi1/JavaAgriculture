@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="500.0" prefWidth="450.0" spacing="20" style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-border-radius: 15; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controles.AfficherInfoProduit">
+
+    <!-- Titre de la fenêtre avec une couleur moderne et élégante -->
+    <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-alignment: CENTER; -fx-text-fill: #4A90E2; -fx-padding: 10; -fx-font-family: 'Segoe UI', sans-serif;" text="Informations sur le Produit" />
+
+    <!-- GridPane pour organiser les éléments en 2 colonnes avec espacement et bordures -->
+    <GridPane alignment="CENTER_LEFT" hgap="20" style="-fx-padding: 15;" vgap="15">
+
+        <!-- ID -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="ID: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="labelId" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <!-- Nom -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="Nom: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="labelNom" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <!-- Date d'ajout -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="Date d'ajout: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="labelDate" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Description -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="Description: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="labelDescription" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Catégorie -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="Catégorie: " GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label fx:id="labelCategorie" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <!-- Prix Unitaire -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="Prix Unitaire: " GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label fx:id="labelPrix" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+        <!-- Quantité en stock -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="Quantité en stock: " GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <Label fx:id="labelQuantiteStock" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+        <!-- Agriculteur ID -->
+        <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI', sans-serif;" text="ID Agriculteur: " GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <Label fx:id="labelAgriculteurId" style="-fx-font-size: 18px; -fx-text-fill: #7B8D8E; -fx-font-family: 'Segoe UI', sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+    </GridPane>
+
+    <!-- Bouton de fermeture avec une couleur de fond moderne -->
+    <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10;">
+        <!-- Bouton Fermer -->
+        <Button fx:id="btnClose" onAction="#onClose" style="-fx-background-color: #5db8e6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-radius: 5px; -fx-font-family: 'Segoe UI', sans-serif;" text="Fermer" />
+
+        <!-- Bouton Modifier -->
+        <Button fx:id="btnEdit" onAction="#onEditClicked" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-radius: 5px; -fx-font-family: 'Segoe UI', sans-serif;" text="Modifier" />
+
+        <!-- Bouton Enregistrer (initialement masqué) -->
+        <Button fx:id="btnSave" onAction="#saveChanges" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-radius: 5px; -fx-font-family: 'Segoe UI', sans-serif;" text="Enregistrer" visible="false" />
+    </HBox>
+
+
+
+</VBox>
