@@ -12,21 +12,12 @@ public class TestBD {
 
         Produit p1 = new Produit("Tomate", "Tomate fraîche bio", "Légume", 1200, 50, 1, LocalDate.now());
 
-
         ProduitService psc = new ProduitService();
-
         psc.add(p1);
-        //psc.add(p2);
-        // psc.add(p3);
 
-        System.out.println(psc.find());
-        //MyDB db2 = MyDB.getInstance();
-        //MyDB db3 = MyDB.getInstance();
-        //MyDB db2 = new MyDB();
-        //MyDB db3 = new MyDB();
+        System.out.println("Liste des produits :");
+        psc.find().forEach(System.out::println); // suppose que la méthode find() retourne une List<Produit>
 
-        System.out.println(db);
-        //System.out.println(db2);
-        //System.out.println(db3);
+        System.out.println("Connexion DB utilisée : " + db);
     }
 }

@@ -1,109 +1,94 @@
-/* Conteneur principal */
 .main-container {
-    -fx-background-color: #f4f6f9;
-    -fx-padding: 30;
-    -fx-border-radius: 15;
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 12, 0, 0, 6);
-    -fx-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f3f6fb);
+    -fx-padding: 35;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 16, 0.3, 0, 6);
 }
 
-/* Titre de la page */
 .title-label {
-    -fx-font-size: 28px;
+    -fx-font-size: 30px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
-    -fx-font-family: 'Segoe UI', sans-serif;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+    -fx-text-fill: #098a27;
+    -fx-padding: 0 0 15 0;
+    -fx-effect: dropshadow(gaussian, rgba(30,61,89,0.1), 2, 0.2, 0, 1);
 }
 
-/* Grille d'informations produit */
-.info-grid {
-    -fx-padding: 10 0 0 0;
-    -fx-background-color: #ffffff;
-    -fx-border-radius: 10;
-    -fx-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* Style des étiquettes en gras */
 .label-bold {
-    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #34495e;
-    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-text-fill: #04124c;
+    -fx-font-size: 15px;
 }
 
-/* Valeur des informations produit */
 .label-value {
-    -fx-font-size: 16px;
-    -fx-text-fill: #7f8c8d;
-    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-text-fill: #011213;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
 }
 
-/* Bouton secondaire */
+.btn-secondary,
+.btn-warning,
+.btn-success,
+.btn-danger {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10 18;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0.2, 0, 2);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
 .btn-secondary {
-    -fx-background-color: #95a5a6;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-background-radius: 6;
-    -fx-padding: 10 20;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 3);
-    -fx-transition: background-color 0.3s ease;
+    -fx-background-color: #7f8c8d;
 }
 
-.btn-secondary:hover {
-    -fx-background-color: #6ddee8;
-}
-
-/* Bouton avertissement */
 .btn-warning {
-    -fx-background-color: #f312c6;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-background-radius: 6;
-    -fx-padding: 10 20;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 3);
-    -fx-transition: background-color 0.3s ease;
+    -fx-background-color: #00f6bd;
+}
+
+.btn-success {
+    -fx-background-color: #1dea94;
+}
+
+.btn-danger {
+    -fx-background-color: #022642;
+}
+
+/* Hover effects */
+.btn-secondary:hover {
+    -fx-background-color: #03bbff;
 }
 
 .btn-warning:hover {
-    -fx-background-color: #e62267;
-}
-
-/* Bouton succès */
-.btn-success {
-    -fx-background-color: #1dea94;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-background-radius: 6;
-    -fx-padding: 10 20;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 3);
-    -fx-transition: background-color 0.3s ease;
+    -fx-background-color: #00dab0;
 }
 
 .btn-success:hover {
-    -fx-background-color: #098a27;
-}
-
-/* Bouton danger */
-.btn-danger {
-    -fx-background-color: #e31127;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-background-radius: 6;
-    -fx-padding: 10 20;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 3);
-    -fx-transition: background-color 0.3s ease;
+    -fx-background-color: #16c77d;
 }
 
 .btn-danger:hover {
-    -fx-background-color: #a10414;
+    -fx-background-color: #e60076;
 }
+
+.product-image {
+    -fx-effect: dropshadow(gaussian, rgba(157, 180, 230, 0.95), 14, 0.4, 0, 6);
+    -fx-border-radius: 34;
+    -fx-background-radius: 14;
+    -fx-padding: 6;
+    -fx-border-color: #ecf0f1;
+    -fx-border-width: 2;
+}
+.label-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdde1;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);
+}
+

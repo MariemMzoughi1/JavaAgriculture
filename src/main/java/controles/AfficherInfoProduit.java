@@ -4,14 +4,28 @@ import Entites.Produit;
 import Services.ProduitService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class AfficherInfoProduit {
 
     @FXML private Label labelId, labelNom, labelDate, labelDescription, labelCategorie;
     @FXML private Label labelPrix, labelQuantiteStock, labelAgriculteurId;
+    @FXML
+    private ImageView imageViewProduit;
 
     @FXML private Button btnSave, btnCancel, btnEdit;
+    @FXML
+    private TextField imageField;
+
+    @FXML
+    private ImageView imagePreview;
+
+    private File selectedImageFile;
+
 
     private TextField textFieldNom, textFieldDescription, textFieldPrix, textFieldQuantiteStock;
 
@@ -33,11 +47,22 @@ public class AfficherInfoProduit {
             labelDate.setText(produit.getDate_ajout().toString());
             labelDescription.setText(produit.getDescription());
             labelCategorie.setText(produit.getCategorie());
-            labelPrix.setText(String.valueOf(produit.getPrix_unitaire()));
+            labelPrix.setText(produit.getPrix_unitaire() + " DT");
             labelQuantiteStock.setText(String.valueOf(produit.getQuantite_stock()));
             labelAgriculteurId.setText(String.valueOf(produit.getAgriculteur_id()));
-        }
-    }
+
+            // Chargement de l'image
+            try {
+                String imagePath = "file:" + produit.getImage();
+                System.out.println("Chemin image : " + imagePath); // Debug
+                Image image = new Image(imagePath);
+                imageViewProduit.setImage(image); // Affichage correct
+            } catch (Exception e) {
+                System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+            }
+        }}
+
+
 
     // Fermer la fenêtre
     @FXML

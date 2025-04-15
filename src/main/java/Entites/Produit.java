@@ -29,8 +29,7 @@ public class Produit {
         this.date_ajout = date_ajout;
     }
 
-    // Constructeur simplifié (sans id et image)
-    public Produit(String nom, String description, String categorie, int prix_unitaire, int quantite_stock, int agriculteur_id, LocalDate date_ajout) {
+    public Produit(String nom, String description, String image, String categorie, int prix_unitaire, int quantite_stock, int agriculteur_id, LocalDate date_ajout) {
         this.nom = nom;
         this.description = description;
         this.categorie = categorie;
@@ -38,6 +37,10 @@ public class Produit {
         this.quantite_stock = quantite_stock;
         this.agriculteur_id = agriculteur_id;
         this.date_ajout = date_ajout;
+        this.image = image;
+    }
+
+    public Produit(String tomate, String tomateFraîcheBio, String légume, int i, int i1, int i2, LocalDate now) {
     }
 
     // Getters et Setters
