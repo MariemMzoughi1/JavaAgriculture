@@ -1,0 +1,52 @@
+/* style-modifier.css */
+
+/* Fond principal */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #f5faff, #e3f2fd);
+    -fx-padding: 30px;
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Titre */
+.label-title {
+    -fx-font-size: 24px;
+    -fx-text-fill: #1e88e5;
+    -fx-font-weight: bold;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+}
+
+/* TextFields */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #90caf9;
+    -fx-border-radius: 8px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+}
+
+/* DatePickers */
+.date-picker {
+    -fx-background-color: white;
+    -fx-border-color: #90caf9;
+    -fx-border-radius: 8px;
+    -fx-padding: 8px;
+}
+
+/* Bouton */
+.button-save {
+    -fx-background-color: #1e88e5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-padding: 10px 20px;
+}
+
+.button-save:hover {
+    -fx-background-color: #1565c0;
+}
