@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.AdminDashboardViewController"
+      prefWidth="600" prefHeight="800"
+      alignment="TOP_CENTER" spacing="20"
+      style="-fx-background-color: #f9f9f9; -fx-padding: 40;">
+
+    <Label text="Admin Dashboard"
+           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+    <Separator orientation="HORIZONTAL" prefWidth="500"/>
+<!--  go to here C:\Projectjava\src\main\resources\com\example\projectjava\user-list-view.fxml-->
+    <Button text="👥 Manage Users"
+            onAction="#handleManageUsers"
+            style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #3498db; -fx-text-fill: white;" />
+
+    <Button text="📅 Manage Reservations"
+            onAction="#handleManageReservations"
+            style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #27ae60; -fx-text-fill: white;" />
+
+    <Button text="🚜 Manage Machines"
+            onAction="#handleManageMachines"
+            style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #e67e22; -fx-text-fill: white;" />
+
+    <Button text="📊 View Reports"
+            style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #8e44ad; -fx-text-fill: white;" />
+
+    <Separator orientation="HORIZONTAL" prefWidth="500"/>
+
+    <Button onAction="#handleLogout" text="🔓 Logout"
+            style="-fx-font-size: 14px; -fx-background-color: #e74c3c; -fx-text-fill: white;" />
+
+</VBox>

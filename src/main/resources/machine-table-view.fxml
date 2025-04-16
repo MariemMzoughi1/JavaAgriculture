@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="600" prefWidth="800" style="-fx-background-color: #f5f5f7;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MachineTableViewController">
+
+    <top>
+        <VBox spacing="5" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
+            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;" text="Liste des Machines" />
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #dfe6e9;" text="Toutes les machines enregistrées" />
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="machineTable" prefWidth="780" style="-fx-padding: 20;">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="60" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="160" text="Nom" />
+                <TableColumn fx:id="typeColumn" prefWidth="120" text="Type" />
+                <TableColumn fx:id="etatColumn" prefWidth="100" text="État" />
+                <TableColumn fx:id="priceColumn" prefWidth="100" text="Prix/Jour" />
+                <TableColumn fx:id="marqueColumn" prefWidth="100" text="Marque" />
+                <TableColumn fx:id="actionsColumn" prefWidth="160" text="Actions" />
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 10 20;">
+         <Button onAction="#goAdd" mnemonicParsing="false" text="ajouter" />
+            <Button onAction="#handleBack" style="-fx-background-color: #636e72; -fx-text-fill: white; -fx-font-weight: bold;" text="Retour" />
+        </HBox>
+    </bottom>
+
+</BorderPane>

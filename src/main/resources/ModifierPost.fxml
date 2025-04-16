@@ -6,7 +6,7 @@
 
 <?import javafx.scene.layout.HBox?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.ModifierPost"
-      alignment="CENTER" spacing="10" style="-fx-padding: 20;" prefWidth="600" prefHeight="600">
+      alignment="CENTER" spacing="10" style="-fx-padding: 20;" prefWidth="800" prefHeight="600">
 
     <Label text="Modifier le Post" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
     <TextField fx:id="titreField" promptText="Titre du post" />

@@ -1,0 +1,42 @@
+.root {
+    -fx-background-color: #f7f9fb;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.label-title {
+    -fx-font-size: 26px;
+    -fx-text-fill: #2e3d49;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 20 0;
+}
+
+.text-field, .date-picker {
+    -fx-pref-width: 300px;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #ddd;
+    -fx-background-color: white;
+}
+
+.text-field:focused, .date-picker:focused {
+    -fx-border-color: #4caf50;
+    -fx-border-width: 2;
+}
+
+.button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 30;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 2, 2);
+    -fx-translate-y: 10;
+}
+
+.button:hover {
+    -fx-background-color: #43a047;
+}

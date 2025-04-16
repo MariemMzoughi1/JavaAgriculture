@@ -1,0 +1,45 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.form-container {
+    -fx-padding: 30;
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #dce0e6;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #116ecc;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.text-field {
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
+.btn-ajouter {
+    -fx-background-color: #116ecc;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10 30;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.btn-ajouter:hover {
+    -fx-background-color: #00c7f8;
+}

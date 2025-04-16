@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.FlowPane?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.MachineIndexController"
+            fitToWidth="true"
+            prefWidth="800" prefHeight="600"
+            style="-fx-background: linear-gradient(to bottom, #f7fff0, #d2f7c4);">
+
+    <VBox spacing="20" alignment="TOP_CENTER"
+          style="-fx-padding: 20;">
+
+        <!-- 🔙 Bouton Retour à l'accueil -->
+        <Button text="🔙 Retour à l'accueil"
+                onAction="#handleBack"
+                style="-fx-background-color: #7f8c8d;
+                       -fx-text-fill: white;
+                       -fx-font-weight: bold;
+                       -fx-padding: 8 20;
+                       -fx-background-radius: 8;
+                       -fx-font-size: 13px;" />
+
+        <!-- 🧱 Container des cartes machines -->
+        <FlowPane fx:id="machineContainer"
+                  hgap="25" vgap="25"
+                  prefWrapLength="740"
+                  style="-fx-background-color: transparent;
+                         -fx-border-insets: 10;
+                         -fx-font-family: 'Segoe UI';
+                         -fx-font-size: 13px;">
+            <padding>
+                <Insets top="10" right="10" bottom="20" left="10"/>
+            </padding>
+        </FlowPane>
+
+    </VBox>
+</ScrollPane>

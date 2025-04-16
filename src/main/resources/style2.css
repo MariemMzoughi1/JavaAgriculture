@@ -1,0 +1,94 @@
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f3f6fb);
+    -fx-padding: 35;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 16, 0.3, 0, 6);
+}
+
+.title-label {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #098a27;
+    -fx-padding: 0 0 15 0;
+    -fx-effect: dropshadow(gaussian, rgba(30,61,89,0.1), 2, 0.2, 0, 1);
+}
+
+.label-bold {
+    -fx-font-weight: bold;
+    -fx-text-fill: #04124c;
+    -fx-font-size: 15px;
+}
+
+.label-value {
+    -fx-text-fill: #011213;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.btn-secondary,
+.btn-warning,
+.btn-success,
+.btn-danger {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10 18;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0.2, 0, 2);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.btn-secondary {
+    -fx-background-color: #7f8c8d;
+}
+
+.btn-warning {
+    -fx-background-color: #00f6bd;
+}
+
+.btn-success {
+    -fx-background-color: #1dea94;
+}
+
+.btn-danger {
+    -fx-background-color: #022642;
+}
+
+/* Hover effects */
+.btn-secondary:hover {
+    -fx-background-color: #03bbff;
+}
+
+.btn-warning:hover {
+    -fx-background-color: #00dab0;
+}
+
+.btn-success:hover {
+    -fx-background-color: #16c77d;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #e60076;
+}
+
+.product-image {
+    -fx-effect: dropshadow(gaussian, rgba(157, 180, 230, 0.95), 14, 0.4, 0, 6);
+    -fx-border-radius: 34;
+    -fx-background-radius: 14;
+    -fx-padding: 6;
+    -fx-border-color: #ecf0f1;
+    -fx-border-width: 2;
+}
+.label-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdde1;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);
+}
+

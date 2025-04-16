@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" fillWidth="true" prefHeight="700" prefWidth="600" spacing="25" styleClass="main-container" stylesheets="@style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AfficherInfoProduit">
+
+    <!-- Titre principal -->
+    <Label alignment="CENTER" maxWidth="Infinity" styleClass="title-label" text="🛍️ Détails du Produit" />
+
+    <!-- Card de l'image -->
+    <StackPane>
+        <ImageView fx:id="imageViewProduit" fitWidth="220" preserveRatio="true" styleClass="product-image">
+            <effect>
+                <DropShadow offsetX="2" offsetY="2" radius="10" />
+            </effect>
+        </ImageView>
+    </StackPane>
+
+    <!-- Informations du produit -->
+    <GridPane alignment="CENTER" hgap="12" styleClass="info-grid" vgap="15">
+        <padding><Insets bottom="10" left="30" right="30" top="10" /></padding>
+
+        <columnConstraints>
+            <ColumnConstraints percentWidth="35.0" />
+            <ColumnConstraints percentWidth="65.0" />
+        </columnConstraints>
+
+        <!-- Infos -->
+        <Label styleClass="label-bold" text="🆔 ID :" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="labelId" styleClass="label-value" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <Label styleClass="label-bold" text="📦 Nom :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="labelNom" styleClass="label-value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <Label styleClass="label-bold" text="📅 Date d'ajout :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="labelDate" styleClass="label-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="label-bold" text="📝 Description :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="labelDescription" styleClass="label-value" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label styleClass="label-bold" text="🏷️ Catégorie :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label fx:id="labelCategorie" styleClass="label-value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <Label styleClass="label-bold" text="💲 Prix Unitaire :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label fx:id="labelPrix" styleClass="label-value" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+        <Label styleClass="label-bold" text="📦 Stock :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <Label fx:id="labelQuantiteStock" styleClass="label-value" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+        <Label styleClass="label-bold" text="👨‍🌾 Agriculteur ID :" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <Label fx:id="labelAgriculteurId" styleClass="label-value" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
+
+
+    </GridPane>
+
+    <!-- Boutons de gestion -->
+    <HBox alignment="CENTER" spacing="15">
+        <Button fx:id="btnSave" onAction="#saveChanges" styleClass="btn-success" text="💾 Enregistrer" visible="false" />
+        <Button fx:id="btnClose" onAction="#onClose" styleClass="btn-secondary" text="❌ Fermer" />
+        <Button fx:id="btnEdit" onAction="#onEditClicked" styleClass="btn-warning" text="✏️ Modifier" />
+        <Button fx:id="btnCancel" onAction="#cancelChanges" styleClass="btn-danger" text="🔙 Annuler" visible="false" />
+    </HBox>
+    <Label alignment="CENTER" maxWidth="Infinity" styleClass="label-card" text="Ce produit est bio 🌿" textFill="#0ecc93">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+
+</VBox>

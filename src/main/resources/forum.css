@@ -1,0 +1,70 @@
+/* Styles des cartes */
+.card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f9f9f9);
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 4);
+    -fx-padding: 16px;
+    -fx-spacing: 12px;
+    -fx-max-width: 600px;
+    -fx-cursor: default;
+}
+
+/* Titre */
+.titre-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #222;
+}
+
+/* Contenu */
+.contenu-label {
+    -fx-wrap-text: true;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+/* Meta informations */
+.meta-label {
+    -fx-text-fill: #888;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+/* Statistiques (likes, dislikes) */
+.stats-label {
+    -fx-text-fill: #555;
+    -fx-font-size: 13px;
+}
+
+/* Boutons généraux */
+.button {
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 12px;
+}
+
+/* Bouton "Voir plus" */
+.button-voirplus {
+    -fx-background-color: #4285F4;
+    -fx-text-fill: white;
+}
+
+/* Bouton "Supprimer" */
+.button-supprimer {
+    -fx-background-color: #DB4437;
+    -fx-text-fill: white;
+}
+
+/* Bouton hover (effet au survol) */
+.button-voirplus:hover {
+    -fx-background-color: #357ae8;
+}
+
+.button-supprimer:hover {
+    -fx-background-color: #c23321;
+}

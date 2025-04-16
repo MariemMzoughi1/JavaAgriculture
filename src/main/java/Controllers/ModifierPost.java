@@ -56,6 +56,10 @@ public class ModifierPost {
 
     @FXML
     private void handleEnregistrer() {
+        if (!isValidInput()) {
+            return;
+        }
+
         post.setTitre(titreField.getText());
         post.setContenu(contenuArea.getText());
         if (selectedImagePath != null) {
@@ -90,4 +94,45 @@ public class ModifierPost {
     private void handleAnnuler() {
         ((Stage) titreField.getScene().getWindow()).close();
     }
+
+    private boolean isValidInput() {
+        boolean isValid = true;
+
+        // Réinitialiser les styles
+        titreField.setStyle("");
+        contenuArea.setStyle("");
+
+        String titre = titreField.getText().trim();
+        String contenu = contenuArea.getText().trim();
+
+        if (titre.isEmpty() || titre.length() < 5) {
+            titreField.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le titre doit contenir au moins 5 caractères.");
+            isValid = false;
+        }
+
+        if (contenu.isEmpty() || contenu.length() < 10) {
+            contenuArea.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le contenu doit contenir au moins 10 caractères.");
+            isValid = false;
+        }
+
+        if (selectedImagePath != null && !selectedImagePath.isEmpty()) {
+            String lowerPath = selectedImagePath.toLowerCase();
+            if (!(lowerPath.endsWith(".png") || lowerPath.endsWith(".jpg") || lowerPath.endsWith(".jpeg"))) {
+                showAlert(Alert.AlertType.WARNING, "Le fichier sélectionné n'est pas une image valide.");
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+    private void showAlert(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }

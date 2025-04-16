@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.AfficherCultureController"
+            fitToWidth="true"
+            prefWidth="1000" prefHeight="600"
+            style="-fx-background-color: transparent;"
+            stylesheets="@AfficherCulture.css">
+
+    <content>
+        <VBox fx:id="root" spacing="20" alignment="TOP_CENTER" styleClass="root">
+
+            <!-- 🌱 Titre -->
+            <Label text="🌱 Liste des Cultures" styleClass="title"/>
+
+            <!-- 🔍 Recherche et tri -->
+            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 10 20 0 20;">
+
+                <!-- Recherche -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="🔍 Catégorie :" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="searchCategorieField"
+                               promptText="Ex: fruit, légume..."
+                               onKeyReleased="#rechercherParCategorie"
+                               prefWidth="200"/>
+                </HBox>
+
+                <!-- Séparateur visuel -->
+                <Separator orientation="VERTICAL"/>
+
+                <!-- Boutons de tri -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Trier par :" style="-fx-font-weight: bold;"/>
+
+                    <Button text="Nom ↑" onAction="#trierParNomAsc"
+                            style="-fx-background-color: #e0f7fa;"/>
+                    <Button text="Nom ↓" onAction="#trierParNomDesc"
+                            style="-fx-background-color: #e0f7fa;"/>
+
+                    <Button text="Quantité ↑" onAction="#trierParQuantiteAsc"
+                            style="-fx-background-color: #dcedc8;"/>
+                    <Button text="Quantité ↓" onAction="#trierParQuantiteDesc"
+                            style="-fx-background-color: #dcedc8;"/>
+                </HBox>
+
+                <!-- Réinitialiser -->
+                <Button text="♻ Réinitialiser"
+                        onAction="#refreshCards"
+                        style="-fx-background-color: #ffe0b2; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <!-- ➕ Bouton Ajouter -->
+            <Button text="➕ Ajouter une Culture"
+                    fx:id="ajouterBtn"
+                    onAction="#ajouterCulture"
+                    styleClass="add-button"/>
+
+            <Button fx:id="btnRetour" text="← Retour" onAction="#retourAccueil" prefWidth="100" />
+
+            <!-- 📋 Liste dynamique -->
+            <VBox fx:id="cardContainer" spacing="20" alignment="TOP_CENTER" styleClass="card-container"/>
+        </VBox>
+    </content>
+</ScrollPane>

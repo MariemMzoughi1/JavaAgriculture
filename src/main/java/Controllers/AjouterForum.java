@@ -55,10 +55,10 @@ public class AjouterForum {
         String contenu = contenuField.getText().trim();
         String imagePath = imageField.getText().trim();
 
-        if (titre.isEmpty() || contenu.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Veuillez remplir tous les champs obligatoires.");
+        if (!isValidInput()) {
             return;
         }
+
 
         try {
             Post post = new Post(titre, contenu);
@@ -119,4 +119,41 @@ public class AjouterForum {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    private boolean isValidInput() {
+        boolean isValid = true;
+
+        // Reset styles
+        titreField.setStyle("");
+        contenuField.setStyle("");
+
+        String titre = titreField.getText().trim();
+        String contenu = contenuField.getText().trim();
+
+        if (titre.isEmpty() || titre.length() < 5) {
+            titreField.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le titre doit contenir au moins 5 caractères.");
+            isValid = false;
+        }
+
+        if (contenu.isEmpty() || contenu.length() < 10) {
+            contenuField.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le contenu doit contenir au moins 10 caractères.");
+            isValid = false;
+        }
+
+        if (!imageField.getText().trim().isEmpty()) {
+            String lowerPath = imageField.getText().toLowerCase();
+            if (!(lowerPath.endsWith(".png") || lowerPath.endsWith(".jpg") || lowerPath.endsWith(".jpeg"))) {
+                imageField.setStyle("-fx-border-color: red;");
+                showAlert(Alert.AlertType.WARNING, "Le fichier sélectionné n'est pas une image valide.");
+                isValid = false;
+            } else {
+                imageField.setStyle("");
+            }
+        }
+
+        return isValid;
+    }
+
 }

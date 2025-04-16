@@ -2,6 +2,7 @@ package Controllers;
 
 import Entites.Post;
 import Services.PostService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -68,6 +69,8 @@ public class ListeForum implements Initializable {
             VBox card = createCard(p);
             cardContainer.getChildren().add(card);
         }
+
+
     }
 
 
@@ -76,26 +79,21 @@ public class ListeForum implements Initializable {
         card.setPadding(new Insets(15));
         card.setSpacing(10);
         card.setMaxWidth(600);
-        card.setStyle("""
-            -fx-background-color: #fdfdfd;
-            -fx-border-color: #dddddd;
-            -fx-border-radius: 10;
-            -fx-background-radius: 10;
-            -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 4);
-        """);
+        card.getStyleClass().add("card");
 
         Label titre = new Label(post.getTitre());
-        titre.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        titre.getStyleClass().add("titre-label");
 
         Label contenu = new Label(post.getContenu());
         contenu.setWrapText(true);
+        contenu.getStyleClass().add("contenu-label");
 
         Label meta = new Label("Auteur ID : " + (post.getAuteurId() != null ? post.getAuteurId() : "N/A") +
                 " | Date : " + (post.getDate() != null ? post.getDate().toString() : "N/A"));
-        meta.setStyle("-fx-text-fill: #666; -fx-font-size: 12px;");
+        meta.getStyleClass().add("meta-label");
 
         Label stats = new Label("👍 " + post.getLikes() + "  👎 " + post.getDislikes());
-        stats.setStyle("-fx-text-fill: #444; -fx-font-size: 13px;");
+        stats.getStyleClass().add("stats-label");
 
         ImageView imageView = new ImageView();
         if (post.getImage() != null && !post.getImage().isEmpty()) {
@@ -119,8 +117,8 @@ public class ListeForum implements Initializable {
         buttonBox.getChildren().addAll(voirPlusBtn, supprimerBtn);
 
         // Style facultatif pour les boutons
-        voirPlusBtn.setStyle("-fx-background-color: #4285F4; -fx-text-fill: white;");
-        supprimerBtn.setStyle("-fx-background-color: #DB4437; -fx-text-fill: white;");
+        voirPlusBtn.getStyleClass().add("button-voirplus");
+        supprimerBtn.getStyleClass().add("button-supprimer");
 
         // Action bouton Voir plus
         voirPlusBtn.setOnAction(e -> {
@@ -153,6 +151,7 @@ public class ListeForum implements Initializable {
 
         // Action bouton Supprimer
         supprimerBtn.setOnAction(e -> {
+
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation de suppression");
             alert.setHeaderText("Voulez-vous vraiment supprimer ce post ?");
@@ -180,5 +179,27 @@ public class ListeForum implements Initializable {
 
         return card;
     }
+
+    @FXML
+    private void handleRetour(ActionEvent event) {
+        try {
+            // Fermer la fenêtre actuelle
+            Stage currentStage = (Stage) createForumButton.getScene().getWindow();
+            currentStage.close();
+
+            // Charger la scène de machine-home.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/machine-home.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Accueil");
+
+            stage.setScene(new Scene(loader.load()));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du retour à l'accueil : " + e.getMessage());
+        }
+    }
+
 
 }

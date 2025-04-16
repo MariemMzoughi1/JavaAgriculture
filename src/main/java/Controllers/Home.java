@@ -16,7 +16,7 @@ public class Home extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/ListeForum.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/login-view.fxml"));
         primaryStage.setTitle("Liste des Forums - Cards View");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
