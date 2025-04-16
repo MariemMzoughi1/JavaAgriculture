@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,7 +32,8 @@ public class AjouterProduit {
     private TextField quantiteStockTextField;
     @FXML
     private TextField imageTextField;
-
+    @FXML
+    private ComboBox<String> categorieComboBox;
     @FXML
     private ImageView imagePreview;
 
