@@ -18,8 +18,12 @@ public class Zone {
         this.nom_zone = nom_zone;
         this.localisation_zone = localisation_zone;
     }
-
-
+    public Zone(int id, float superficie_zone, String nom_zone, String localisation_zone) {
+        this.id = id;
+        this.superficie_zone = superficie_zone;
+        this.nom_zone = nom_zone;
+        this.localisation_zone = localisation_zone;
+    }
 
 
     public int getId() {
@@ -57,13 +61,9 @@ public class Zone {
 
     @Override
     public String toString() {
-        return "Zone{" +
-                "id=" + id +
-                ", superficie_zone=" + superficie_zone +
-                ", nom_zone='" + nom_zone + '\'' +
-                ", localisation_zone='" + localisation_zone + '\'' +
-                '}';
+        return nom_zone; // ou: return nom_zone + " - " + localisation_zone;
     }
+
 
     @Override
     public boolean equals(Object o) {

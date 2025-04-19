@@ -120,13 +120,18 @@ public class ListeZones implements Initializable {
     private void supprimerZone() {
         Zone selectedZone = zoneTable.getSelectionModel().getSelectedItem();
         if (selectedZone != null) {
-            zoneService.delete(selectedZone);
-            zoneTable.getItems().remove(selectedZone);
-            showAlert("Zone supprimée", "La zone a été supprimée avec succès.");
+            try {
+                zoneService.delete(selectedZone);
+                zoneTable.getItems().remove(selectedZone);
+                showAlert("Zone supprimée", "La zone a été supprimée avec succès.");
+            } catch (RuntimeException e) {
+                showAlert("Erreur de suppression", e.getMessage());
+            }
         } else {
             showAlert("Aucune zone sélectionnée", "Veuillez sélectionner une zone à supprimer.");
         }
     }
+
 
     @FXML
     private void retourAccueil(ActionEvent event) throws IOException {

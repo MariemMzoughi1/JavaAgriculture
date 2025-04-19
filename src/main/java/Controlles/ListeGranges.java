@@ -13,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import Services.GrangeService;
+
 
 import java.io.IOException;
 
@@ -21,40 +23,70 @@ public class ListeGranges {
     @FXML private TableView<Grange> tableGranges;
     @FXML private TableColumn<Grange, String> colType;
     @FXML private TableColumn<Grange, Float> colCapacite;
+    @FXML private TableColumn<Grange, Integer> colZone;
     @FXML private TableColumn<Grange, Void> colActions;
 
-    private final ObservableList<Grange> granges = FXCollections.observableArrayList(
-            new Grange("Grange bovins", 50),
-            new Grange("Grange ovins", 30)
-    );
+    private final GrangeService grangeService = new GrangeService();
+    private final ObservableList<Grange> granges = FXCollections.observableArrayList();
+
 
     @FXML
     public void initialize() {
         colType.setCellValueFactory(new PropertyValueFactory<>("type_grange"));
         colCapacite.setCellValueFactory(new PropertyValueFactory<>("capacite"));
+        colZone.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getZone() != null) {
+                return new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getZone().getId()).asObject();
+            } else {
+                return new javafx.beans.property.SimpleIntegerProperty(0).asObject();
+            }
+        });
 
+        granges.addAll(grangeService.find());
         tableGranges.setItems(granges);
         addActionButtonsToTable();
     }
 
     private void addActionButtonsToTable() {
-        colActions.setCellFactory(param -> new TableCell<>() {
+        colActions.setCellFactory(param -> new TableCell<Grange, Void>() {
             private final Button btnModifier = new Button("Modifier");
             private final Button btnSupprimer = new Button("Supprimer");
 
             {
+                // Style des boutons
                 btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
                 btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
 
+                // Action pour le bouton Modifier
                 btnModifier.setOnAction(event -> {
                     Grange grange = getTableView().getItems().get(getIndex());
-                    System.out.println("Modifier : " + grange);
-                    // TODO: ouvrir interface de modification
+
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierGrange.fxml"));
+                        Scene scene = new Scene(loader.load());
+
+                        ModifierGrange controller = loader.getController();
+                        controller.setGrange(grange); // passer l'objet grange à modifier
+
+                        Stage stage = new Stage();
+                        stage.setTitle("Modifier Grange");
+                        stage.setScene(scene);
+                        stage.showAndWait();
+
+                        getTableView().refresh();
+
+
+                    } catch (IOException e) {
+                        showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement de la fenêtre de modification : " + e.getMessage());
+                    }
                 });
 
+                // Action pour le bouton Supprimer
                 btnSupprimer.setOnAction(event -> {
                     Grange grange = getTableView().getItems().get(getIndex());
-                    granges.remove(grange);
+                    grangeService.delete(grange); // Supprimer la grange via le service
+                    granges.remove(grange); // Retirer la grange de la liste affichée
+                    showAlert(Alert.AlertType.INFORMATION, "Succès", "Grange supprimée avec succès !");
                 });
             }
 
@@ -62,14 +94,15 @@ public class ListeGranges {
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
-                    setGraphic(null);
+                    setGraphic(null); // Ne rien afficher si la ligne est vide
                 } else {
                     HBox pane = new HBox(10, btnModifier, btnSupprimer);
-                    setGraphic(pane);
+                    setGraphic(pane); // Afficher les boutons dans la cellule
                 }
             }
         });
     }
+
 
     @FXML
     void retourAccueil(ActionEvent event) throws IOException {
@@ -87,5 +120,13 @@ public class ListeGranges {
         stage.setTitle("Ajouter une Grange");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void showAlert(Alert.AlertType information, String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

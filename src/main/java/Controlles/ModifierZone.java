@@ -3,6 +3,7 @@ package Controlles;
 import Entites.Zone;
 import Services.ZoneService;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -18,12 +19,12 @@ public class ModifierZone {
     private TextField localisationField;
 
     private Zone zoneAModifier;
-    private final ZoneService zoneService = new ZoneService(); // 🔥 Instanciation du service
+    private final ZoneService zoneService = new ZoneService();
 
     public void setZone(Zone zone) {
         this.zoneAModifier = zone;
 
-
+        // Pré-remplir les champs avec les valeurs actuelles
         nomZoneField.setText(zone.getNom_zone());
         superficieField.setText(String.valueOf(zone.getSuperficie_zone()));
         localisationField.setText(zone.getLocalisation_zone());
@@ -31,19 +32,40 @@ public class ModifierZone {
 
     @FXML
     private void enregistrerModification() {
+        try {
+            // Récupérer les nouvelles valeurs
+            String nouveauNom = nomZoneField.getText().trim();
+            float nouvelleSuperficie = Float.parseFloat(superficieField.getText().trim());
+            String nouvelleLocalisation = localisationField.getText().trim();
 
-        zoneAModifier.setNom_zone(nomZoneField.getText());
-        zoneAModifier.setSuperficie_zone(Float.parseFloat(superficieField.getText()));
-        zoneAModifier.setLocalisation_zone(localisationField.getText());
+            // Modifier l'objet zone
+            zoneAModifier.setNom_zone(nouveauNom);
+            zoneAModifier.setSuperficie_zone(nouvelleSuperficie);
+            zoneAModifier.setLocalisation_zone(nouvelleLocalisation);
 
+            // Mise à jour en base
+            zoneService.update(zoneAModifier);
 
-        zoneService.update(zoneAModifier);
+            // Message console
+            System.out.println("✅ Zone modifiée avec succès : " + zoneAModifier);
 
+            // Fermer la fenêtre
+            Stage stage = (Stage) nomZoneField.getScene().getWindow();
+            stage.close();
 
-        System.out.println("✅ Zone modifiée avec succès : " + zoneAModifier);
+        } catch (NumberFormatException e) {
+            showAlert("Erreur de saisie", "La superficie doit être un nombre valide.");
+        } catch (Exception e) {
+            showAlert("Erreur", "Une erreur est survenue lors de la modification.");
+            e.printStackTrace();
+        }
+    }
 
-
-        Stage stage = (Stage) nomZoneField.getScene().getWindow();
-        stage.close();
+    private void showAlert(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
