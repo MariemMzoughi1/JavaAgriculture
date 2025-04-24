@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
             fx:controller="Controlles.ListeZones" prefHeight="500.0" prefWidth="700.0"
             style="-fx-background-color: #e8f5e9;">
 
-
     <Text text="🌿 Liste des Zones 🌿" layoutX="230.0" layoutY="30.0"
           style="-fx-font-size: 24px; -fx-fill: #2e7d32;" />
 
+    <!-- 🔍 Champ de recherche -->
+    <TextField fx:id="searchField" layoutX="35.0" layoutY="60.0" prefWidth="630.0"
+               promptText="Rechercher une zone..." />
 
-    <TableView fx:id="zoneTable" layoutX="35.0" layoutY="50.0" prefHeight="360.0" prefWidth="630.0"
-               style="-fx-font-size: 14px;">
-        <columns>
-            <TableColumn fx:id="nomZoneColumn" prefWidth="200.0" text="Nom Zone" />
-            <TableColumn fx:id="superficieZoneColumn" prefWidth="200.0" text="Superficie" />
-            <TableColumn fx:id="localisationZoneColumn" prefWidth="200.0" text="Localisation" />
-        </columns>
-    </TableView>
-
+    <!-- ScrollPane pour rendre le contenu défilable -->
+    <ScrollPane layoutX="35.0" layoutY="100.0" prefWidth="630.0" prefHeight="310.0"
+                style="-fx-background: transparent;">
+        <content>
+            <VBox fx:id="zoneContainer" spacing="10.0" />
+        </content>
+    </ScrollPane>
 
     <HBox layoutX="35.0" layoutY="430.0" spacing="20.0">
         <children>
             <Button fx:id="ajouterBtn" onAction="#ajouterZone" text="Ajouter"
                     style="-fx-background-color: #66bb6a; -fx-text-fill: white; -fx-font-weight: bold;" />
-            <Button fx:id="modifierBtn" onAction="#modifierZone" text="Modifier"
-                    style="-fx-background-color: #42a5f5; -fx-text-fill: white; -fx-font-weight: bold;" />
-            <Button fx:id="supprimerBtn" onAction="#supprimerZone" text="Supprimer"
-                    style="-fx-background-color: #ef5350; -fx-text-fill: white; -fx-font-weight: bold;" />
+
             <Button fx:id="retourBtn" onAction="#retourAccueil" text="Accueil"
                     style="-fx-background-color: #8d6e63; -fx-text-fill: white; -fx-font-weight: bold;" />
         </children>

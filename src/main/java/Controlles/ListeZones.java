@@ -2,21 +2,19 @@ package Controlles;
 
 import Entites.Zone;
 import Services.ZoneService;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.event.ActionEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,47 +30,54 @@ public class ListeZones implements Initializable {
     private Button btnRetour;
 
     @FXML
-    private Button modifierBtn;
+    private VBox zoneContainer;
 
     @FXML
-    private Button supprimerBtn;
+    private javafx.scene.control.TextField searchField;
 
-
-
-    @FXML
-    private TableColumn<Zone, String> nomZoneColumn;
-
-    @FXML
-    private TableColumn<Zone, String> superficieZoneColumn;
-
-    @FXML
-    private TableColumn<Zone, String> localisationZoneColumn;
-
-    @FXML
-    private TableView<Zone> zoneTable;
 
     private ZoneService zoneService = new ZoneService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        superficieZoneColumn.setCellValueFactory(new PropertyValueFactory<>("superficie_zone"));
-        nomZoneColumn.setCellValueFactory(new PropertyValueFactory<>("nom_zone"));
-        localisationZoneColumn.setCellValueFactory(new PropertyValueFactory<>("localisation_zone"));
-
-
         List<Zone> zones = zoneService.find();
-        ObservableList<Zone> observableList = FXCollections.observableArrayList(zones);
-        zoneTable.setItems(observableList);
+        for (Zone zone : zones) {
+            HBox box = createZoneBox(zone);
+            zoneContainer.getChildren().add(box);
+        }
+
+        // 🔍 Ajout de l'écouteur de recherche
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            rechercherZones();
+        });
     }
 
+
+    private HBox createZoneBox(Zone zone) {
+        HBox box = new HBox(10);
+        box.setStyle("-fx-padding: 10px; -fx-background-color: #ffffff; -fx-border-color: #c8e6c9;");
+
+        Text nom = new Text("Nom: " + zone.getNom_zone());
+        Text superficie = new Text("Superficie: " + zone.getSuperficie_zone() + " ha");
+        Text localisation = new Text("Localisation: " + zone.getLocalisation_zone());
+
+        Button modifierBtn = new Button("Modifier");
+        modifierBtn.setStyle("-fx-background-color: #42a5f5; -fx-text-fill: white;");
+        modifierBtn.setOnAction(e -> modifierZone(zone));
+
+        Button supprimerBtn = new Button("Supprimer");
+        supprimerBtn.setStyle("-fx-background-color: #ef5350; -fx-text-fill: white;");
+        supprimerBtn.setOnAction(e -> supprimerZone(zone, box));
+
+        box.getChildren().addAll(nom, superficie, localisation, modifierBtn, supprimerBtn);
+        return box;
+    }
 
     @FXML
     private void ajouterZone(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterZone.fxml"));
             Parent root = loader.load();
-
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
@@ -84,54 +89,34 @@ public class ListeZones implements Initializable {
             e.printStackTrace();
         }
     }
-
     @FXML
-    private void modifierZone() {
-        Zone zoneSelectionnee = zoneTable.getSelectionModel().getSelectedItem();
+    private void modifierZone(Zone zone) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierZone.fxml"));
+            Parent root = loader.load();
 
-        if (zoneSelectionnee != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierZone.fxml"));
-                Parent root = loader.load();
+            ModifierZone controller = loader.getController();
+            controller.setZone(zone);
 
-                ModifierZone controller = loader.getController();
-                controller.setZone(zoneSelectionnee);
+            Stage stage = new Stage();
+            stage.setTitle("Modifier une Zone");
+            stage.setScene(new Scene(root));
+            stage.show();
 
-                Stage stage = new Stage();
-                stage.setTitle("Modifier une Zone");
-                stage.setScene(new Scene(root));
-                stage.show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Aucune sélection");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez sélectionner une zone à modifier.");
-            alert.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
-
     @FXML
-    private void supprimerZone() {
-        Zone selectedZone = zoneTable.getSelectionModel().getSelectedItem();
-        if (selectedZone != null) {
-            try {
-                zoneService.delete(selectedZone);
-                zoneTable.getItems().remove(selectedZone);
-                showAlert("Zone supprimée", "La zone a été supprimée avec succès.");
-            } catch (RuntimeException e) {
-                showAlert("Erreur de suppression", e.getMessage());
-            }
-        } else {
-            showAlert("Aucune zone sélectionnée", "Veuillez sélectionner une zone à supprimer.");
+    private void supprimerZone(Zone zone, HBox box) {
+        try {
+            zoneService.delete(zone);
+            zoneContainer.getChildren().remove(box);
+            showAlert("Zone supprimée", "La zone a été supprimée avec succès.");
+        } catch (RuntimeException e) {
+            showAlert("Erreur de suppression", e.getMessage());
         }
     }
-
 
     @FXML
     private void retourAccueil(ActionEvent event) throws IOException {
@@ -141,7 +126,6 @@ public class ListeZones implements Initializable {
         stage.show();
     }
 
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -149,4 +133,23 @@ public class ListeZones implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    private void rechercherZones() {
+        String keyword = searchField.getText().toLowerCase();
+        List<Zone> zones = zoneService.find();
+
+        zoneContainer.getChildren().clear();
+
+        for (Zone zone : zones) {
+            if (zone.getNom_zone().toLowerCase().contains(keyword) ||
+                    zone.getLocalisation_zone().toLowerCase().contains(keyword) ||
+                    String.valueOf(zone.getSuperficie_zone()).contains(keyword)) {
+
+                HBox box = createZoneBox(zone);
+                zoneContainer.getChildren().add(box);
+            }
+        }
+    }
+
 }

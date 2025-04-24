@@ -15,9 +15,13 @@
         <Label text="📋 Liste des Granges" layoutX="20" layoutY="10"
                style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
 
+        <!-- 🔍 Champ de recherche -->
+        <TextField fx:id="searchField" layoutX="20" layoutY="40" prefWidth="610"
+                   promptText="Rechercher une grange..." />
+
         <TableView fx:id="tableGranges"
-                   layoutX="20" layoutY="50"
-                   prefWidth="610.0" prefHeight="320.0"
+                   layoutX="20" layoutY="80"
+                   prefWidth="610.0" prefHeight="290.0"
                    fixedCellSize="40.0"
                    style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5;">
             <columns>

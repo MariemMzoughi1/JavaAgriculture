@@ -16,8 +16,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-
+import netscape.javascript.JSObject;
 
 public class AjouterZone {
 
@@ -37,11 +39,42 @@ public class AjouterZone {
     private TextField superficieTextField;
 
     @FXML
+    private WebView mapView;
+
+    private double latitude;
+    private double longitude;
+
+    @FXML
+    public void initialize() {
+        WebEngine webEngine = mapView.getEngine();
+        webEngine.load(getClass().getResource("/mapbox.html").toExternalForm());
+
+        // Écouter l'état de chargement de la page
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
+                JSObject window = (JSObject) webEngine.executeScript("window");
+                window.setMember("javaConnector", new JavaConnector());
+                System.out.println("✅ JavaConnector connecté avec succès !");
+            }
+
+        });
+
+    }
+
+    // 🔧 Classe interne pour la liaison JS → Java
+    public class JavaConnector {
+        public void sendCoordinates(double lng, double lat) {
+            latitude = lat;
+            longitude = lng;
+            System.out.println("📍 Coordonnées reçues : lat=" + lat + ", lng=" + lng);
+            localisationTextField.setText("lat=" + lat + ";lng=" + lng);
+        }
+    }
+    @FXML
     void AjouterZone(ActionEvent event) {
         String superficieStr = superficieTextField.getText();
         String nomZone = nomzoneTextField.getText();
         String localisation = localisationTextField.getText();
-
 
         if (superficieStr.isEmpty() || nomZone.isEmpty() || localisation.isEmpty()) {
             showAlert("Tous les champs sont obligatoires.");
@@ -59,18 +92,11 @@ public class AjouterZone {
             showAlert("La superficie doit être un nombre valide.");
             return;
         }
+
         if (nomZone.length() < 3) {
             showAlert("Le nom de la zone doit contenir au moins 3 caractères.");
             return;
         }
-
-
-        if (localisation.length() < 3) {
-            showAlert("La localisation doit contenir au moins 3 caractères.");
-            return;
-        }
-
-
 
         Zone zone = new Zone(superficie, nomZone, localisation);
         ZoneService zoneservice = new ZoneService();
@@ -84,7 +110,6 @@ public class AjouterZone {
             alert.setContentText("Zone ajoutée avec succès !");
             alert.showAndWait();
 
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherZone.fxml"));
             Parent root = loader.load();
             AfficherZone afficherZone = loader.getController();
@@ -97,7 +122,6 @@ public class AjouterZone {
             showAlert("Erreur lors de l'ajout : " + e.getMessage());
         }
     }
-
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -115,15 +139,6 @@ public class AjouterZone {
         stage.setScene(new Scene(root));
         stage.setTitle("Liste des zones");
         stage.show();
+
     }
-
-
-
-    @FXML
-    void initialize() {
-    }
-
-
-
-
 }

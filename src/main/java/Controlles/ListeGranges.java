@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import Services.GrangeService;
 
-
 import java.io.IOException;
 
 public class ListeGranges {
@@ -25,10 +24,10 @@ public class ListeGranges {
     @FXML private TableColumn<Grange, Float> colCapacite;
     @FXML private TableColumn<Grange, Integer> colZone;
     @FXML private TableColumn<Grange, Void> colActions;
+    @FXML private TextField searchField; // Champ de recherche
 
     private final GrangeService grangeService = new GrangeService();
     private final ObservableList<Grange> granges = FXCollections.observableArrayList();
-
 
     @FXML
     public void initialize() {
@@ -45,6 +44,23 @@ public class ListeGranges {
         granges.addAll(grangeService.find());
         tableGranges.setItems(granges);
         addActionButtonsToTable();
+
+        // 🔍 Écoute les changements de texte pour filtrer les granges
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterGranges(newValue);
+        });
+    }
+
+    private void filterGranges(String searchText) {
+        ObservableList<Grange> filtered = FXCollections.observableArrayList();
+
+        for (Grange g : grangeService.find()) {
+            if (g.getType_grange().toLowerCase().contains(searchText.toLowerCase())) {
+                filtered.add(g);
+            }
+        }
+
+        tableGranges.setItems(filtered);
     }
 
     private void addActionButtonsToTable() {
@@ -53,11 +69,9 @@ public class ListeGranges {
             private final Button btnSupprimer = new Button("Supprimer");
 
             {
-                // Style des boutons
                 btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
                 btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
 
-                // Action pour le bouton Modifier
                 btnModifier.setOnAction(event -> {
                     Grange grange = getTableView().getItems().get(getIndex());
 
@@ -66,7 +80,7 @@ public class ListeGranges {
                         Scene scene = new Scene(loader.load());
 
                         ModifierGrange controller = loader.getController();
-                        controller.setGrange(grange); // passer l'objet grange à modifier
+                        controller.setGrange(grange);
 
                         Stage stage = new Stage();
                         stage.setTitle("Modifier Grange");
@@ -75,17 +89,15 @@ public class ListeGranges {
 
                         getTableView().refresh();
 
-
                     } catch (IOException e) {
                         showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement de la fenêtre de modification : " + e.getMessage());
                     }
                 });
 
-                // Action pour le bouton Supprimer
                 btnSupprimer.setOnAction(event -> {
                     Grange grange = getTableView().getItems().get(getIndex());
-                    grangeService.delete(grange); // Supprimer la grange via le service
-                    granges.remove(grange); // Retirer la grange de la liste affichée
+                    grangeService.delete(grange);
+                    granges.remove(grange);
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Grange supprimée avec succès !");
                 });
             }
@@ -94,15 +106,14 @@ public class ListeGranges {
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
-                    setGraphic(null); // Ne rien afficher si la ligne est vide
+                    setGraphic(null);
                 } else {
                     HBox pane = new HBox(10, btnModifier, btnSupprimer);
-                    setGraphic(pane); // Afficher les boutons dans la cellule
+                    setGraphic(pane);
                 }
             }
         });
     }
-
 
     @FXML
     void retourAccueil(ActionEvent event) throws IOException {
@@ -122,8 +133,8 @@ public class ListeGranges {
         stage.show();
     }
 
-    private void showAlert(Alert.AlertType information, String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Utiliser le type passé en paramètre
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
