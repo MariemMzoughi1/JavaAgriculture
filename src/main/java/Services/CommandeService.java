@@ -5,6 +5,7 @@ import Entites.Produit;
 import Utils.MyDB;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,9 @@ public class CommandeService {
     private Connection con;
 
     public CommandeService() {
-        con = MyDB.getInstance().getCon();  // Connexion déjà faite
+        con = MyDB.getInstance().getCon();
     }
 
-    // Récupérer tous les produits
     public List<Produit> getProduits() {
         List<Produit> produits = new ArrayList<>();
         String req = "SELECT * FROM produit";
@@ -32,7 +32,7 @@ public class CommandeService {
                 p.setQuantite_stock(rs.getInt("quantite_stock"));
                 p.setImage(rs.getString("image"));
                 p.setAgriculteur_id(rs.getInt("agriculteur_id"));
-                p.setDate_ajout(rs.getDate("date_ajout").toLocalDate());
+                p.setDate_ajout(rs.getDate("date_ajout").toLocalDate()); // ✅ Correction ici
                 produits.add(p);
             }
         } catch (SQLException e) {
@@ -41,12 +41,12 @@ public class CommandeService {
         return produits;
     }
 
-    // Ajouter une commande dans la base de données
     public void ajouterCommande(Commande commande) {
-        String req = "INSERT INTO commande (etat, date_commande, total) VALUES (?, ?, ?)";
+        String req = "INSERT INTO commande (etat, datecommande, total) VALUES (?, ?, ?)";
 
         try (PreparedStatement ps = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, commande.getEtat());
+            ps.setTimestamp(2, Timestamp.valueOf(commande.getDatecommande())); // Utilise 'datecommande' au lieu de 'date_commande'
             ps.setDouble(3, commande.getTotal());
 
             int rowsAffected = ps.executeUpdate();
@@ -56,8 +56,7 @@ public class CommandeService {
                 if (generatedKeys.next()) {
                     int commandeId = generatedKeys.getInt(1);
                     System.out.println("Commande ajoutée avec succès, ID : " + commandeId);
-
-                    // Enregistrer les produits associés à la commande
+                    // ici tu peux appeler ajouterProduitsCommande(commandeId, listeProduits) si besoin
                 }
             }
         } catch (SQLException e) {
@@ -65,7 +64,6 @@ public class CommandeService {
         }
     }
 
-    // Ajouter les produits à la commande (dans une table de jointure)
     private void ajouterProduitsCommande(int commandeId, List<Produit> produits) {
         String req = "INSERT INTO commande_produit (commande_id, produit_id) VALUES (?, ?)";
 
@@ -73,9 +71,9 @@ public class CommandeService {
             for (Produit produit : produits) {
                 ps.setInt(1, commandeId);
                 ps.setInt(2, produit.getId());
-                ps.addBatch(); // Ajoute l'insertion pour chaque produit dans un batch
+                ps.addBatch();
             }
-            ps.executeBatch(); // Exécute toutes les insertions en une fois
+            ps.executeBatch();
             System.out.println("Produits associés à la commande ajoutés avec succès !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout des produits à la commande : " + e.getMessage());
@@ -89,7 +87,7 @@ public class CommandeService {
                 "WHERE cp.commande_id = ?";
 
         try (PreparedStatement ps = con.prepareStatement(req)) {
-            ps.setInt(1, commande.getId());  // Assurez-vous que commande.getId() retourne un int
+            ps.setInt(1, commande.getId());
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Produit produit = new Produit();
@@ -110,5 +108,4 @@ public class CommandeService {
         }
         return produits;
     }
-
 }

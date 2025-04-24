@@ -1,5 +1,8 @@
 package Entites;
 
+import javafx.beans.binding.BooleanExpression;
+import javafx.beans.value.ObservableValue;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -105,6 +108,7 @@ public class Produit {
     public int hashCode() {
         return Objects.hash(id, nom, description, categorie, prix_unitaire, quantite_stock, image, agriculteur_id, date_ajout);
     }
+
 
 
 }

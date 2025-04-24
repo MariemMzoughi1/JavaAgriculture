@@ -150,7 +150,7 @@ public class CommandeController {
             switch (response.getButtonData()) {
                 case OK_DONE -> {
                     double total = panier.stream().mapToDouble(Produit::getPrix_unitaire).sum();
-                    Commande commande = new Commande("En attente", java.time.LocalDateTime.now(), total);
+                    Commande commande = new Commande("Validé", java.time.LocalDateTime.now(), total);
                     commandeService.ajouterCommande(commande);
                     afficherMessage("Commande passée", "Votre commande a été enregistrée avec succès !");
                     panier.clear(); // vider le panier
@@ -175,19 +175,27 @@ public class CommandeController {
     @FXML
     public void ouvrirPanier(ActionEvent event) {
         try {
-            // Charger le fichier FXML du panier
+            // Vérifiez si le panier contient des produits
+            if (panier == null || panier.isEmpty()) {
+                afficherMessage("Panier vide", "Votre panier est actuellement vide.");
+                return;
+            }
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/panier.fxml"));
             AnchorPane panierView = loader.load();
 
-            // Créer une nouvelle scène à partir du panier FXML
-            Scene panierScene = new Scene(panierView);
+            PanierController controller = loader.getController();
+            controller.setPanier(panier); // Passez la liste du panier au contrôleur
 
-            // Récupérer la fenêtre actuelle (stage) et définir la nouvelle scène
+            Scene panierScene = new Scene(panierView);
             Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             stage.setScene(panierScene);
+            stage.setTitle("Panier");
             stage.show();
         } catch (IOException e) {
             afficherMessage("Erreur de chargement", "Impossible de charger la vue du panier.");
         }
     }
+
 }
+
