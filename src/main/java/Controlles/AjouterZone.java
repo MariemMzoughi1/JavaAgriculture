@@ -1,5 +1,6 @@
 package Controlles;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -16,8 +17,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 
@@ -39,44 +42,27 @@ public class AjouterZone {
     private TextField superficieTextField;
 
     @FXML
-    private WebView mapView;
+    private Text imagePathText;
+
+    private File selectedImageFile;
+
 
     private double latitude;
     private double longitude;
 
     @FXML
     public void initialize() {
-        WebEngine webEngine = mapView.getEngine();
-        webEngine.load(getClass().getResource("/mapbox.html").toExternalForm());
-
-        // Écouter l'état de chargement de la page
-        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
-                JSObject window = (JSObject) webEngine.executeScript("window");
-                window.setMember("javaConnector", new JavaConnector());
-                System.out.println("✅ JavaConnector connecté avec succès !");
-            }
-
-        });
 
     }
 
-    // 🔧 Classe interne pour la liaison JS → Java
-    public class JavaConnector {
-        public void sendCoordinates(double lng, double lat) {
-            latitude = lat;
-            longitude = lng;
-            System.out.println("📍 Coordonnées reçues : lat=" + lat + ", lng=" + lng);
-            localisationTextField.setText("lat=" + lat + ";lng=" + lng);
-        }
-    }
     @FXML
     void AjouterZone(ActionEvent event) {
         String superficieStr = superficieTextField.getText();
         String nomZone = nomzoneTextField.getText();
         String localisation = localisationTextField.getText();
+        String image = imagePathText.getText();  // Récupération du chemin de l'image
 
-        if (superficieStr.isEmpty() || nomZone.isEmpty() || localisation.isEmpty()) {
+        if (superficieStr.isEmpty() || nomZone.isEmpty() || localisation.isEmpty() || image.isEmpty()) {
             showAlert("Tous les champs sont obligatoires.");
             return;
         }
@@ -98,11 +84,12 @@ public class AjouterZone {
             return;
         }
 
-        Zone zone = new Zone(superficie, nomZone, localisation);
+        Zone zone = new Zone(superficie, nomZone, localisation, image);
+        zone.setImage(image);  // Utilisation de l'attribut "image" dans la classe Zone
         ZoneService zoneservice = new ZoneService();
 
         try {
-            zoneservice.add(zone);
+            zoneservice.add(zone);  // Méthode d'ajout dans la base de données
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Succès");
@@ -116,6 +103,7 @@ public class AjouterZone {
             afficherZone.setSuperficie(superficie);
             afficherZone.setNomdezone(nomZone);
             afficherZone.setLocalisation(localisation);
+            afficherZone.setImage(image);  // Passer le chemin de l'image au contrôleur suivant
             superficieTextField.getScene().setRoot(root);
 
         } catch (SQLException | IOException e) {
@@ -141,4 +129,43 @@ public class AjouterZone {
         stage.show();
 
     }
+    public void setCoordinates(double lat, double lng) {
+        this.latitude = lat;
+        this.longitude = lng;
+        localisationTextField.setText("lat=" + lat + ";lng=" + lng);
+    }
+    @FXML
+    void ouvrirMap(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterMapZone.fxml"));
+            Parent root = loader.load();
+
+            // Récupération du contrôleur Map
+            AjouterMapZone ajoutermapzone = loader.getController();
+            ajoutermapzone.setAjouterZoneController(this); // Important pour retour coords
+
+            Stage stage = new Stage();
+            stage.setTitle("Sélectionner une position sur la carte");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Erreur d'ouverture de la carte : " + e.getMessage());
+        }
+    }
+
+    @FXML
+    void choisirImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        selectedImageFile = fileChooser.showOpenDialog(null);
+        if (selectedImageFile != null) {
+            imagePathText.setText(selectedImageFile.getAbsolutePath());
+        }
+    }
+
+
 }

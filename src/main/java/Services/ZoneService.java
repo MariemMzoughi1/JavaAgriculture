@@ -98,7 +98,8 @@ public class ZoneService implements InterfaceCRUD<Zone> {
                         rs.getInt("id"),
                         rs.getFloat("superficie_zone"),
                         rs.getString("nom_zone"),
-                        rs.getString("localisation_zone")
+                        rs.getString("localisation_zone"),
+                        rs.getString("image")
                 );
                 zones.add(z); // Ajout de la zone à la liste
             }

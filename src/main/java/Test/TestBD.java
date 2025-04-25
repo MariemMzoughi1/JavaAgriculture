@@ -9,7 +9,7 @@ public class TestBD {
         MyDB db = MyDB.getInstance();
 
 
-        Zone z1 = new Zone(200,"monzone","tunis");
+       // Zone z1 = new Zone(200,"monzone","tunis");
 
 
         ZoneService zsc = new ZoneService();

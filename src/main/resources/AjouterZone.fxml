@@ -6,46 +6,35 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f4fbe5;" xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.AjouterZone">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f4fbe5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.AjouterZone">
 
     <children>
 
-        <!-- Champ de recherche -->
-        <TextField fx:id="searchField" layoutX="80.0" layoutY="20.0" prefWidth="640.0"
-                   promptText="🔍 Rechercher une zone..."
-                   style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
-
-        <Text fill="#3e8e41" layoutX="240.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Créer une nouvelle zone">
+        <Text fill="#3e8e41" layoutX="240.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Créer une nouvelle zone">
             <font>
                 <Font size="26.0" />
             </font>
         </Text>
 
-        <Label layoutX="80.0" layoutY="80.0" text="Superficie de la zone" textFill="#333" />
-        <TextField fx:id="superficieTextField" layoutX="80.0" layoutY="100.0" prefWidth="640.0"
-                   style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
+        <Label layoutX="80.0" layoutY="90.0" text="Superficie de la zone" textFill="#333" />
+        <TextField fx:id="superficieTextField" layoutX="80.0" layoutY="110.0" prefWidth="640.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
 
-        <Label layoutX="80.0" layoutY="140.0" text="Nom de la zone" textFill="#333" />
-        <TextField fx:id="nomzoneTextField" layoutX="80.0" layoutY="160.0" prefWidth="640.0"
-                   style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
+        <Label layoutX="80.0" layoutY="160.0" text="Nom de la zone" textFill="#333" />
+        <TextField fx:id="nomzoneTextField" layoutX="80.0" layoutY="180.0" prefWidth="640.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
 
-        <Label layoutX="80.0" layoutY="200.0" text="Sélectionner une localisation sur la carte" textFill="#333" />
-        <WebView fx:id="mapView" layoutX="80.0" layoutY="220.0" prefWidth="640.0" prefHeight="200.0" />
+        <Button layoutX="79.0" layoutY="288.0" onAction="#choisirImage" text="Choisir une image" />
+        <Text fx:id="imagePathText" />
 
-        <TextField fx:id="localisationTextField" layoutX="80.0" layoutY="430.0" prefWidth="640.0"
-                   promptText="Latitude, Longitude (rempli automatiquement)"
-                   style="-fx-background-color: #f0f0f0; -fx-border-color: #a7dba7; -fx-border-radius: 4;" editable="false" />
 
-        <Button layoutX="320.0" layoutY="470.0" onAction="#AjouterZone"
-                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"
-                text="Ajouter Zone" />
+        <Label layoutX="80.0" layoutY="230.0" text="Localisation (coordonnées)" textFill="#333" />
+        <TextField fx:id="localisationTextField" editable="false" layoutX="80.0" layoutY="250.0" prefHeight="27.0" prefWidth="475.0" style="-fx-background-color: #eeeeee; -fx-border-color: #a7dba7; -fx-border-radius: 4;" />
 
-        <Button layoutX="308.0" layoutY="520.0" onAction="#retourliste"
-                style="-fx-background-color: #FF6347; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"
-                text="Retour à la liste de zone" />
+        <Button layoutX="583.0" layoutY="251.0" onAction="#ouvrirMap" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Choisir sur la carte" />
+
+        <Button layoutX="77.0" layoutY="339.0" onAction="#AjouterZone" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Ajouter Zone" />
+
+        <Button layoutX="75.0" layoutY="390.0" onAction="#retourliste" style="-fx-background-color: #FF6347; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Retour à la liste de zone" />
 
     </children>
 </AnchorPane>

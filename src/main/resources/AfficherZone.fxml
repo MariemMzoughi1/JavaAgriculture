@@ -2,57 +2,36 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controlles.AfficherZone"
-            style="-fx-background-color: #f4fbe5;">
+<AnchorPane prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: #f4fbe5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.AfficherZone">
 
     <children>
 
-
-        <Text layoutX="170.0" layoutY="50.0"
-              strokeType="OUTSIDE"
-              strokeWidth="0.0"
-              text="Détails de la Zone"
-              fill="#3e8e41">
+        <!-- Titre de la page -->
+        <Text fill="#3e8e41" layoutX="170.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Détails de la Zone">
             <font>
                 <Font size="24.0" />
             </font>
         </Text>
 
+        <!-- Image de la zone -->
+        <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" layoutX="176.0" layoutY="69.0" style="-fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
-        <TextField fx:id="superficie"
-                   editable="false"
-                   layoutX="80.0" layoutY="90.0"
-                   prefWidth="440.0"
-                   promptText="Superficie"
-                   style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
+        <!-- Champ Superficie -->
+        <TextField fx:id="superficie" editable="false" layoutX="80.0" layoutY="283.0" prefWidth="440.0" promptText="Superficie" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
-        <TextField fx:id="nomdezone"
-                   editable="false"
-                   layoutX="80.0" layoutY="150.0"
-                   prefWidth="440.0"
-                   promptText="Nom de la zone"
-                   style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
+        <!-- Champ Nom de la zone -->
+        <TextField fx:id="nomdezone" editable="false" layoutX="80.0" layoutY="331.0" prefWidth="440.0" promptText="Nom de la zone" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
-        <TextField fx:id="localisation"
-                   editable="false"
-                   layoutX="80.0" layoutY="210.0"
-                   prefWidth="440.0"
-                   promptText="Localisation"
-                   style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
+        <!-- Champ Localisation -->
+        <TextField fx:id="localisation" editable="false" layoutX="80.0" layoutY="381.0" prefWidth="440.0" promptText="Localisation" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
-
-        <Button fx:id="btnRetourListe"
-                layoutX="220.0" layoutY="300.0"
-                onAction="#retourListeZones"
-                text="Retour à la liste des zones"
-                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" />
+        <!-- Bouton Retour -->
+        <Button fx:id="btnRetourListe" layoutX="190.0" layoutY="428.0" onAction="#retourListeZones" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="Retour à la liste des zones" />
 
     </children>
 </AnchorPane>
