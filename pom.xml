@@ -26,6 +26,12 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>22.0.1</version> <!-- ou la version que tu utilises -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>21.0.2</version>
         </dependency>

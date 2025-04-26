@@ -1,64 +1,47 @@
-/* Appliquer à tout le chart */
 .chart {
-    -fx-background-color: #f4f4f4; /* Couleur de fond du graphique */
-    -fx-padding: 20px;
-    -fx-border-color: transparent;
-    -fx-border-width: 0;
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
-/* Fond interne */
-.chart-plot-background {
-    -fx-background-color: #ffffff; /* Zone des courbes en blanc */
+/* Ligne de la courbe */
+.chart-series-line {
+    -fx-stroke: #3498db; /* Bleu moderne */
+    -fx-stroke-width: 2px;
 }
 
-/* Bordures entre axes */
-.chart-horizontal-grid-lines, .chart-vertical-grid-lines {
-    -fx-stroke: #e0e0e0; /* Couleur des grilles */
+/* Symboles (points) sur la ligne */
+.chart-line-symbol {
+    -fx-background-color: #3498db, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Axes */
+.axis {
+    -fx-tick-label-fill: #555555;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Grille */
+.chart-horizontal-grid-lines,
+.chart-vertical-grid-lines {
+    -fx-stroke: #e0e0e0;
+}
+
+/* Barres du BarChart */
+.default-color0.chart-bar {
+    -fx-bar-fill: #2ecc71; /* Vert pastel */
 }
 
 /* Titre du graphique */
 .chart-title {
-    -fx-font-size: 22px;
     -fx-text-fill: #333333;
-    -fx-font-weight: bold;
-}
-
-/* Titres des axes */
-.axis-label {
     -fx-font-size: 16px;
-    -fx-text-fill: #666666;
-}
-
-/* Couleur des ticks (chiffres sur les axes) */
-.axis-tick-mark, .axis {
-    -fx-tick-label-fill: #555555;
-}
-
-/* Styles pour chaque série de données (couleur des lignes) */
-.default-color0.chart-series-line {
-    -fx-stroke: #2196f3; /* Bleu pour Stock */
-    -fx-stroke-width: 3px;
-}
-.default-color1.chart-series-line {
-    -fx-stroke: #e91e63; /* Rose pour Prix */
-    -fx-stroke-width: 3px;
-}
-
-/* Points sur les lignes */
-.default-color0.chart-line-symbol {
-    -fx-background-color: #2196f3, white;
-    -fx-background-insets: 0, 2;
-    -fx-background-radius: 5px;
-}
-.default-color1.chart-line-symbol {
-    -fx-background-color: #e91e63, white;
-    -fx-background-insets: 0, 2;
-    -fx-background-radius: 5px;
-}
-
-/* Animation légère au survol */
-.chart-line-symbol:hover {
-    -fx-scale-x: 1.5;
-    -fx-scale-y: 1.5;
-    -fx-effect: dropshadow(gaussian, #666666, 10, 0.5, 0, 0);
+    -fx-font-weight: bold;
 }
