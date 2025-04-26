@@ -2,6 +2,7 @@ package controles;
 
 import Entites.Commande;
 import Services.CommandeService;
+import Services.EmailService;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -47,10 +48,31 @@ public class FormulaireCommandeController {
         fadeTransition.setFromValue(0);  // Commence invisible
         fadeTransition.setToValue(1);    // Devient visible
         fadeTransition.play();
+
+        // Gestion de l'événement de saisie pour le téléphone
+        telephoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Empêcher de modifier le préfixe +216 et d’écrire autre chose que des chiffres
+            if (!newValue.startsWith("+216")) {
+                telephoneField.setText("+216");
+                return;
+            }
+
+            // Récupérer juste la partie après +216
+            String numbersOnly = newValue.substring(4).replaceAll("[^\\d]", "");
+
+            // Limiter à 8 chiffres
+            if (numbersOnly.length() > 8) {
+                numbersOnly = numbersOnly.substring(0, 8);
+            }
+
+            // Remettre la valeur formatée
+            telephoneField.setText("+216" + numbersOnly);
+        });
     }
 
     @FXML
     private void onConfirmer() {
+        // Vérification des champs
         if (nomField.getText().isEmpty() || telephoneField.getText().isEmpty() ||
                 gouvernoratComboBox.getValue() == null || adresseDetailField.getText().isEmpty() ||
                 emailField.getText().isEmpty()) {
@@ -64,9 +86,9 @@ public class FormulaireCommandeController {
             return;
         }
 
-        // Vérifier téléphone : doit commencer par +216 suivi de 8 chiffres
+        // Vérifier que le numéro de téléphone commence par +216 et contient 8 chiffres après
         if (!telephoneField.getText().matches("\\+216\\d{8}")) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Le numéro doit contenir 8 chiffres après +216.");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le numéro doit commencer par +216 suivi de 8 chiffres.");
             return;
         }
 
@@ -80,7 +102,11 @@ public class FormulaireCommandeController {
         Commande commande = new Commande("En attente", LocalDateTime.now(), totalCommande);
         new CommandeService().ajouterCommande(commande);
 
-        showAlert(Alert.AlertType.INFORMATION, "Commande réussie", "Votre commande a été enregistrée !");
+        // Envoyer l'email de confirmation
+        EmailService.sendConfirmationEmail(emailField.getText());
+
+        // Afficher un message de confirmation
+        showAlert(Alert.AlertType.INFORMATION, "Commande réussie", "Votre commande a été enregistrée ! Un e-mail de confirmation vous a été envoyé.");
 
         // Fermer la fenêtre
         Stage stage = (Stage) nomField.getScene().getWindow();
