@@ -1,15 +1,22 @@
 package Services;
 
-
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import Entites.Produit;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PanierService {
 
-    private final List<Produit> panier = new ArrayList<>();
+    private final ObservableList<Produit> panier = FXCollections.observableArrayList();
+    private static PanierService instance;
+
+    private PanierService() {}
+
+    public static PanierService getInstance() {
+        if (instance == null) {
+            instance = new PanierService();
+        }
+        return instance;
+    }
 
     public void ajouterProduit(Produit produit) {
         panier.add(produit);
@@ -23,14 +30,14 @@ public class PanierService {
         panier.clear();
     }
 
-    public List<Produit> getPanier() {
-        return new ArrayList<>(panier);
+    public ObservableList<Produit> getPanier() {
+        return panier;  // <<< retourne la vraie liste observable !!
     }
 
     public double getTotal() {
         double total = 0;
         for (Produit produit : panier) {
-            total += produit.getPrix_unitaire(); // Supposons que Produit a un getPrix()
+            total += produit.getPrix_unitaire() * produit.getQuantite_stock();
         }
         return total;
     }
