@@ -9,6 +9,7 @@ public class PaymentService {
 
     public PaymentService() {
         // Initialise Stripe avec ta clé secrète
+        Stripe.apiKey = "sk_test_51QxrcZB2VudiYA1MyVulxNng9wn0TvukmqGXavh081A0vVoMjdD7ftt6TpoyuIstUUU8zzAmbf9U73dHjqLhxnda00RNtbqKAT"; // ← ta clé secrète
     }
 
     public Session createCheckoutSession(double amount) throws Exception {
