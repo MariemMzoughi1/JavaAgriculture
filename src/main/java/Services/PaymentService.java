@@ -9,7 +9,6 @@ public class PaymentService {
 
     public PaymentService() {
         // Initialise Stripe avec ta clé secrète
-        Stripe.apiKey = "ffffffff"; // ← ta clé secrète
     }
 
     public Session createCheckoutSession(double amount) throws Exception {
