@@ -3,10 +3,20 @@ package controles;
 import Entites.Commande;
 import Services.CommandeService;
 import Services.EmailService;
+import Services.PaymentService;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import java.awt.Desktop;
+import java.net.URI;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -102,15 +112,39 @@ public class FormulaireCommandeController {
         Commande commande = new Commande("En attente", LocalDateTime.now(), totalCommande);
         new CommandeService().ajouterCommande(commande);
 
+        try {
+            // Création de la session de paiement
+            PaymentService paymentService = new PaymentService();
+            Session session = paymentService.createCheckoutSession(totalCommande);
+
+            String checkoutUrl = session.getUrl(); // ← L'URL à ouvrir pour payer
+
+            openPaymentPage(checkoutUrl);
+
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la création du paiement.");
+            e.printStackTrace();
+        }
+    }
+
+    private void openPaymentPage(String url) {
+        // Ouvrir l'URL Stripe Checkout dans WebView
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        webEngine.load(url);
+
+        Stage stage = new Stage();
+        stage.setTitle("Paiement sécurisé");
+        stage.setScene(new Scene(webView, 800, 600));
+        stage.show();
+
         // Envoyer l'email de confirmation
         EmailService.sendConfirmationEmail(emailField.getText());
 
         // Afficher un message de confirmation
         showAlert(Alert.AlertType.INFORMATION, "Commande réussie", "Votre commande a été enregistrée ! Un e-mail de confirmation vous a été envoyé.");
 
-        // Fermer la fenêtre
-        Stage stage = (Stage) nomField.getScene().getWindow();
-        stage.close();
+
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
