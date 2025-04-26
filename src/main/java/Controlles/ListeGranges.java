@@ -22,6 +22,7 @@ public class ListeGranges {
     @FXML private TableView<Grange> tableGranges;
     @FXML private TableColumn<Grange, String> colType;
     @FXML private TableColumn<Grange, Float> colCapacite;
+    @FXML private TableColumn<Grange, Float> colProductivite;
     @FXML private TableColumn<Grange, Integer> colZone;
     @FXML private TableColumn<Grange, Void> colActions;
     @FXML private TextField searchField; // Champ de recherche
@@ -33,6 +34,7 @@ public class ListeGranges {
     public void initialize() {
         colType.setCellValueFactory(new PropertyValueFactory<>("type_grange"));
         colCapacite.setCellValueFactory(new PropertyValueFactory<>("capacite"));
+        colProductivite.setCellValueFactory(new PropertyValueFactory<>("productivite")); // OK float direct
         colZone.setCellValueFactory(cellData -> {
             if (cellData.getValue().getZone() != null) {
                 return new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getZone().getId()).asObject();
@@ -41,15 +43,44 @@ public class ListeGranges {
             }
         });
 
+        colProductivite.setCellFactory(param -> new TableCell<Grange, Float>() {
+            @Override
+            protected void updateItem(Float item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    String niveau;
+                    if (item < 20) {
+                        niveau = "Faible";
+                        setStyle("-fx-text-fill: red;");
+                    } else if (item >= 20 && item <= 50) {
+                        niveau = "Moyenne";
+                        setStyle("-fx-text-fill: orange;");
+                    } else {
+                        niveau = "Élevée";
+                        setStyle("-fx-text-fill: green;");
+                    }
+
+                    // Afficher le chiffre + niveau
+                    setText(String.format("%.2f - %s", item, niveau));
+                }
+            }
+        });
+
+
+
         granges.addAll(grangeService.find());
         tableGranges.setItems(granges);
         addActionButtonsToTable();
 
-        // 🔍 Écoute les changements de texte pour filtrer les granges
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterGranges(newValue);
         });
     }
+
+
 
     private void filterGranges(String searchText) {
         ObservableList<Grange> filtered = FXCollections.observableArrayList();
@@ -132,6 +163,20 @@ public class ListeGranges {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    private void ouvrirChartProductivite() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/productivite_chart.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Graphique de Productivité");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType); // Utiliser le type passé en paramètre
@@ -140,4 +185,6 @@ public class ListeGranges {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 }

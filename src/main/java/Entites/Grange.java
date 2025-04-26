@@ -6,6 +6,7 @@ public class Grange {
     private int id;
     private String type_grange;
     private float capacite;
+    private float productivite;
     private Zone zone;
 
 
@@ -40,6 +41,14 @@ public class Grange {
         this.capacite = capacite;
     }
 
+    public float getProductivite() {
+        return productivite;
+    }
+
+    public void setProductivite(float productivite) {
+        this.productivite = productivite;
+    }
+
     public Zone getZone() {
         return zone;
     }
@@ -55,6 +64,7 @@ public class Grange {
                 "id=" + id +
                 ", type_grange='" + type_grange + '\'' +
                 ", capacite=" + capacite +
+                ", productivite=" + productivite +
                 ", zone=" + (zone != null ? zone.getNom_zone() : "Aucune") +
                 '}';
     }
@@ -71,5 +81,7 @@ public class Grange {
     public int hashCode() {
         return Objects.hash(id, type_grange, capacite);
     }
+
+
 
 }

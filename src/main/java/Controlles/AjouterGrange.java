@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
 
 public class AjouterGrange implements Initializable {
 
-
     @FXML
     private TextField typeGrangeField;
 
@@ -33,12 +32,10 @@ public class AjouterGrange implements Initializable {
     private final GrangeService grangeService = new GrangeService();
     private final ZoneService zoneService = new ZoneService();
 
-
     public void initialize(URL url, ResourceBundle rb) {
-        List<Zone> zones = zoneService.find(); // récupère les zones depuis la BDD
-        zoneComboBox.setItems(FXCollections.observableArrayList(zones)); // les injecte dans le ComboBox
+        List<Zone> zones = zoneService.find();
+        zoneComboBox.setItems(FXCollections.observableArrayList(zones));
 
-        // CellFactory pour afficher l'ID de la zone dans le ComboBox
         zoneComboBox.setCellFactory(param -> new ListCell<Zone>() {
             @Override
             protected void updateItem(Zone zone, boolean empty) {
@@ -46,12 +43,11 @@ public class AjouterGrange implements Initializable {
                 if (empty || zone == null) {
                     setText(null);
                 } else {
-                    setText(String.valueOf(zone.getId())); // Affiche uniquement l'ID
+                    setText(String.valueOf(zone.getId()));
                 }
             }
         });
 
-        // Affichage de l'ID de la zone dans la liste déroulante
         zoneComboBox.setButtonCell(new ListCell<Zone>() {
             @Override
             protected void updateItem(Zone zone, boolean empty) {
@@ -59,13 +55,11 @@ public class AjouterGrange implements Initializable {
                 if (empty || zone == null) {
                     setText(null);
                 } else {
-                    setText(String.valueOf(zone.getId())); // Affiche uniquement l'ID
+                    setText(String.valueOf(zone.getId()));
                 }
             }
         });
     }
-
-
 
     @FXML
     private void ajouterGrange(ActionEvent event) {
@@ -85,7 +79,6 @@ public class AjouterGrange implements Initializable {
             }
 
             Zone selectedZone = zoneComboBox.getValue();
-
             if (selectedZone == null) {
                 showAlert(AlertType.ERROR, "Erreur", "Veuillez sélectionner une zone.");
                 return;
@@ -94,12 +87,16 @@ public class AjouterGrange implements Initializable {
             Grange grange = new Grange(type, capacite);
             grange.setZone(selectedZone);
 
+            // Calculer la productivité et la stocker (SEULEMENT EN CHIFFRE)
+            float productivite = calculerProductivite(grange);
+            grange.setProductivite(productivite);
+
             grangeService.add(grange);
 
-            // Alerte de succès
             showAlert(AlertType.INFORMATION, "Succès", "Grange ajoutée avec succès !");
+            ((Button) event.getSource()).getScene().getWindow().hide();
+
         } catch (Exception e) {
-            // Alerte en cas d'exception
             showAlert(AlertType.ERROR, "Erreur", "Erreur : " + e.getMessage());
         }
     }
@@ -107,10 +104,27 @@ public class AjouterGrange implements Initializable {
     private void showAlert(AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null); // Pas de texte en en-tête
+        alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.showAndWait(); // Affiche l'alerte et attend que l'utilisateur la ferme
+        alert.showAndWait();
     }
 
+    // Nouvelle version qui retourne juste un float (pas de texte)
+    private float calculerProductivite(Grange grange) {
+        String type = grange.getType_grange().toLowerCase();
 
+        switch (type) {
+            case "vache":
+            case "vaches":
+                return grange.getCapacite() * 20f;
+            case "mouton":
+            case "moutons":
+                return grange.getCapacite() * 5f;
+            case "poule":
+            case "poules":
+                return grange.getCapacite() * 1f;
+            default:
+                return grange.getCapacite() * 1.2f;
+        }
+    }
 }
