@@ -17,20 +17,26 @@ public class ZoneService implements InterfaceCRUD<Zone> {
     }
 
     @Override
-    public void add(Zone zone)throws SQLException {
-        String req = "INSERT INTO Zone (superficie_zone, nom_zone, localisation_zone) VALUES ('"
+    public void add(Zone zone) throws SQLException {
+        // Récupérer l'image depuis l'objet Zone
+        String image = zone.getImage();  // On récupère le chemin de l'image
+
+        // Construire la requête SQL pour insérer une nouvelle zone avec l'image
+        String req = "INSERT INTO Zone (superficie_zone, nom_zone, localisation_zone, image) VALUES ('"
                 + zone.getSuperficie_zone() + "', '"
                 + zone.getNom_zone() + "', '"
-                + zone.getLocalisation_zone() + "')";
+                + zone.getLocalisation_zone() + "', '"
+                + (image != null ? image : "") + "')";  // Ajouter l'image (ou chaîne vide si aucune image)
 
         Statement st;
         try {
             st = con.createStatement();
-            st.executeUpdate(req);
+            st.executeUpdate(req);  // Exécuter la requête d'insertion
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
 
 
     @Override
@@ -82,10 +88,6 @@ public class ZoneService implements InterfaceCRUD<Zone> {
     }
 
 
-
-
-
-
     @Override
     public List<Zone> find() {
         List<Zone> zones = new ArrayList<>();
@@ -108,6 +110,28 @@ public class ZoneService implements InterfaceCRUD<Zone> {
         }
         return zones;
     }
+
+    public Zone findById(int id) {
+        Zone zone = null;
+        String req = "SELECT * FROM Zone WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                zone = new Zone(
+                        rs.getInt("id"),
+                        rs.getFloat("superficie_zone"),
+                        rs.getString("nom_zone"),
+                        rs.getString("localisation_zone"),
+                        rs.getString("image")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur dans ZoneService.findById() : " + e.getMessage());
+        }
+        return zone;
+    }
+
 
 
 

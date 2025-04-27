@@ -3,6 +3,8 @@ package Controlles;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -45,6 +47,8 @@ public class AjouterZone {
     private Text imagePathText;
 
     private File selectedImageFile;
+
+    private String imagePath = "";  // Chemin relatif de l'image
 
 
     private double latitude;
@@ -155,6 +159,7 @@ public class AjouterZone {
 
     @FXML
     void choisirImage(ActionEvent event) {
+        // Utiliser FileChooser pour choisir l'image
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir une image");
         fileChooser.getExtensionFilters().addAll(
@@ -163,9 +168,34 @@ public class AjouterZone {
 
         selectedImageFile = fileChooser.showOpenDialog(null);
         if (selectedImageFile != null) {
-            imagePathText.setText(selectedImageFile.getAbsolutePath());
+            // Afficher le chemin absolu pour vérifier si c'est correct
+            System.out.println("Chemin absolu de l'image : " + selectedImageFile.getAbsolutePath());
+
+            // Définir le nom du fichier pour éviter les collisions
+            String imageName = selectedImageFile.getName();
+            String targetPath = "resources/images/" + imageName;
+
+            // Créer le dossier "ressources/images" si il n'existe pas
+            File targetDirectory = new File("resources/images");
+            if (!targetDirectory.exists()) {
+                targetDirectory.mkdirs();  // Créer le dossier si il n'existe pas
+            }
+
+            // Déplacer l'image dans le dossier `ressources/images`
+            try {
+                File targetFile = new File(targetPath);
+                // Si le fichier cible existe déjà, on le remplace
+                Files.copy(selectedImageFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                imagePath = targetPath;  // Enregistrer le chemin relatif de l'image
+                imagePathText.setText(imagePath);  // Afficher le chemin de l'image dans le Text
+            } catch (IOException e) {
+                showAlert("Erreur lors de la copie de l'image : " + e.getMessage());
+                System.out.println("Erreur lors de la copie de l'image : " + e.getMessage());  // Log pour le débogage
+            }
         }
     }
+
+
 
 
 }

@@ -1,5 +1,6 @@
 package Entites;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Zone {
@@ -9,7 +10,7 @@ public class Zone {
     private String nom_zone;
     private String localisation_zone;
     private String image;
-
+    private List<Grange> granges;
 
     public Zone(){}
 
@@ -67,6 +68,14 @@ public class Zone {
     }
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<Grange> getGranges() {
+        return granges;
+    }
+
+    public void setGranges(List<Grange> granges) {
+        this.granges = granges;
     }
 
     @Override
