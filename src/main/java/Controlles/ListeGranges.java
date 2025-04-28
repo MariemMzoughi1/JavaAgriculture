@@ -26,15 +26,18 @@ public class ListeGranges {
     @FXML private TableColumn<Grange, Integer> colZone;
     @FXML private TableColumn<Grange, Void> colActions;
     @FXML private TextField searchField; // Champ de recherche
+    private ObservableList<Grange> grangesList;
 
     private final GrangeService grangeService = new GrangeService();
-    private final ObservableList<Grange> granges = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        // Initialisation de grangesList avec les données récupérées du service
+        grangesList = FXCollections.observableArrayList(grangeService.find());
+
         colType.setCellValueFactory(new PropertyValueFactory<>("type_grange"));
         colCapacite.setCellValueFactory(new PropertyValueFactory<>("capacite"));
-        colProductivite.setCellValueFactory(new PropertyValueFactory<>("productivite")); // OK float direct
+        colProductivite.setCellValueFactory(new PropertyValueFactory<>("productivite"));
         colZone.setCellValueFactory(cellData -> {
             if (cellData.getValue().getZone() != null) {
                 return new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getZone().getId()).asObject();
@@ -62,17 +65,13 @@ public class ListeGranges {
                         niveau = "Élevée";
                         setStyle("-fx-text-fill: green;");
                     }
-
-                    // Afficher le chiffre + niveau
                     setText(String.format("%.2f - %s", item, niveau));
                 }
             }
         });
 
-
-
-        granges.addAll(grangeService.find());
-        tableGranges.setItems(granges);
+        // Lier la liste à la TableView
+        tableGranges.setItems(grangesList);
         addActionButtonsToTable();
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -80,12 +79,25 @@ public class ListeGranges {
         });
     }
 
+    @FXML
+    public void trierParType() {
+        grangesList.sort((grange1, grange2) -> grange1.getType_grange().compareTo(grange2.getType_grange()));
+    }
 
+    @FXML
+    public void trierParCapacite() {
+        grangesList.sort((grange1, grange2) -> Float.compare(grange1.getCapacite(), grange2.getCapacite()));
+    }
+
+    @FXML
+    public void trierParProductivite() {
+        grangesList.sort((grange1, grange2) -> Float.compare(grange1.getProductivite(), grange2.getProductivite()));
+    }
 
     private void filterGranges(String searchText) {
         ObservableList<Grange> filtered = FXCollections.observableArrayList();
 
-        for (Grange g : grangeService.find()) {
+        for (Grange g : grangesList) {
             if (g.getType_grange().toLowerCase().contains(searchText.toLowerCase())) {
                 filtered.add(g);
             }
@@ -128,7 +140,7 @@ public class ListeGranges {
                 btnSupprimer.setOnAction(event -> {
                     Grange grange = getTableView().getItems().get(getIndex());
                     grangeService.delete(grange);
-                    granges.remove(grange);
+                    grangesList.remove(grange); // Utilisation de grangesList ici
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Grange supprimée avec succès !");
                 });
             }
@@ -163,6 +175,7 @@ public class ListeGranges {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void ouvrirChartProductivite() {
         try {
@@ -177,7 +190,6 @@ public class ListeGranges {
         }
     }
 
-
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType); // Utiliser le type passé en paramètre
         alert.setTitle(title);
@@ -185,6 +197,5 @@ public class ListeGranges {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
 }
+

@@ -36,12 +36,14 @@
 
         <VBox fx:id="grangesList" layoutX="49.0" layoutY="261.0" prefHeight="2.0" prefWidth="319.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
+        <Button fx:id="btnAfficherProductivite" layoutX="64.0" layoutY="222.0" onAction="#afficherProductivite" text="Afficher Productivité" />
 
         <!-- Bouton Retour -->
         <Button fx:id="btnRetourListe" layoutX="253.0" layoutY="554.0" onAction="#retourListeZones" prefHeight="37.0" prefWidth="222.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="Retour à la liste des zones" />
 
         <!-- Bouton Proposer Culture -->
         <Button fx:id="btnProposerCulture" layoutX="225.0" layoutY="508.0" onAction="#proposerCulture" prefHeight="37.0" prefWidth="278.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="propositions des activité agriculture" />
+
 
     </children>
 </AnchorPane>

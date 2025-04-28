@@ -6,8 +6,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="450.0" prefWidth="650.0" style="-fx-background-color: #f0f4f8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.ListeGranges">
+<AnchorPane prefHeight="589.0" prefWidth="741.0" style="-fx-background-color: #f0f4f8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.ListeGranges">
 
     <children>
         <Label layoutX="20" layoutY="10" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📋 Liste des Granges" />
@@ -15,22 +16,25 @@
         <!-- 🔍 Champ de recherche -->
         <TextField fx:id="searchField" layoutX="20" layoutY="40" prefWidth="610" promptText="Rechercher une grange..." />
 
-        <TableView fx:id="tableGranges" fixedCellSize="40.0" layoutX="20" layoutY="80" prefHeight="290.0" prefWidth="610.0" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5;">
+        <!-- HBox pour les boutons de tri -->
+        <HBox layoutX="20" layoutY="70" spacing="10">
+            <Button onAction="#trierParType" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Trier par Type" />
+            <Button onAction="#trierParCapacite" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Trier par Capacité" />
+            <Button onAction="#trierParProductivite" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Trier par Productivité" />
+        </HBox>
+
+        <TableView fx:id="tableGranges" fixedCellSize="40.0" layoutX="20" layoutY="110" prefHeight="406.0" prefWidth="696.0" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5;">
             <columns>
                 <TableColumn fx:id="colType" prefWidth="200" text="Type" />
                 <TableColumn fx:id="colCapacite" prefWidth="150" text="Capacité" />
                 <TableColumn fx:id="colZone" prefWidth="100" text="Zone ID" />
                 <TableColumn fx:id="colActions" prefWidth="180" text="Actions" />
                 <TableColumn fx:id="colProductivite" prefWidth="200" text="Productivité" />
-
             </columns>
         </TableView>
 
-        <Button fx:id="btnRetour" layoutX="20" layoutY="390" onAction="#retourAccueil" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="↩ Retour à l'accueil" />
-
-        <Button fx:id="btnAjouter" layoutX="254.0" layoutY="390.0" onAction="#ajouterGrange" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="➕ Ajouter une Grange" />
-        <Button layoutX="477.0" layoutY="390.0" onAction="#ouvrirChartProductivite" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" text="📊 Voir Productivité" />
-
-
+        <Button fx:id="btnRetour" layoutX="38.0" layoutY="538.0" onAction="#retourAccueil" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="↩ Retour à l'accueil" />
+        <Button fx:id="btnAjouter" layoutX="297.0" layoutY="538.0" onAction="#ajouterGrange" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="➕ Ajouter une Grange" />
+        <Button layoutX="566.0" layoutY="538.0" onAction="#ouvrirChartProductivite" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" text="📊 Voir Productivité" />
     </children>
 </AnchorPane>

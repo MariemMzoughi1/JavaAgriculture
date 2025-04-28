@@ -5,35 +5,33 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.io.IOException;
 
 import Entites.Grange;
 import Entites.Zone;
 import Services.GrangeService;
+import Services.ZoneService;
+
 import javafx.concurrent.Worker;
-import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import java.io.IOException;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import Services.ZoneService;
-
-
 
 public class AfficherZone {
 
@@ -59,10 +57,12 @@ public class AfficherZone {
     private ImageView imageView;
 
     @FXML
-    private VBox grangesList;  // Déclaration du VBox
+    private VBox grangesList;
 
     @FXML
     private Button btnProposerCulture;
+
+    private int currentZoneId; // ID de la zone actuellement affichée
 
     public void setSuperficie(float superficie) {
         this.superficie.setText(Float.toString(superficie));
@@ -76,17 +76,16 @@ public class AfficherZone {
         this.localisation.setText(localisation);
     }
 
-    // Méthode pour afficher l'image
     public void setImage(String image) {
         if (image != null && !image.isEmpty()) {
-            Image img = new Image("file:" + image); // Charger l'image depuis le chemin
-            imageView.setImage(img);  // Afficher l'image dans l'ImageView
+            Image img = new Image("file:" + image);
+            imageView.setImage(img);
         }
     }
 
     @FXML
     void initialize() {
-        // Initialisation, si nécessaire
+        // Initialisation si nécessaire
     }
 
     @FXML
@@ -99,63 +98,54 @@ public class AfficherZone {
         stage.show();
     }
 
-    // Méthode pour définir la zone et afficher ses informations
     public void setZone(Zone zone) {
+        this.currentZoneId = zone.getId(); // Stocker l'ID de la zone
         setNomdezone(zone.getNom_zone());
         setSuperficie(zone.getSuperficie_zone());
         setLocalisation(zone.getLocalisation_zone());
-        setImage(zone.getImage()); // Utiliser le champ image
+        setImage(zone.getImage());
         afficherGranges(zone.getId());
         afficherZoneAvecCarte(zone.getId());
     }
-    public void afficherZoneAvecCarte(int zoneId) {
-        // Récupérer la zone depuis la base de données
-        ZoneService zoneService = new ZoneService();  // Création de l'instance
-        Zone zone = zoneService.findById(zoneId);    // Appel de la méthode sur l'instance
 
+    public void afficherZoneAvecCarte(int zoneId) {
+        ZoneService zoneService = new ZoneService();
+        Zone zone = zoneService.findById(zoneId);
 
         if (zone != null) {
-            // Récupérer la localisation de la zone
             String localisation = zone.getLocalisation_zone();
-
-            // Appeler la méthode afficherCarte pour afficher la carte avec les coordonnées
             afficherCarte(localisation);
         } else {
             System.out.println("Zone non trouvée.");
         }
     }
+
     private void afficherCarte(String localisation) {
         if (localisation == null || localisation.isEmpty() || !localisation.contains(",")) {
             System.out.println("Localisation invalide.");
             return;
         }
 
-        // Séparer la latitude et la longitude
         String[] parts = localisation.split(",");
         String latitude = parts[0].trim();
         String longitude = parts[1].trim();
 
-        // Charger le fichier HTML à partir des ressources
         WebEngine webEngine = mapView.getEngine();
         URL mapFileUrl = getClass().getResource("/mapbox.html");
         webEngine.load(mapFileUrl.toExternalForm());
 
-        // Attendre que la page HTML soit chargée avant d'envoyer les coordonnées via JavaScript
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
-                // Appel JS pour envoyer les coordonnées à la carte
                 String script = String.format("if (window.javaConnector) { window.javaConnector.sendCoordinates(%s, %s); }", longitude, latitude);
                 webEngine.executeScript(script);
             }
         });
     }
 
-    // Méthode pour afficher la liste des granges associées à la zone
     private void afficherGranges(int zoneId) {
         GrangeService grangeService = new GrangeService();
-        List<Grange> granges = grangeService.find();  // Récupérer toutes les granges depuis la base de données
+        List<Grange> granges = grangeService.find();
 
-        // Filtrer les granges en fonction de la zoneId
         List<Grange> grangesPourZone = new ArrayList<>();
         for (Grange grange : granges) {
             if (grange.getZone().getId() == zoneId) {
@@ -163,15 +153,12 @@ public class AfficherZone {
             }
         }
 
-        // Vider la liste précédente pour ne pas afficher d'éléments du passé
         grangesList.getChildren().clear();
 
-        // Ajouter les granges dans la VBox
         if (!grangesPourZone.isEmpty()) {
             for (Grange grange : grangesPourZone) {
-                // Créer un Label avec les détails de la grange
                 Label grangeLabel = new Label("Grange: " + grange.getType_grange() + " - Capacité: " + grange.getCapacite() + " - Productivité: " + grange.getProductivite());
-                grangesList.getChildren().add(grangeLabel);  // Ajouter chaque grange à la VBox
+                grangesList.getChildren().add(grangeLabel);
             }
         } else {
             Label noGrangesLabel = new Label("Aucune grange associée à cette zone.");
@@ -179,12 +166,25 @@ public class AfficherZone {
         }
     }
 
+    @FXML
+    private void afficherProductivite(ActionEvent event) throws IOException {
+        int zoneId = currentZoneId;
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProductiviteChartZone.fxml"));
+        Parent root = loader.load();
 
+        ProductiviteChartZone controller = loader.getController();
+        controller.setZoneId(zoneId);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Productivité des granges");
+        stage.show();
+    }
 
     @FXML
     private void proposerCulture(ActionEvent event) {
-        String superficieText = superficie.getText(); // Récupérer le texte du TextField
+        String superficieText = superficie.getText();
 
         if (superficieText == null || superficieText.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -197,7 +197,7 @@ public class AfficherZone {
 
         double superficieZone;
         try {
-            superficieZone = Double.parseDouble(superficieText); // Convertir le texte en double
+            superficieZone = Double.parseDouble(superficieText);
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur de format");
@@ -249,6 +249,4 @@ public class AfficherZone {
         stage.setScene(scene);
         stage.show();
     }
-
-
 }

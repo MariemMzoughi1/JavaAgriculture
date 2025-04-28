@@ -5,9 +5,7 @@
     <title>Map Picker avec Leaflet</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Feuilles de style Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- Script Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
@@ -26,30 +24,35 @@
 <div id="map"></div>
 
 <script>
-    const map = L.map('map').setView([36.0, 10.0], 6); // Tunisie par défaut
+    const map = L.map('map', {
+        center: [36.0, 10.0],
+        zoom: 6,
+        zoomControl: true
+    });
 
-    // Tuiles Mapbox via Leaflet
+    // Corrigé ici
     L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWNocmFmbGgiLCJhIjoiY203b21nenFsMDVsbTJqc2VzYjlreHRtYSJ9._1FrGi5hIX7QpG1_X7b1Ug', {
         tileSize: 512,
         zoomOffset: -1,
+        detectRetina: true,
+        maxZoom: 18,
+        minZoom: 1,
+        crossOrigin: true,
         attribution: '© Mapbox © OpenStreetMap'
     }).addTo(map);
 
     let marker = null;
 
-    // Lorsque l'utilisateur clique sur la carte
     map.on('click', function(e) {
         const { lat, lng } = e.latlng;
 
-        // Supprimer l'ancien marqueur si présent
         if (marker) {
             map.removeLayer(marker);
         }
 
-        // Ajouter un nouveau marqueur
         marker = L.marker([lat, lng]).addTo(map);
 
-        // Appel vers Java via JSObject (bridge)
+        // Envoie les coordonnées
         if (window.javaConnector) {
             window.javaConnector.sendCoordinates(lng, lat);
         }

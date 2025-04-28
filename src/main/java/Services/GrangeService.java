@@ -114,5 +114,39 @@ public class GrangeService implements InterfaceCRUD<Grange> {
 
         return granges;
     }
+    public List<Grange> findByZoneId(int zoneId) {
+        List<Grange> granges = new ArrayList<>();
+        String req = "SELECT g.*, z.id AS zid, z.superficie_zone, z.nom_zone, z.localisation_zone " +
+                "FROM grange g " +
+                "JOIN zone z ON g.zone_id = z.id " +
+                "WHERE g.zone_id = ?"; // Filtrer par zone_id
+
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setInt(1, zoneId); // Passer le zoneId comme paramètre
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Grange g = new Grange();
+                g.setId(rs.getInt("id"));
+                g.setType_grange(rs.getString("type_grange"));
+                g.setCapacite(rs.getFloat("capacite"));
+                g.setProductivite(rs.getFloat("productivite"));
+
+                Zone z = new Zone();
+                z.setId(rs.getInt("zid"));
+                z.setSuperficie_zone(rs.getFloat("superficie_zone"));
+                z.setNom_zone(rs.getString("nom_zone"));
+                z.setLocalisation_zone(rs.getString("localisation_zone"));
+
+                g.setZone(z);
+
+                granges.add(g);
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Erreur récupération granges par zoneId : " + e.getMessage());
+        }
+
+        return granges;
+    }
+
 
 }
