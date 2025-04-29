@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.AjouterForum"
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.forum.AjouterForum"
             prefHeight="600.0" prefWidth="800.0" stylesheets="@ajouter_forum.css">
     <children>
         <Label layoutX="230.0" layoutY="30.0" text="Ajouter un Post Forum" style="-fx-font-size: 20px;"/>

@@ -1,8 +1,10 @@
-package Controllers;
+package Controllers.forum;
 
 import Entites.Post;
+import Entites.User;
 import Services.PostService;
-import javafx.application.Platform;
+import Services.Session;
+import Services.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -16,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import java.io.IOException;
-import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.net.URL;
@@ -29,34 +30,14 @@ public class ListeForum implements Initializable {
     private VBox cardContainer;
 
     @FXML
-    private Button createForumButton; // Le bouton que tu viens d'ajouter
+    private Button createForumButton;
 
-    // Méthode pour gérer le clic sur le bouton "Créer Forum"
-    @FXML
-    private void handleCreateForum(ActionEvent event) {
-        try {
-            // Fermer la fenêtre actuelle
-            Stage currentStage = (Stage) createForumButton.getScene().getWindow();
-            currentStage.close();
-
-            // Charger la nouvelle scène
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterForum.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Créer un Forum");
-
-            // Charger et afficher la scène
-            stage.setScene(new Scene(loader.load()));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors de l'ouverture de l'interface AjouterForum : " + e.getMessage());
-        }
-    }
+    UserService userService = new UserService();
+    PostService service = new PostService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        PostService service = new PostService();
+
         List<Post> posts = service.find();
 
         // Trier par date décroissante (du plus récent au plus ancien)
@@ -69,10 +50,7 @@ public class ListeForum implements Initializable {
             VBox card = createCard(p);
             cardContainer.getChildren().add(card);
         }
-
-
     }
-
 
     private VBox createCard(Post post) {
         VBox card = new VBox(10);
@@ -88,7 +66,8 @@ public class ListeForum implements Initializable {
         contenu.setWrapText(true);
         contenu.getStyleClass().add("contenu-label");
 
-        Label meta = new Label("Auteur ID : " + (post.getAuteurId() != null ? post.getAuteurId() : "N/A") +
+        String username = post.getAuteurId() != null ? userService.getUsernameById(post.getAuteurId()) : "N/A";
+        Label meta = new Label("Auteur : " + username +
                 " | Date : " + (post.getDate() != null ? post.getDate().toString() : "N/A"));
         meta.getStyleClass().add("meta-label");
 
@@ -110,11 +89,47 @@ public class ListeForum implements Initializable {
             }
         }
 
+        // Vérifier si l'utilisateur connecté est l'auteur du post
+        User currentUser = Session.getCurrentUser();  // Assurer que la méthode getCurrentUser() existe dans Session
+        boolean isAuthor = post.getAuteurId() != null && post.getAuteurId().equals(currentUser.getId());
+
         // Boutons Voir plus et Supprimer
+        // Boutons Voir plus, Supprimer, Like, Dislike
         HBox buttonBox = new HBox(10);
         Button voirPlusBtn = new Button("Voir plus");
         Button supprimerBtn = new Button("Supprimer");
-        buttonBox.getChildren().addAll(voirPlusBtn, supprimerBtn);
+        Button likeBtn = new Button("👍");
+        Button dislikeBtn = new Button("👎");
+
+        buttonBox.getChildren().addAll(voirPlusBtn, likeBtn, dislikeBtn);
+
+// Afficher le bouton Supprimer uniquement si l'utilisateur est l'auteur
+        if (isAuthor) {
+            buttonBox.getChildren().add(supprimerBtn);
+        }
+
+// Action bouton Like
+        likeBtn.setOnAction(e -> {
+
+            if (currentUser != null) {
+                service.likePost(post.getId(), currentUser.getId());
+                refreshPosts(); // Recharger les posts après vote
+            }
+        });
+
+// Action bouton Dislike
+        dislikeBtn.setOnAction(e -> {
+
+            if (currentUser != null) {
+                service.dislikePost(post.getId(), currentUser.getId());
+                refreshPosts(); // Recharger les posts après vote
+            }
+        });
+
+
+
+
+
 
         // Style facultatif pour les boutons
         voirPlusBtn.getStyleClass().add("button-voirplus");
@@ -123,19 +138,15 @@ public class ListeForum implements Initializable {
         // Action bouton Voir plus
         voirPlusBtn.setOnAction(e -> {
             try {
-                // Fermer la fenêtre actuelle
                 Stage currentStage = (Stage) voirPlusBtn.getScene().getWindow();
                 currentStage.close();
 
-                // Charger la scène de détail
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailsForum.fxml"));
                 VBox root = loader.load();
 
-                // Récupérer le contrôleur et lui passer le post
                 DetailsForum controller = loader.getController();
                 controller.setPost(post);
 
-                // Afficher la nouvelle scène
                 Stage detailStage = new Stage();
                 detailStage.setTitle("Détails du forum");
                 detailStage.setScene(new Scene(root));
@@ -147,29 +158,26 @@ public class ListeForum implements Initializable {
             }
         });
 
+        // Action bouton Supprimer (si l'utilisateur est l'auteur)
+        if (isAuthor) {
+            supprimerBtn.setOnAction(e -> {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation de suppression");
+                alert.setHeaderText("Voulez-vous vraiment supprimer ce post ?");
+                alert.setContentText("Cette action est irréversible.");
 
-
-        // Action bouton Supprimer
-        supprimerBtn.setOnAction(e -> {
-
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation de suppression");
-            alert.setHeaderText("Voulez-vous vraiment supprimer ce post ?");
-            alert.setContentText("Cette action est irréversible.");
-
-            // Affiche l’alerte et attend la réponse de l’utilisateur
-            alert.showAndWait().ifPresent(response -> {
-                if (response == javafx.scene.control.ButtonType.OK) {
-                    PostService service = new PostService();
-                    service.delete(post); // Supprimer de la BDD
-                    cardContainer.getChildren().remove(card); // Supprimer de l'interface
-                    System.out.println("Post supprimé !");
-                } else {
-                    System.out.println("Suppression annulée.");
-                }
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == javafx.scene.control.ButtonType.OK) {
+                        PostService service = new PostService();
+                        service.delete(post); // Supprimer de la BDD
+                        cardContainer.getChildren().remove(card); // Supprimer de l'interface
+                        System.out.println("Post supprimé !");
+                    } else {
+                        System.out.println("Suppression annulée.");
+                    }
+                });
             });
-        });
-
+        }
 
         if (imageView.getImage() != null) {
             card.getChildren().add(imageView);
@@ -180,14 +188,32 @@ public class ListeForum implements Initializable {
         return card;
     }
 
+    // Méthode pour gérer le clic sur le bouton "Créer Forum"
     @FXML
-    private void handleRetour(ActionEvent event) {
+    private void handleCreateForum(ActionEvent event) {
         try {
-            // Fermer la fenêtre actuelle
             Stage currentStage = (Stage) createForumButton.getScene().getWindow();
             currentStage.close();
 
-            // Charger la scène de machine-home.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterForum.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Créer un Forum");
+
+            stage.setScene(new Scene(loader.load()));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de l'ouverture de l'interface AjouterForum : " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleRetour(ActionEvent event) {
+        try {
+            Stage currentStage = (Stage) createForumButton.getScene().getWindow();
+            currentStage.close();
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/machine-home.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Accueil");
@@ -198,6 +224,20 @@ public class ListeForum implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Erreur lors du retour à l'accueil : " + e.getMessage());
+        }
+    }
+    private void refreshPosts() {
+        cardContainer.getChildren().clear();
+        List<Post> posts = service.find();
+
+        posts.sort((p1, p2) -> {
+            if (p1.getDate() == null || p2.getDate() == null) return 0;
+            return p2.getDate().compareTo(p1.getDate());
+        });
+
+        for (Post p : posts) {
+            VBox card = createCard(p);
+            cardContainer.getChildren().add(card);
         }
     }
 

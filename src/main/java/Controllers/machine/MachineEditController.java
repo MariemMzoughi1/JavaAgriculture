@@ -1,4 +1,4 @@
-package Controllers;
+package Controllers.machine;
 
 import Entites.Machine;
 import javafx.collections.FXCollections;
@@ -13,14 +13,12 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import Services.ServiceMachine;
-import Services.Session;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 public class MachineEditController {
 

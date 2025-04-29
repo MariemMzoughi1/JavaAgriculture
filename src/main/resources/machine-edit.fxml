@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<ScrollPane fitToWidth="true" prefHeight="680" prefWidth="560" style="-fx-background: linear-gradient(to bottom, #f7fff0, #e1f3cc);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MachineEditController">
+<ScrollPane fitToWidth="true" prefHeight="680" prefWidth="560" style="-fx-background: linear-gradient(to bottom, #f7fff0, #e1f3cc);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.machine.MachineEditController">
 
     <VBox alignment="CENTER" prefWidth="520" spacing="18" style="-fx-padding: 30;                  -fx-background-color: #ffffff;                  -fx-background-radius: 12;                  -fx-effect: dropshadow(gaussian, rgba(160,200,120,0.25), 10, 0.2, 0, 3);                  -fx-font-family: 'Segoe UI';                  -fx-font-size: 13px;">
 

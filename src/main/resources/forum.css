@@ -1,70 +1,100 @@
-/* Styles des cartes */
+/* Card Styling */
 .card {
-    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f9f9f9);
-    -fx-border-color: #e0e0e0;
-    -fx-border-width: 1px;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 4);
-    -fx-padding: 16px;
-    -fx-spacing: 12px;
-    -fx-max-width: 600px;
-    -fx-cursor: default;
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-max-width: 600;
+    -fx-transition: all 0.3s ease;
 }
 
-/* Titre */
+.card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 3);
+    -fx-scale-y: 1.02;
+    -fx-scale-x: 1.02;
+}
+
+/* Label Styling */
 .titre-label {
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #222;
+    -fx-text-fill: #333333;
 }
 
-/* Contenu */
 .contenu-label {
-    -fx-wrap-text: true;
     -fx-font-size: 14px;
-    -fx-text-fill: #333;
+    -fx-text-fill: #666666;
+    -fx-wrap-text: true;
 }
 
-/* Meta informations */
 .meta-label {
-    -fx-text-fill: #888;
     -fx-font-size: 12px;
-    -fx-font-style: italic;
+    -fx-text-fill: #999999;
 }
 
-/* Statistiques (likes, dislikes) */
 .stats-label {
-    -fx-text-fill: #555;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #444444;
 }
 
-/* Boutons généraux */
-.button {
-    -fx-background-radius: 8px;
+/* Button Styling */
+.button-voirplus, .button-like, .button-dislike, .button-supprimer {
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
     -fx-cursor: hand;
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-padding: 6px 12px;
 }
 
-/* Bouton "Voir plus" */
 .button-voirplus {
-    -fx-background-color: #4285F4;
+    -fx-background-color: #0078d4;
     -fx-text-fill: white;
 }
 
-/* Bouton "Supprimer" */
-.button-supprimer {
-    -fx-background-color: #DB4437;
-    -fx-text-fill: white;
-}
-
-/* Bouton hover (effet au survol) */
 .button-voirplus:hover {
-    -fx-background-color: #357ae8;
+    -fx-background-color: #005ea2;
+}
+
+.button-like {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+}
+
+.button-like:hover {
+    -fx-background-color: #218838;
+}
+
+.button-dislike {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+}
+
+.button-dislike:hover {
+    -fx-background-color: #c82333;
+}
+
+.button-supprimer {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
 }
 
 .button-supprimer:hover {
-    -fx-background-color: #c23321;
+    -fx-background-color: #5a6268;
+}
+
+/* Container Styling */
+#cardContainer {
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-alignment: top-center;
+}
+
+/* Header Styling */
+.header-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
 }

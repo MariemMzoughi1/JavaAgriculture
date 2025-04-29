@@ -1,7 +1,10 @@
-package Controllers;
+package Controllers.forum;
 
 import Entites.Post;
+import Entites.User;
+import Services.GeminiAPIService;
 import Services.PostService;
+import Services.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Date;
 
 public class AjouterForum {
 
@@ -51,17 +55,47 @@ public class AjouterForum {
 
     @FXML
     void ajouterPost(ActionEvent event) {
-        String titre = titreField.getText().trim();
-        String contenu = contenuField.getText().trim();
-        String imagePath = imageField.getText().trim();
-
         if (!isValidInput()) {
             return;
         }
 
+        String titre = titreField.getText().trim();
+        String contenu = contenuField.getText().trim();
+        String imagePath = imageField.getText().trim();
 
         try {
+
+            if (GeminiAPIService.contientBadWords(titre)) {
+                showAlert(Alert.AlertType.ERROR, "Le titre contient des propos inappropriés. Veuillez corriger votre titre.");
+                return;
+            }
+            if (!GeminiAPIService.estLieAAgriculture(titre)) {
+                showAlert(Alert.AlertType.ERROR, "Le titre n'est pas lié à l'agriculture. Veuillez respecter le thème du forum.");
+                return;
+            }
+            if (GeminiAPIService.contientBadWords(contenu)) {
+                showAlert(Alert.AlertType.ERROR, "Le contenu contient des propos inappropriés. Veuillez corriger votre texte.");
+                return;
+            }
+
+            if (!GeminiAPIService.estLieAAgriculture(contenu)) {
+                showAlert(Alert.AlertType.ERROR, "Le contenu n'est pas lié à l'agriculture. Veuillez respecter le thème du forum.");
+                return;
+            }
+
+            // Récupération de l'utilisateur connecté
+            User currentUser = Session.getCurrentUser();
+            if (currentUser == null) {
+                showAlert(Alert.AlertType.ERROR, "Aucun utilisateur connecté !");
+                return;
+            }
+
             Post post = new Post(titre, contenu);
+            post.setDate(new Date());
+            post.setLikes(0);
+            post.setDislikes(0);
+            post.setAuteurId(currentUser.getId()); // Association de l'auteur
+
             if (!imagePath.isEmpty()) {
                 post.setImage(imagePath);
             }
@@ -69,21 +103,23 @@ public class AjouterForum {
             postService.add(post);
             showAlert(Alert.AlertType.INFORMATION, "Post ajouté avec succès !");
 
-            // Fermer la fenêtre actuelle
-            ((javafx.stage.Stage)(((javafx.scene.Node) event.getSource()).getScene().getWindow())).close();
+            // Fermer la fenêtre actuelle et ouvrir la liste
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.close();
 
-            // Ouvrir la nouvelle interface ListeForum.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeForum.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Liste des Forums");
-            stage.setScene(new Scene(loader.load()));
-            stage.show();
+            Stage newStage = new Stage();
+            newStage.setTitle("Liste des Forums");
+            newStage.setScene(new Scene(loader.load()));
+            newStage.show();
 
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur lors de l'ajout du post : " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     void retour(ActionEvent event) {
@@ -92,7 +128,7 @@ public class AjouterForum {
             ((Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow()).close();
 
             // Charger la vue de la liste des forums
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeForum.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MenuPrincipal.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Liste des Forums");
             stage.setScene(new Scene(loader.load()));

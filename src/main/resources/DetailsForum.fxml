@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.DetailsForum" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f0f0f0;">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.forum.DetailsForum" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f0f0f0;">
     <ScrollPane fitToWidth="true" style="-fx-background-color: #f0f0f0;">
         <content>
             <VBox spacing="15" alignment="TOP_CENTER" style="-fx-padding: 30; -fx-background-color: #f0f0f0;">
@@ -20,10 +20,15 @@
                           prefHeight="100" />
                 <!-- Likes et Dislikes -->
                 <Label fx:id="likesDislikesLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555555; -fx-padding: 5;"/>
+                <Button text="Traduire Contenu" onAction="#traduireContenuPost" />
+
+
+
                 <!-- Boutons -->
                 <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20 0;">
                     <Button text="Retour" onAction="#handleRetour" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-padding: 10 20; -fx-font-size: 14px; -fx-border-radius: 25; -fx-cursor: hand;"/>
-                    <Button text="Modifier" onAction="#handleModifier" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-padding: 10 20; -fx-font-size: 14px; -fx-border-radius: 25; -fx-cursor: hand;"/>
+                    <Button fx:id="modifierBtn" text="Modifier" onAction="#handleModifier" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-padding: 10 20; -fx-font-size: 14px; -fx-border-radius: 25; -fx-cursor: hand;"/>
+
                 </HBox>
                 <Label text="Commentaires :" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 10;"/>
                 <!-- Formulaire de commentaire -->

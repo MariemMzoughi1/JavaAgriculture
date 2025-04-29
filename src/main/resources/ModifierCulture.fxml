@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.ModifierCultureController"
+            fx:controller="Controllers.culture.ModifierCultureController"
             prefWidth="600" prefHeight="600"
             style="-fx-background-color: #f8f9fa;"
             stylesheets="@style-modifier.css">

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" fillWidth="true" prefHeight="700" prefWidth="600" spacing="25" styleClass="main-container" stylesheets="@style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AfficherInfoProduit">
+<VBox alignment="TOP_CENTER" fillWidth="true" prefHeight="700" prefWidth="600" spacing="25" styleClass="main-container" stylesheets="@style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.produit.AfficherInfoProduit">
 
     <!-- Titre principal -->
     <Label alignment="CENTER" maxWidth="Infinity" styleClass="title-label" text="🛍️ Détails du Produit" />

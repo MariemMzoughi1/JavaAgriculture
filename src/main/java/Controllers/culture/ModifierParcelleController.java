@@ -1,4 +1,4 @@
-package Controllers;
+package Controllers.culture;
 
 import Entites.Parcelle;
 import Services.ParcelleService;

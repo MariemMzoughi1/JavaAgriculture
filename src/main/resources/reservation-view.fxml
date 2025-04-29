@@ -7,7 +7,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.ReservationViewController"
+            fx:controller="Controllers.produit.ReservationViewController"
             prefHeight="580.0" prefWidth="880.0"
             style="-fx-background-color: linear-gradient(to bottom, #eef9e6, #d2f0c0);">
 

@@ -5,7 +5,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.AfficherCultureController"
+            fx:controller="Controllers.culture.AfficherCultureController"
             fitToWidth="true"
             prefWidth="1000" prefHeight="600"
             style="-fx-background-color: transparent;"

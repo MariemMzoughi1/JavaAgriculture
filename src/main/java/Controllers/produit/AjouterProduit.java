@@ -1,4 +1,4 @@
-package Controllers;
+package Controllers.produit;
 
 import Entites.Produit;
 import Services.ProduitService;

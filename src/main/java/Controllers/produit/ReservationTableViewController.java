@@ -1,4 +1,4 @@
-package Controllers;
+package Controllers.produit;
 
 import Entites.Reservation;
 import javafx.collections.FXCollections;

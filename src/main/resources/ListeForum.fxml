@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 
 <ScrollPane fx:id="scrollPane" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.ListeForum" fitToWidth="true" prefHeight="600.0" prefWidth="800.0" stylesheets="@/forum.css">
+            fx:controller="Controllers.forum.ListeForum" fitToWidth="true" prefHeight="600.0" prefWidth="800.0" stylesheets="@/forum.css">
     <content>
         <!-- Conteneur de la liste avec un bouton en haut -->
         <VBox fx:id="cardContainer" spacing="20">

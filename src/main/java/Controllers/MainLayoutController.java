@@ -6,10 +6,11 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -17,7 +18,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class MenuPrincipalController {
+public class MainLayoutController {
+
     @FXML
     private Label dateLabel;
     @FXML
@@ -27,8 +29,7 @@ public class MenuPrincipalController {
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @FXML
-    private StackPane mainContent;
-    @FXML
+    private StackPane contentArea;
     public void initialize() {
         updateDateTime(); // première mise à jour immédiate
 
@@ -40,42 +41,43 @@ public class MenuPrincipalController {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
     }
-    private void updateDateTime() {
-        LocalDateTime now = LocalDateTime.now();
-        dateLabel.setText("📅 " + now.format(dateFormatter));
-        timeLabel.setText("🕒 " + now.format(timeFormatter));
-    }
-    public void ouvrirCulture() {
-        chargerVue("/AfficherCulture.fxml");
+
+    private void loadContent(String fxmlPath) {
+        try {
+            Parent page = FXMLLoader.load(getClass().getResource(fxmlPath));
+            contentArea.getChildren().setAll(page);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void ouvrirParcelle() {
-        chargerVue("/AfficherParcelle.fxml");
+    public void handleAccueil(ActionEvent event) {
+        loadContent("/Sidebar.fxml"); // ou une autre page d’accueil
     }
-    @FXML
-    private void handleAddMachine(ActionEvent event) throws IOException {
-        chargerVue("/machine-add.fxml");
-    }
-
-
 
     public void handleMachines(ActionEvent event) {
-        chargerVue("/machine-index.fxml");
+        loadContent("/machine-index.fxml");
     }
 
     public void handleReservation(ActionEvent event) {
-        chargerVue("/reservation-view.fxml");
+        loadContent("/reservation-view.fxml");
     }
 
     public void handleForum(ActionEvent event) {
-        chargerVue("/ListeForum.fxml");
+        loadContent("/ListeForum.fxml");
     }
 
     public void handleProduit(ActionEvent event) {
-        chargerVue("/AfficherProduit.fxml");
+        loadContent("/AfficherProduit.fxml");
     }
 
+    public void handleCulture(ActionEvent event) {
+        loadContent("/AfficherCulture.fxml");
+    }
 
+    public void handleParcelle(ActionEvent event) {
+        loadContent("/AfficherParcelle.fxml");
+    }
 
     public void handleLogout(ActionEvent event) {
         try {
@@ -88,15 +90,9 @@ public class MenuPrincipalController {
         }
     }
 
-
-
-    private void chargerVue(String vue) {
-        try {
-            Node content = FXMLLoader.load(getClass().getResource(vue)); // PAS de slash ici
-            mainContent.getChildren().setAll(content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void updateDateTime() {
+        LocalDateTime now = LocalDateTime.now();
+        dateLabel.setText("📅 " + now.format(dateFormatter));
+        timeLabel.setText("🕒 " + now.format(timeFormatter));
     }
-
 }

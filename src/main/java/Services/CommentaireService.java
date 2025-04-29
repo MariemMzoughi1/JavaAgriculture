@@ -18,8 +18,14 @@ public class CommentaireService implements InterfaceCRUD<Commentaire> {
 
     @Override
     public void add(Commentaire c) {
-        String req = "INSERT INTO commentaire (post_id, contenu, auteur_id, date) VALUES (?, ?, ?, ?)";
         try {
+            // Check for bad words using Gemini API
+            if (GeminiAPIService.contientBadWords(c.getContenu())) {
+                System.out.println("❌ Commentaire inapproprié détecté !");
+                throw new IllegalArgumentException("Le contenu contient des mots ou expressions inappropriés.");
+            }
+
+            String req = "INSERT INTO commentaire (post_id, contenu, auteur_id, date) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(req);
             ps.setInt(1, c.getPostId());
             ps.setString(2, c.getContenu());
@@ -31,6 +37,9 @@ public class CommentaireService implements InterfaceCRUD<Commentaire> {
             ps.setTimestamp(4, new Timestamp(c.getDate().getTime()));
             ps.executeUpdate();
             System.out.println("✅ Commentaire ajouté !");
+        } catch (IllegalArgumentException e) {
+            System.out.println("❌ Erreur : " + e.getMessage());
+            throw e; // Rethrow to be handled by the controller
         } catch (SQLException e) {
             System.out.println("❌ Erreur lors de l'ajout : " + e.getMessage());
         }
@@ -38,8 +47,14 @@ public class CommentaireService implements InterfaceCRUD<Commentaire> {
 
     @Override
     public void update(Commentaire c) {
-        String req = "UPDATE commentaire SET contenu = ?, auteur_id = ?, date = ? WHERE id = ?";
         try {
+            // Check for bad words using Gemini API
+            if (GeminiAPIService.contientBadWords(c.getContenu())) {
+                System.out.println("❌ Commentaire inapproprié détecté !");
+                throw new IllegalArgumentException("Le contenu contient des mots ou expressions inappropriés.");
+            }
+
+            String req = "UPDATE commentaire SET contenu = ?, auteur_id = ?, date = ? WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(req);
             ps.setString(1, c.getContenu());
             if (c.getAuteurId() != null) {
@@ -55,6 +70,9 @@ public class CommentaireService implements InterfaceCRUD<Commentaire> {
             } else {
                 System.out.println("⚠️ Aucun commentaire trouvé avec cet ID.");
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println("❌ Erreur : " + e.getMessage());
+            throw e; // Rethrow to be handled by the controller
         } catch (SQLException e) {
             System.out.println("❌ Erreur lors de la mise à jour : " + e.getMessage());
         }
@@ -99,9 +117,15 @@ public class CommentaireService implements InterfaceCRUD<Commentaire> {
         }
         return commentaires;
     }
+
     public void ajouterCommentaire(Commentaire c) {
-        String sql = "INSERT INTO commentaire (post_id, contenu, auteur_id, date) VALUES (?, ?, ?, ?)";
         try {
+            // Check for bad words using Gemini API
+            if (GeminiAPIService.contientBadWords(c.getContenu())) {
+                throw new IllegalArgumentException("Le contenu contient des mots ou expressions inappropriés.");
+            }
+
+            String sql = "INSERT INTO commentaire (post_id, contenu, auteur_id, date) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, c.getPostId());
             ps.setString(2, c.getContenu());
@@ -111,6 +135,8 @@ public class CommentaireService implements InterfaceCRUD<Commentaire> {
                 ps.setNull(3, Types.INTEGER);
             ps.setDate(4, new java.sql.Date(c.getDate().getTime()));
             ps.executeUpdate();
+        } catch (IllegalArgumentException e) {
+            throw e; // Rethrow to be handled by the controller
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -151,15 +177,21 @@ public class CommentaireService implements InterfaceCRUD<Commentaire> {
     }
 
     public void modifierCommentaire(Commentaire c) {
-        String sql = "UPDATE commentaire SET contenu = ? WHERE id = ?";
         try {
+            // Check for bad words using Gemini API
+            if (GeminiAPIService.contientBadWords(c.getContenu())) {
+                throw new IllegalArgumentException("Le contenu contient des mots ou expressions inappropriés.");
+            }
+
+            String sql = "UPDATE commentaire SET contenu = ? WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, c.getContenu());
             ps.setInt(2, c.getId());
             ps.executeUpdate();
+        } catch (IllegalArgumentException e) {
+            throw e; // Rethrow to be handled by the controller
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 }

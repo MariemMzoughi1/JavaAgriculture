@@ -122,4 +122,24 @@ public class UserService {
         }
         return null;
     }
+
+    public String getUsernameById(int id) {
+        String username = null;
+        try {
+            String req = "SELECT username FROM user WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(req);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du username : " + e.getMessage());
+        }
+
+        return username;
+    }
+
 }

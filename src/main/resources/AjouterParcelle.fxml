@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.AjouterParcelleController"
+            fx:controller="Controllers.culture.AjouterParcelleController"
             prefWidth="800" prefHeight="600"
             style="-fx-background-color: #f4f4f4;">
 

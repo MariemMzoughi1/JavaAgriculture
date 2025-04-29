@@ -1,6 +1,7 @@
-package Controllers;
+package Controllers.user;
 
 import Entites.User;
+import Services.Session;
 import Services.UserService;
 import Utils.PasswordUtils;
 import javafx.fxml.FXML;
@@ -43,6 +44,7 @@ public class LoginViewController {
             if (user.getPassword().equals(hashedInput)) {
                 // Authentification réussie
                 statusLabel.setText("✅ Connexion réussie !");
+                Session.setCurrentUser(user);
                 redirectUser(user);
                 return;
             }
@@ -59,7 +61,7 @@ public class LoginViewController {
             if (role.equals("ADMIN") || role.equals("ROLE_ADMIN")) {
                 fxmlPath = "/admin-dashboard-view.fxml";
             } else {
-                fxmlPath = "/machine-home.fxml";
+                fxmlPath = "/MenuPrincipal.fxml";
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

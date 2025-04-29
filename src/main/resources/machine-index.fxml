@@ -8,7 +8,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.MachineIndexController"
+            fx:controller="Controllers.machine.MachineIndexController"
             fitToWidth="true"
             prefWidth="800" prefHeight="600"
             style="-fx-background: linear-gradient(to bottom, #f7fff0, #d2f7c4);">

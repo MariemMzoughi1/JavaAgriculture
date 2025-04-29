@@ -43,3 +43,15 @@
 .btn-ajouter:hover {
     -fx-background-color: #00c7f8;
 }
+.nav-button {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+.nav-button:hover {
+    -fx-background-color: #1e8449;
+}
+

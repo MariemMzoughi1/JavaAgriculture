@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controllers.CommandeController"
+            fx:controller="Controllers.produit.CommandeController"
             style="-fx-background-color: #f4f4f9;">
 
     <!-- En-tête avec bouton retour et titre -->

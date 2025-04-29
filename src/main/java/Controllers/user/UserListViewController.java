@@ -1,4 +1,4 @@
-package Controllers;
+package Controllers.user;
 
 import Entites.User;
 import javafx.collections.FXCollections;

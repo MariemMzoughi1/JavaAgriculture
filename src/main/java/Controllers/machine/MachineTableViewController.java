@@ -1,4 +1,4 @@
-package Controllers;
+package Controllers.machine;
 
 import Entites.Machine;
 import javafx.collections.FXCollections;

@@ -4,7 +4,7 @@
 <?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.ModifierParcelleController"
+            fx:controller="Controllers.culture.ModifierParcelleController"
             prefWidth="500" prefHeight="600"
             stylesheets="@ModifierParcelle.css">
 

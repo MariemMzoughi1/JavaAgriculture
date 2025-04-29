@@ -13,6 +13,14 @@
                     style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
             <Button text="Parcelle" onAction="#ouvrirParcelle"
                     style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+            <Button text="➕ Ajouter une machine" onAction="#handleAddMachine"
+                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+            <Button text="📋 Machines" onAction="#handleMachines"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+            <Button text="📅 Réservations" onAction="#handleReservation"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+            <Button text="💬 Forum" onAction="#handleForum"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+            <Button text="🧺 Produits" onAction="#handleProduit"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+            <Button text="🔓 Logout" onAction="#handleLogout"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+
         </VBox>
     </left>
 

@@ -4,7 +4,7 @@
 
 <?import javafx.scene.layout.HBox?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.AjouterCultureController"
+            fx:controller="Controllers.culture.AjouterCultureController"
             prefHeight="500" prefWidth="500"
             style="-fx-background-color: #f8f9fa;">
     <children>

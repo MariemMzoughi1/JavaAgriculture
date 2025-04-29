@@ -1,4 +1,4 @@
-package Controllers;
+package Controllers.forum;
 
 import Entites.Post;
 import Services.PostService;

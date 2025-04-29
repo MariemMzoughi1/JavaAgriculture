@@ -29,6 +29,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>21.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version> <!-- dernière version en 2024 -->
+        </dependency>
     </dependencies>
     <build>
         <plugins>
