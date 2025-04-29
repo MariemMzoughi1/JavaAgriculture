@@ -12,16 +12,18 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class ListeGrangesUser {
 
-    @FXML private FlowPane grangeContainer;
-    @FXML private TextField searchField;
+    @FXML
+    private FlowPane grangeContainer;
+    @FXML
+    private TextField searchField;
 
     private ObservableList<Grange> grangesList;
     private final GrangeService grangeService = new GrangeService();
@@ -43,15 +45,17 @@ public class ListeGrangesUser {
         for (Grange grange : granges) {
             VBox card = new VBox(5);
             card.setPadding(new Insets(10));
-            card.setPrefWidth(200);
+            card.setPrefWidth(250);
             card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 6, 0, 0, 4);");
 
             Label typeLabel = new Label("Type: " + grange.getType_grange());
             Label capaciteLabel = new Label("Capacité: " + grange.getCapacite());
-            Label productiviteLabel = new Label("Productivité: " + grange.getProductivite() + " - " + getProductiviteNiveau(grange.getProductivite()));
-            Label zoneLabel = new Label("Zone ID: " + (grange.getZone() != null ? grange.getZone().getId() : "Non assignée"));
 
+            String unite = getUniteParType(grange.getType_grange());
+            Label productiviteLabel = new Label("Productivité: " + grange.getProductivite() + " " + unite + " - " + getProductiviteNiveau(grange.getProductivite()));
             productiviteLabel.setStyle("-fx-text-fill: " + getProductiviteCouleur(grange.getProductivite()) + ";");
+
+            Label zoneLabel = new Label("Zone ID: " + (grange.getZone() != null ? grange.getZone().getId() : "Non assignée"));
 
             card.getChildren().addAll(typeLabel, capaciteLabel, productiviteLabel, zoneLabel);
             grangeContainer.getChildren().add(card);
@@ -68,6 +72,24 @@ public class ListeGrangesUser {
         if (val < 20) return "red";
         else if (val <= 50) return "orange";
         else return "green";
+    }
+
+    private String getUniteParType(String type) {
+        if (type == null) return "";
+        type = type.toLowerCase();
+        switch (type) {
+            case "poule":
+            case "poules":
+                return "œufs/jour";
+            case "mouton":
+            case "moutons":
+                return "kg/mois";
+            case "vache":
+            case "vaches":
+                return "litres/jour";
+            default:
+                return "unités/mois";
+        }
     }
 
     private void filterGranges(String searchText) {
