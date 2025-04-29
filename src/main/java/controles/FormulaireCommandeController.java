@@ -128,24 +128,54 @@ public class FormulaireCommandeController {
     }
 
     private void openPaymentPage(String url) {
-        // Ouvrir l'URL Stripe Checkout dans WebView
         WebView webView = new WebView();
         WebEngine webEngine = webView.getEngine();
         webEngine.load(url);
 
-        Stage stage = new Stage();
-        stage.setTitle("Paiement sécurisé");
-        stage.setScene(new Scene(webView, 800, 600));
-        stage.show();
+        Stage paymentStage = new Stage();
+        paymentStage.setTitle("Paiement sécurisé");
+        paymentStage.setScene(new Scene(webView, 800, 600));
+        paymentStage.show();
 
-        // Envoyer l'email de confirmation
-        EmailService.sendConfirmationEmail(emailField.getText());
+        webEngine.locationProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Navigated to: " + newValue);
 
-        // Afficher un message de confirmation
-        showAlert(Alert.AlertType.INFORMATION, "Commande réussie", "Votre commande a été enregistrée ! Un e-mail de confirmation vous a été envoyé.");
+            if (newValue.contains("success")) {
+                // Paiement réussi
 
+                // Fermer la fenêtre de paiement
+                paymentStage.close();
 
+                // Envoyer l'email de confirmation
+                EmailService.sendConfirmationEmail(emailField.getText());
+
+                // Afficher une alerte de succès
+                showAlert(Alert.AlertType.INFORMATION, "Paiement réussi", "Votre paiement a été effectué avec succès. Un e-mail de confirmation vous a été envoyé.");
+
+                // 🔥 Changer la scène vers la page ListeProduits.fxml
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/commande.fxml"));
+                    Parent root = loader.load();
+
+                    Stage stage = (Stage) formulaireView.getScene().getWindow(); // récupérer la fenêtre actuelle
+                    stage.setScene(new Scene(root));
+                    stage.setTitle("Liste des Produits");
+                    stage.show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la page des produits.");
+                }
+            }
+            else if (newValue.contains("cancel")) {
+                // Paiement annulé
+                paymentStage.close();
+                showAlert(Alert.AlertType.ERROR, "Paiement annulé", "Le paiement a été annulé.");
+            }
+        });
     }
+
+
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);

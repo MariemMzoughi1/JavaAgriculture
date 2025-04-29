@@ -8,9 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -19,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,42 +28,45 @@ public class CommandeController {
     @FXML
     private Label panierMessage;
 
+    @FXML
+    private Button btnPanier;
+
+    @FXML
+    private ComboBox<String> categorieFilter;
+
+    @FXML
+    private ComboBox<String> prixSort;
+
     private final CommandeService commandeService = new CommandeService();
     private final List<Produit> produitsDisponibles = new ArrayList<>();
     private final List<Produit> panier = new ArrayList<>();
 
     @FXML
-    private Button btnPanier; // Ajout du bouton Panier
-
-    @FXML
     public void initialize() {
         produitsDisponibles.addAll(commandeService.getProduits());
-        afficherProduits();
-        mettreAJourPanierMessage(); // Met à jour l'état initial du panier
+        chargerCategories();
+        afficherProduits(produitsDisponibles);
+        mettreAJourPanierMessage();
     }
-    @FXML
-    private void retourAfficherProduit(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/afficherproduit.fxml"));
-            AnchorPane view = loader.load();
 
-            Scene scene = new Scene(view);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Produits");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void chargerCategories() {
+        List<String> categories = produitsDisponibles.stream()
+                .map(Produit::getCategorie)
+                .distinct()
+                .toList();
+        categorieFilter.getItems().addAll(categories);
+    }
+
+    private void afficherProduits(List<Produit> produits) {
+        produitsContainer.getChildren().clear();
+        for (Produit produit : produits) {
+            VBox card = creerCarteProduit(produit);
+            produitsContainer.getChildren().add(card);
         }
     }
 
     private void afficherProduits() {
-        produitsContainer.getChildren().clear();
-
-        for (Produit produit : produitsDisponibles) {
-            VBox card = creerCarteProduit(produit);
-            produitsContainer.getChildren().add(card);
-        }
+        afficherProduits(produitsDisponibles);
     }
 
     private VBox creerCarteProduit(Produit produit) {
@@ -82,27 +82,23 @@ public class CommandeController {
             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
         """);
 
-        // Image du produit
         ImageView imageView = new ImageView();
         try {
             Image image = new Image("file:" + produit.getImage(), 200, 150, true, true);
             imageView.setImage(image);
         } catch (Exception e) {
-            System.out.println("Erreur de chargement d'image : " + produit.getImage());
+            System.out.println("Erreur chargement image : " + produit.getImage());
         }
         imageView.setFitWidth(200);
         imageView.setFitHeight(150);
         imageView.setPreserveRatio(true);
 
-        // Nom du produit
         Label nomLabel = new Label(produit.getNom());
         nomLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
 
-        // Prix
         Label prixLabel = new Label(produit.getPrix_unitaire() + " DT");
         prixLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #5b5b5b;");
 
-        // Bouton "Ajouter au panier"
         Button btnAjouter = new Button("Ajouter au panier");
         btnAjouter.setStyle("""
             -fx-background-color: #4CAF50;
@@ -124,7 +120,6 @@ public class CommandeController {
         mettreAJourPanierMessage();
     }
 
-
     private void mettreAJourPanierMessage() {
         if (panier.isEmpty()) {
             panierMessage.setText("Panier vide !");
@@ -133,6 +128,27 @@ public class CommandeController {
         }
         panierMessage.setVisible(true);
     }
+
+    @FXML
+    private void appliquerFiltres(ActionEvent event) {
+        String selectedCategorie = categorieFilter.getValue();
+        String selectedTri = prixSort.getValue();
+
+        List<Produit> filtres = new ArrayList<>(produitsDisponibles);
+
+        if (selectedCategorie != null && !selectedCategorie.isEmpty()) {
+            filtres.removeIf(p -> !p.getCategorie().equalsIgnoreCase(selectedCategorie));
+        }
+
+        if ("Prix croissant".equals(selectedTri)) {
+            filtres.sort((p1, p2) -> Double.compare(p1.getPrix_unitaire(), p2.getPrix_unitaire()));
+        } else if ("Prix décroissant".equals(selectedTri)) {
+            filtres.sort((p1, p2) -> Double.compare(p2.getPrix_unitaire(), p1.getPrix_unitaire()));
+        }
+
+        afficherProduits(filtres);
+    }
+
     @FXML
     private void passerCommandeDepuisPagePrincipale(ActionEvent event) {
         if (panier.isEmpty()) {
@@ -145,38 +161,25 @@ public class CommandeController {
         confirmation.setHeaderText("Souhaitez-vous passer la commande ?");
         confirmation.setContentText("Cliquez sur OUI pour confirmer.");
 
-        // Attente de la réponse
         confirmation.showAndWait().ifPresent(response -> {
             switch (response.getButtonData()) {
                 case OK_DONE -> {
                     double total = panier.stream().mapToDouble(Produit::getPrix_unitaire).sum();
                     Commande commande = new Commande("Validé", java.time.LocalDateTime.now(), total);
                     commandeService.ajouterCommande(commande);
-                    afficherMessage("Commande passée", "Votre commande a été enregistrée avec succès !");
-                    panier.clear(); // vider le panier
+                    afficherMessage("Commande enregistrée", "Votre commande a été passée avec succès !");
+                    panier.clear();
                     mettreAJourPanierMessage();
                 }
-                case CANCEL_CLOSE -> afficherMessage("Commande annulée", "La commande n'a pas été envoyée.");
+                case CANCEL_CLOSE -> afficherMessage("Commande annulée", "La commande n’a pas été envoyée.");
             }
         });
     }
 
-
-    // Méthode pour afficher un message d'alerte
-    private void afficherMessage(String titre, String contenu) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titre);
-        alert.setHeaderText(null);
-        alert.setContentText(contenu);
-        alert.showAndWait();
-    }
-
-    // Action du bouton Panier
     @FXML
-    public void ouvrirPanier(ActionEvent event) {
+    private void ouvrirPanier(ActionEvent event) {
         try {
-            // Vérifiez si le panier contient des produits
-            if (panier == null || panier.isEmpty()) {
+            if (panier.isEmpty()) {
                 afficherMessage("Panier vide", "Votre panier est actuellement vide.");
                 return;
             }
@@ -185,7 +188,7 @@ public class CommandeController {
             AnchorPane panierView = loader.load();
 
             PanierController controller = loader.getController();
-            controller.setPanier(panier); // Passez la liste du panier au contrôleur
+            controller.setPanier(panier);
 
             Scene panierScene = new Scene(panierView);
             Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -193,9 +196,31 @@ public class CommandeController {
             stage.setTitle("Panier");
             stage.show();
         } catch (IOException e) {
-            afficherMessage("Erreur de chargement", "Impossible de charger la vue du panier.");
+            afficherMessage("Erreur", "Impossible de charger la vue du panier.");
         }
     }
 
-}
+    @FXML
+    private void retourAfficherProduit(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/afficherproduit.fxml"));
+            AnchorPane view = loader.load();
 
+            Scene scene = new Scene(view);
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Produits");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void afficherMessage(String titre, String contenu) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(contenu);
+        alert.showAndWait();
+    }
+}
