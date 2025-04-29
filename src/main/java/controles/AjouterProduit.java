@@ -5,6 +5,7 @@ import Services.ProduitService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -15,6 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
@@ -112,7 +114,7 @@ public class AjouterProduit {
         produit.setPrix_unitaire(prixUnitaire);
         produit.setQuantite_stock(quantiteStock);
         produit.setImage(selectedImageFile.getAbsolutePath());
-        produit.setAgriculteur_id(1); // à remplacer selon l'utilisateur connecté
+        produit.setAgriculteur_id(1);
         produit.setDate_ajout(LocalDate.now());
 
         new ProduitService().add(produit);
@@ -125,21 +127,31 @@ public class AjouterProduit {
 
     }
 
-    // Méthode pour changer la scène et afficher la liste des produits
     private void allerVersListeProduits() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherProduit.fxml"));
-            Parent root = loader.load();
+            // Charger le MenuPrincipal
+            FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/MenuPrincipal.fxml"));
+            Parent root = mainLoader.load();
 
-            // Récupérer la fenêtre active et changer son contenu
-            Stage stage = (Stage) nomTextField.getScene().getWindow();
-            stage.getScene().setRoot(root);
+            // Récupérer le contrôleur de MenuPrincipal
+            MenuPrincipalController controller = mainLoader.getController();
 
-        } catch (Exception e) {
+            // Charger la vue des produits
+            Node produitsView = FXMLLoader.load(getClass().getResource("/AfficherProduit.fxml"));
+            controller.setMainContent(produitsView);  // On injecte dans le StackPane
+
+            // Obtenir la fenêtre actuelle à partir de n'importe quel nœud de la scène
+            Stage currentStage = (Stage) nomTextField.getScene().getWindow();
+
+            // Changer la racine de la scène courante
+            currentStage.getScene().setRoot(root);
+
+        } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur lors de l'affichage de la liste des produits.", Alert.AlertType.ERROR);
         }
     }
+
 
     // Alerte réutilisable
     private void showAlert(String message, Alert.AlertType type) {

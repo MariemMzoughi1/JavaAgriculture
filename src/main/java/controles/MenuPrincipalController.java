@@ -98,5 +98,10 @@ public class MenuPrincipalController {
             System.out.println("Fichier FXML introuvable : " + vue);
         }
     }
+    public void setMainContent(Node content) {
+        mainContent.getChildren().setAll(content);
+    }
+
+
 
 }
