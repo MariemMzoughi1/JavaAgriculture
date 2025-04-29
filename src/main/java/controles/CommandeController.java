@@ -200,21 +200,6 @@ public class CommandeController {
         }
     }
 
-    @FXML
-    private void retourAfficherProduit(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/afficherproduit.fxml"));
-            AnchorPane view = loader.load();
-
-            Scene scene = new Scene(view);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Produits");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void afficherMessage(String titre, String contenu) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

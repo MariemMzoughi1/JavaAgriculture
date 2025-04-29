@@ -18,10 +18,19 @@
             <Label fx:id="labelTitre" style="-fx-font-size: 24px;                           -fx-font-weight: bold;                           -fx-text-fill: #2d3436;" text="📦 Liste des Produits" />
 
             <Region HBox.hgrow="ALWAYS" />
-
+            <Button fx:id="btnStatistiques"
+                    text="📊 Statistiques"
+                    onAction="#ouvrirStatistiques"
+                    style="-fx-background-color: #3f51b5;
+                   -fx-text-fill: white;
+                   -fx-font-size: 14px;
+                   -fx-font-weight: bold;
+                   -fx-padding: 8 18;
+                   -fx-background-radius: 20;
+                   -fx-cursor: hand;
+                   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0.2, 0, 2);" />
             <Button fx:id="btnAjouter" onAction="#ajouterProduit" prefHeight="36" prefWidth="180" styleClass="btn-ajouter" text="➕ Ajouter un produit" />
 
-            <Button fx:id="btnVoirCommandes" onAction="#ouvrirCommandes" prefHeight="36" prefWidth="180" style="-fx-background-color: #00b894;                            -fx-text-fill: white;                            -fx-font-size: 13px;                            -fx-background-radius: 22;                            -fx-font-weight: bold;                            -fx-cursor: hand;" text="🧾 Voir les commandes" />
         </HBox>
 
         <!-- Table des produits -->

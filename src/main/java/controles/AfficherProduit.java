@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -66,22 +67,23 @@ public class AfficherProduit {
 
         chargerProduits();
     }
-    @FXML
-    private void ouvrirCommandes(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/commande.fxml"));
-            AnchorPane commandeView = loader.load();
 
-            Scene scene = new Scene(commandeView);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Commandes");
+    @FXML
+    private void ouvrirStatistiques() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/statistique.fxml"));
+            Node content = loader.load();
+            // Remplace mainContent par le bon conteneur où tu veux afficher la vue, par exemple :
+            // mainContent.getChildren().setAll(content);
+            // ou bien ouvre une nouvelle fenêtre :
+            Stage stage = new Stage();
+            stage.setTitle("Statistiques");
+            stage.setScene(new Scene((Parent) content));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 
     // ✅ Méthode pour recharger les données de la table
