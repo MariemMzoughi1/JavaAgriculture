@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="593.0" prefWidth="759.0" style="-fx-background-color: #e8f5e9;" stylesheets="@ListeZones.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.ListeZonesUser">
+
+    <!-- 🌿 Titre -->
+    <Text layoutX="230.0" layoutY="30.0" style="-fx-font-size: 24px; -fx-fill: #2e7d32;" text="🌿 Liste des Zones 🌿" />
+
+    <!-- 🔍 Recherche -->
+    <TextField fx:id="searchField" layoutX="35.0" layoutY="60.0" onKeyReleased="#rechercherZones" prefWidth="630.0" promptText="Rechercher une zone..." />
+
+    <!-- 📋 ScrollPane avec les cards -->
+    <ScrollPane layoutX="24.0" layoutY="136.0" prefHeight="380.0" prefWidth="690.0" style="-fx-background: transparent;">
+        <content>
+            <VBox fx:id="zoneContainer" alignment="TOP_CENTER" spacing="15" styleClass="card-container">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <!-- ➕ Boutons bas -->
+    <Button fx:id="ajouterBtn" layoutX="51.0" layoutY="537.0" onAction="#ajouterZone" style="-fx-background-color: #66bb6a; -fx-text-fill: white; -fx-font-weight: bold;" text="Ajouter" />
+    <Button fx:id="retourBtn" layoutX="120.0" layoutY="537.0" onAction="#retourAccueil" style="-fx-background-color: #8d6e63; -fx-text-fill: white; -fx-font-weight: bold;" text="Accueil" />
+    <Button layoutX="484.0" layoutY="537.0" onAction="#exporterCSV" style="-fx-background-color: #f5d505; -fx-text-fill: white;" text="Exporter en CSV" />
+    <Button layoutX="620.0" layoutY="537.0" onAction="#exporterPDF" style="-fx-background-color: #f4022f; -fx-text-fill: white; -fx-font-weight: bold;" text="Exporter PDF" />
+
+</AnchorPane>

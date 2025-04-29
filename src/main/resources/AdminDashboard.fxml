@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controlles.AdminDashboard"
+            prefWidth="900" prefHeight="600">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox spacing="15" style="-fx-background-color: #2e7d32;" alignment="TOP_CENTER" prefWidth="200">
+            <padding><Insets top="30" left="10" right="10" bottom="10"/></padding>
+
+            <Text text="Admin Panel" style="-fx-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+
+            <Button fx:id="btnZones" text="📋 Zones" onAction="#consulterZones"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;" maxWidth="180"/>
+            <Button fx:id="btnGranges" text="🏠 Granges" onAction="#consulterGranges"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;" maxWidth="180"/>
+        </VBox>
+    </left>
+
+    <!-- Contenu -->
+    <center>
+        <AnchorPane fx:id="contentPane" style="-fx-background-color: #f1f8e9;" />
+    </center>
+</BorderPane>

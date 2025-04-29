@@ -24,16 +24,15 @@ public class Acceuil {
 
     @FXML
     private void consulterZones(ActionEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/ListeZones.fxml"));
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/ListeZonesUser.fxml"));
         rootPane.getChildren().setAll(pane);
     }
 
 
 
-
     @FXML
     private void consulterGranges(ActionEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/ListeGranges.fxml"));
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/ListeGrangesUser.fxml"));
         rootPane.getChildren().setAll(pane);
     }
 }

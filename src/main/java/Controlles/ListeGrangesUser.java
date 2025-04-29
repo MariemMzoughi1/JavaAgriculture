@@ -7,32 +7,29 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import Services.GrangeService;
 
 import java.io.IOException;
 
-public class ListeGranges {
+public class ListeGrangesUser {
 
     @FXML private TableView<Grange> tableGranges;
     @FXML private TableColumn<Grange, String> colType;
     @FXML private TableColumn<Grange, Float> colCapacite;
     @FXML private TableColumn<Grange, Float> colProductivite;
     @FXML private TableColumn<Grange, Integer> colZone;
-    @FXML private TableColumn<Grange, Void> colActions;
-    @FXML private TextField searchField; // Champ de recherche
-    private ObservableList<Grange> grangesList;
+    @FXML private TextField searchField;
 
+    private ObservableList<Grange> grangesList;
     private final GrangeService grangeService = new GrangeService();
 
     @FXML
     public void initialize() {
-        // Initialisation de grangesList avec les données récupérées du service
         grangesList = FXCollections.observableArrayList(grangeService.find());
 
         colType.setCellValueFactory(new PropertyValueFactory<>("type_grange"));
@@ -70,9 +67,7 @@ public class ListeGranges {
             }
         });
 
-        // Lier la liste à la TableView
         tableGranges.setItems(grangesList);
-        addActionButtonsToTable();
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterGranges(newValue);
@@ -96,66 +91,12 @@ public class ListeGranges {
 
     private void filterGranges(String searchText) {
         ObservableList<Grange> filtered = FXCollections.observableArrayList();
-
         for (Grange g : grangesList) {
             if (g.getType_grange().toLowerCase().contains(searchText.toLowerCase())) {
                 filtered.add(g);
             }
         }
-
         tableGranges.setItems(filtered);
-    }
-
-    private void addActionButtonsToTable() {
-        colActions.setCellFactory(param -> new TableCell<Grange, Void>() {
-            private final Button btnModifier = new Button("Modifier");
-            private final Button btnSupprimer = new Button("Supprimer");
-
-            {
-                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-
-                btnModifier.setOnAction(event -> {
-                    Grange grange = getTableView().getItems().get(getIndex());
-
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierGrange.fxml"));
-                        Scene scene = new Scene(loader.load());
-
-                        ModifierGrange controller = loader.getController();
-                        controller.setGrange(grange);
-
-                        Stage stage = new Stage();
-                        stage.setTitle("Modifier Grange");
-                        stage.setScene(scene);
-                        stage.showAndWait();
-
-                        getTableView().refresh();
-
-                    } catch (IOException e) {
-                        showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement de la fenêtre de modification : " + e.getMessage());
-                    }
-                });
-
-                btnSupprimer.setOnAction(event -> {
-                    Grange grange = getTableView().getItems().get(getIndex());
-                    grangeService.delete(grange);
-                    grangesList.remove(grange); // Utilisation de grangesList ici
-                    showAlert(Alert.AlertType.INFORMATION, "Succès", "Grange supprimée avec succès !");
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    HBox pane = new HBox(10, btnModifier, btnSupprimer);
-                    setGraphic(pane);
-                }
-            }
-        });
     }
 
     @FXML
@@ -191,7 +132,7 @@ public class ListeGranges {
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType); // Utiliser le type passé en paramètre
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
