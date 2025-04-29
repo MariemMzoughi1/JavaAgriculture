@@ -1,4 +1,6 @@
 package controles;
+import com.lowagie.text.DocumentException;
+import java.io.IOException;
 
 import Entites.Commande;
 import Services.CommandeService;
@@ -22,6 +24,7 @@ import javafx.util.Duration;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import Services.FactureService;
 
 public class FormulaireCommandeController {
 
@@ -33,6 +36,7 @@ public class FormulaireCommandeController {
     @FXML private TextField emailField;
 
     private double totalCommande;
+    private Commande commande;
 
     public void setTotalCommande(double total) {
         this.totalCommande = total;
@@ -108,9 +112,8 @@ public class FormulaireCommandeController {
             return;
         }
 
-        // Créer la commande
-        Commande commande = new Commande("En attente", LocalDateTime.now(), totalCommande);
-        new CommandeService().ajouterCommande(commande);
+
+
 
         try {
             // Création de la session de paiement
@@ -141,39 +144,45 @@ public class FormulaireCommandeController {
             System.out.println("Navigated to: " + newValue);
 
             if (newValue.contains("success")) {
-                // Paiement réussi
-
-                // Fermer la fenêtre de paiement
                 paymentStage.close();
 
-                // Envoyer l'email de confirmation
-                EmailService.sendConfirmationEmail(emailField.getText());
-
-                // Afficher une alerte de succès
-                showAlert(Alert.AlertType.INFORMATION, "Paiement réussi", "Votre paiement a été effectué avec succès. Un e-mail de confirmation vous a été envoyé.");
-
-                // 🔥 Changer la scène vers la page ListeProduits.fxml
                 try {
+                    // ✅ Créer la commande
+                    Commande commande = new Commande("En attente", LocalDateTime.now(), totalCommande);
+
+                    // ✅ Ajouter la commande
+                    new CommandeService().ajouterCommande(commande);
+
+                    // ✅ Envoyer email de confirmation
+                    EmailService.sendConfirmationEmail(emailField.getText());
+
+                    // ✅ Générer facture PDF
+                    FactureService.generateInvoice(commande, emailField.getText());
+
+                    // ✅ Alerte de succès
+                    showAlert(Alert.AlertType.INFORMATION, "Paiement réussi",
+                            "Votre paiement a été effectué avec succès.\nUn e-mail de confirmation vous a été envoyé.\nLa facture a été générée sur votre bureau.");
+
+                    // ✅ Revenir à la page commande.fxml
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/commande.fxml"));
                     Parent root = loader.load();
-
-                    Stage stage = (Stage) formulaireView.getScene().getWindow(); // récupérer la fenêtre actuelle
+                    Stage stage = (Stage) formulaireView.getScene().getWindow();
                     stage.setScene(new Scene(root));
                     stage.setTitle("Liste des Produits");
                     stage.show();
 
-                } catch (Exception e) {
+                } catch (IOException | DocumentException e) {
                     e.printStackTrace();
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la page des produits.");
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la génération de la facture ou chargement page.");
                 }
-            }
-            else if (newValue.contains("cancel")) {
-                // Paiement annulé
+
+            } else if (newValue.contains("cancel")) {
                 paymentStage.close();
                 showAlert(Alert.AlertType.ERROR, "Paiement annulé", "Le paiement a été annulé.");
             }
         });
     }
+
 
 
 
