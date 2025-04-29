@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.Controllers.DashboardQuantiteController"
+            prefWidth="900" prefHeight="650"
+            style="-fx-background-color: linear-gradient(to bottom right, #f1f5f9, #ffffff);">
+
+    <VBox alignment="CENTER" spacing="30"
+          layoutX="50" layoutY="30" prefWidth="800" prefHeight="600"
+          style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0.5, 0, 5);">
+
+        <!-- 🌟 Titre -->
+        <Label fx:id="titreLabel"
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+        <!-- 📈 Camembert -->
+        <PieChart fx:id="quantiteParCategorieChart"
+                  prefWidth="600" prefHeight="400"
+                  style="-fx-background-radius: 15; -fx-border-color: #d1d8e0; -fx-border-width: 2; -fx-border-radius: 15;"/>
+
+    </VBox>
+</AnchorPane>

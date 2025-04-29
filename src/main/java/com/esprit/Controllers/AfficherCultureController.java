@@ -18,15 +18,14 @@ import java.io.IOException;
 import java.util.List;
 
 public class AfficherCultureController {
-    @FXML private TextField searchCategorieField;
 
-    @FXML
-    private VBox cardContainer;
+    @FXML private TextField searchCategorieField;
+    @FXML private VBox conseilsBox;
+    @FXML private VBox cardContainer;
 
     private final CultureService cultureService = new CultureService();
 
     public void initialize() {
-        cardContainer.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         refreshCards();
     }
 
@@ -51,7 +50,6 @@ public class AfficherCultureController {
         card.setStyle("-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 5);");
         card.setPrefWidth(800);
 
-        // ✅ ImageView avec vérification URL
         VBox left = new VBox();
         ImageView imageView = new ImageView();
         String imageUrl = culture.getImage();
@@ -66,7 +64,6 @@ public class AfficherCultureController {
         imageView.setStyle("-fx-border-radius: 10; -fx-background-radius: 10;");
         left.getChildren().add(imageView);
 
-        // 📋 Détails de la culture
         VBox right = new VBox(8);
         Label nom = new Label("🌿 " + culture.getNom());
         nom.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -78,9 +75,8 @@ public class AfficherCultureController {
         Label saison = new Label("🗓 Saison : " + culture.getSaison());
         Label categorie = new Label("🧪 Catégorie : " + culture.getCategorie());
 
-        // 🖊 Modifier
         Button btnModifier = new Button("✏️ Modifier");
-        btnModifier.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        btnModifier.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 6 14;");
         btnModifier.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierCulture.fxml"));
@@ -98,24 +94,53 @@ public class AfficherCultureController {
             }
         });
 
-        // 🗑 Supprimer
         Button btnSupprimer = new Button("🗑 Supprimer");
-        btnSupprimer.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+        btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 6 14;");
         btnSupprimer.setOnAction(event -> {
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Voulez-vous vraiment supprimer cette culture ?",
-                    ButtonType.YES, ButtonType.NO);
-            confirm.setTitle("Confirmation");
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Suppression de Culture");
+            confirm.setHeaderText("🗑 Voulez-vous vraiment supprimer cette culture ?");
+            confirm.setContentText("Nom : " + culture.getNom() + "\nCatégorie : " + culture.getCategorie());
+
+            DialogPane dialogPane = confirm.getDialogPane();
+            dialogPane.setStyle("-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8f9fa);" +
+                    "-fx-border-color: #e53935;" +
+                    "-fx-border-radius: 12;" +
+                    "-fx-background-radius: 12;" +
+                    "-fx-padding: 20;");
+            Label headerLabel = (Label) dialogPane.lookup(".header-panel .label");
+            if (headerLabel != null) {
+                headerLabel.setStyle("-fx-text-fill: #e53935; -fx-font-size: 20px; -fx-font-weight: bold;");
+            }
+            Label contentLabel = (Label) dialogPane.lookup(".content.label");
+            if (contentLabel != null) {
+                contentLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #37474f;");
+            }
+
+            ButtonType confirmButton = new ButtonType("✅ Oui, Supprimer", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType("❌ Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+            confirm.getButtonTypes().setAll(confirmButton, cancelButton);
+
             confirm.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
+                if (response == confirmButton) {
                     boolean success = cultureService.supprimer(culture.getId());
                     if (success) {
                         refreshCards();
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "✅ Culture supprimée !");
-                        alert.show();
+                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                        successAlert.setTitle("Suppression réussie");
+                        successAlert.setHeaderText(null);
+                        successAlert.setContentText("✅ Culture supprimée avec succès !");
+                        successAlert.getDialogPane().setStyle("-fx-background-color: linear-gradient(to bottom right, #e8f5e9, #ffffff);-fx-border-color: #43a047; -fx-border-radius: 12; -fx-background-radius: 12;");
+                        successAlert.getDialogPane().lookup(".content.label").setStyle("-fx-font-size: 16px; -fx-text-fill: #2e7d32;");
+                        successAlert.show();
                     } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "❌ Échec de la suppression.");
-                        alert.show();
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Erreur");
+                        errorAlert.setHeaderText(null);
+                        errorAlert.setContentText("❌ Échec de la suppression !");
+                        errorAlert.getDialogPane().setStyle("-fx-background-color: linear-gradient(to bottom right, #ffebee, #ffffff);-fx-border-color: #e53935; -fx-border-radius: 12; -fx-background-radius: 12;");
+                        errorAlert.getDialogPane().lookup(".content.label").setStyle("-fx-font-size: 16px; -fx-text-fill: #c62828;");
+                        errorAlert.show();
                     }
                 }
             });
@@ -143,6 +168,7 @@ public class AfficherCultureController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void rechercherParCategorie() {
         String keyword = searchCategorieField.getText().trim().toLowerCase();
@@ -198,5 +224,4 @@ public class AfficherCultureController {
             }
         }
     }
-
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.Controllers.SuggestionCultureController"
+            prefWidth="600" prefHeight="500"
+            style="-fx-background-color: linear-gradient(to bottom, #dfe9f3, #ffffff);">
+
+    <children>
+
+        <VBox alignment="CENTER" spacing="20"
+              AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20"
+              AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 20;
+                     -fx-padding: 30;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+
+            <!-- 🌱 Titre principal -->
+            <Label text="🧠 Suggestion de Culture Adaptée"
+                   style="-fx-font-size: 26px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #2c3e50;"/>
+
+            <!-- 🔍 Champs de saisie -->
+            <TextField fx:id="solField"
+                       promptText="🧱 Type de sol (argileux, sableux, limoneux...)"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 12;
+                              -fx-font-size: 14px;"/>
+
+            <TextField fx:id="saisonField"
+                       promptText="🌞 Saison (Printemps, Été, Automne, Hiver)"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 12;
+                              -fx-font-size: 14px;"/>
+
+            <!-- 🚀 Bouton de suggestion -->
+            <Button text="✨ Suggérer une Culture"
+                    onAction="#suggérerCulture"
+                    style="-fx-background-color: linear-gradient(to right, #00c6ff, #0072ff);
+                           -fx-text-fill: white;
+                           -fx-font-weight: bold;
+                           -fx-font-size: 16px;
+                           -fx-background-radius: 30;
+                           -fx-padding: 10 20;
+                           -fx-cursor: hand;"/>
+
+            <!-- 📋 Résultat -->
+            <ScrollPane fx:id="scrollPane"
+                        fitToWidth="true"
+                        style="-fx-background-color: transparent; -fx-background-insets: 0;">
+                <VBox fx:id="cardContainer"
+                      spacing="15"
+                      style="-fx-padding: 20 10;
+                             -fx-background-color: #ecf0f1;
+                             -fx-background-radius: 12;"/>
+            </ScrollPane>
+
+        </VBox>
+
+    </children>
+</AnchorPane>

@@ -1,63 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<?import javafx.scene.layout.HBox?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.esprit.Controllers.AjouterCultureController"
-            prefHeight="500" prefWidth="500"
-            style="-fx-background-color: #f8f9fa;">
+            prefWidth="900" prefHeight="700"
+            style="-fx-background-color: linear-gradient(to bottom, #e0eafc, #cfdef3);">
+
     <children>
 
-        <!-- Titre -->
-        <Label text="Ajouter une Culture" layoutX="130" layoutY="20"
-               style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <!-- Titre principal -->
+        <Label text="🌾 Ajouter une Nouvelle Culture"
+               layoutX="250" layoutY="30"
+               style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
 
-        <!-- Nom -->
-        <Label text="Nom" layoutX="30" layoutY="80"/>
-        <TextField fx:id="tfNom" layoutX="150" layoutY="75" prefWidth="300"/>
+        <!-- Formulaire -->
+        <GridPane layoutX="110" layoutY="100" hgap="20" vgap="20"
+                  style="-fx-background-color: white;
+                         -fx-padding: 30;
+                         -fx-background-radius: 20;
+                         -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 5);">
 
-        <!-- Description -->
-        <Label text="Description" layoutX="30" layoutY="120"/>
-        <TextField fx:id="tfDescription" layoutX="150" layoutY="115" prefWidth="300"/>
+            <columnConstraints>
+                <ColumnConstraints prefWidth="180"/>
+                <ColumnConstraints prefWidth="400"/>
+            </columnConstraints>
 
-        <!-- Image -->
-        <Label text="Image" layoutX="30" layoutY="160"/>
-        <HBox layoutX="150" layoutY="155" spacing="10">
-            <TextField fx:id="tfImage" prefWidth="220"/>
-            <Button text="📂" onAction="#parcourirImage"/>
-        </HBox>
+            <!-- Nom -->
+            <Label text="🌱 Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <TextField fx:id="tfNom" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-        <!-- Date de Plantation -->
-        <Label text="Date de Plantation" layoutX="30" layoutY="200"/>
-        <DatePicker fx:id="dpDatePlantation" layoutX="150" layoutY="195" prefWidth="300"/>
+            <!-- Description -->
+            <Label text="📝 Description :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <TextField fx:id="tfDescription" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-        <!-- Date de Récolte -->
-        <Label text="Date de Récolte" layoutX="30" layoutY="240"/>
-        <DatePicker fx:id="dpDateRecolte" layoutX="150" layoutY="235" prefWidth="300"/>
+            <!-- Image -->
+            <Label text="🖼️ Image :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                <TextField fx:id="tfImage" prefWidth="240"/>
+                <Button text="📂" onAction="#parcourirImage"
+                        style="-fx-background-color: #5dade2;
+                               -fx-text-fill: white;
+                               -fx-background-radius: 20;
+                               -fx-cursor: hand;"/>
+            </HBox>
 
-        <!-- Saison -->
-        <Label text="Saison" layoutX="30" layoutY="280"/>
-        <ComboBox fx:id="cbSaison" layoutX="150" layoutY="275" prefWidth="300"/>
+            <!-- Date Plantation -->
+            <Label text="🌱 Date de Plantation :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <DatePicker fx:id="dpDatePlantation" prefWidth="300" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-        <!-- Quantité -->
-        <Label text="Quantité" layoutX="30" layoutY="320"/>
-        <TextField fx:id="tfQuantite" layoutX="150" layoutY="315" prefWidth="300"/>
+            <!-- Date Récolte -->
+            <Label text="🌾 Date de Récolte :" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <DatePicker fx:id="dpDateRecolte" prefWidth="300" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-        <!-- Catégorie -->
-        <Label text="Catégorie" layoutX="30" layoutY="360"/>
-        <ComboBox fx:id="cbCategorie" layoutX="150" layoutY="355" prefWidth="300"/>
+            <!-- Saison -->
+            <Label text="🧭 Saison :" GridPane.rowIndex="5" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <ComboBox fx:id="cbSaison" prefWidth="300" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-        <!-- Ligne des boutons côte à côte -->
-        <HBox layoutX="130" layoutY="420" spacing="20">
-            <Button text="⬅ Retour"
-                    onAction="#retourAfficherParcelle"
-                    style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+            <!-- Quantité -->
+            <Label text="📦 Quantité :" GridPane.rowIndex="6" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <TextField fx:id="tfQuantite" prefWidth="300" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
-            <Button text="Ajouter Culture"
-                    onMouseClicked="#ajouterCulture"
-                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-        </HBox>
+            <!-- Catégorie -->
+            <Label text="🏷️ Catégorie :" GridPane.rowIndex="7" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <ComboBox fx:id="cbCategorie" prefWidth="300" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+            <!-- Boutons -->
+            <HBox spacing="20" GridPane.rowIndex="8" GridPane.columnIndex="1" style="-fx-padding: 20 0 0 0;">
+                <Button text="⬅ Retour"
+                        onAction="#retourAfficherParcelle"
+                        style="-fx-background-color: #95a5a6;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 30;
+                               -fx-padding: 10 20;
+                               -fx-cursor: hand;"/>
+
+                <Button text="✅ Ajouter Culture"
+                        onMouseClicked="#ajouterCulture"
+                        style="-fx-background-color: linear-gradient(to right, #00b09b, #96c93d);
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 30;
+                               -fx-padding: 10 20;
+                               -fx-cursor: hand;"/>
+            </HBox>
+
+        </GridPane>
 
     </children>
 </AnchorPane>

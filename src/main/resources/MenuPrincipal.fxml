@@ -4,27 +4,55 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.esprit.Controllers.MenuPrincipalController"
-            prefWidth="800" prefHeight="600">
+            prefWidth="1100" prefHeight="700"
+            style="-fx-background-color: #f4f6f8;">
 
-    <!-- Barre latérale gauche -->
+    <!-- Sidebar -->
     <left>
-        <VBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
-            <Button text="Culture" onAction="#ouvrirCulture"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="Parcelle" onAction="#ouvrirParcelle"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+        <VBox fx:id="sidebar" spacing="20" alignment="TOP_CENTER"
+              style="-fx-background-color: #20232a; -fx-padding: 20;" prefWidth="220">
+
+            <!-- Bouton Toggle -->
+            <Button fx:id="toggleSidebarButton"
+                    text="☰"
+                    onAction="#toggleSidebar"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 26px; -fx-cursor: hand;"/>
+
+            <!-- Titre -->
+            <Label fx:id="sidebarTitle" text="🌿 ParcelleApp"
+                   style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" />
+
+            <!-- Menu -->
+            <VBox spacing="12" alignment="TOP_CENTER">
+                <Button text="🌾 Culture" onAction="#ouvrirCulture"
+                        style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+                <Button text="🌍 Parcelle" onAction="#ouvrirParcelle"
+                        style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+                <Button text="🚨 Alertes" onAction="#ouvrirAlertesParcelles"
+                        style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+                <Button text="🔮 Prévisions" onAction="#ouvrirPrevisionRecolte"
+                        style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+                <Button text="🧠 Suggestion" onAction="#ouvrirSuggestionCulture"
+                        style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+                <Button text="📊 Statistiques" onAction="#ouvrirStatistiquesQuantites"
+                        style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+                <Button text="☀️ Météo" onAction="#ouvrirMeteo"
+                        style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+            </VBox>
+
         </VBox>
     </left>
 
-    <!-- Contenu central -->
-
-        <center>
-            <StackPane fx:id="mainContent" style="-fx-background-color: #ecf0f1;">
-                <VBox alignment="CENTER" spacing="10">
-                    <Label fx:id="dateLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-                    <Label fx:id="timeLabel" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50;" />
-                </VBox>
-            </StackPane>
-        </center>
+    <!-- Centre principal -->
+    <center>
+        <StackPane fx:id="mainContent" style="-fx-background-color: #f4f6f8;">
+            <VBox alignment="CENTER" spacing="10">
+                <Label fx:id="dateLabel"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                <Label fx:id="timeLabel"
+                       style="-fx-font-size: 26px; -fx-text-fill: #34495e;" />
+            </VBox>
+        </StackPane>
+    </center>
 
 </BorderPane>

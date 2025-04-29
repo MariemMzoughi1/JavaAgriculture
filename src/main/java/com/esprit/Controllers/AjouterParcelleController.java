@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -43,6 +45,7 @@ public class AjouterParcelleController {
                 setText(empty || item == null ? null : item.getNom());
             }
         });
+
         cbCulture.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(Culture item, boolean empty) {
@@ -51,7 +54,7 @@ public class AjouterParcelleController {
             }
         });
 
-        // Valeurs pour les ComboBox fixes
+        // Valeurs fixes pour les autres ComboBox
         cbEtat.getItems().addAll("bon", "moyen", "mauvais");
         cbTypeSol.getItems().addAll("argileux", "sableux", "limoneux", "calcaire");
     }
@@ -66,7 +69,10 @@ public class AjouterParcelleController {
                 return;
             }
 
-            double superficie = Double.parseDouble(tfSuperficie.getText());
+            // ✅ Saisie en hectares → conversion en m²
+            double superficieHa = Double.parseDouble(tfSuperficie.getText());
+            double superficie = superficieHa * 10_000;
+
             double prix = Double.parseDouble(tfPrix.getText());
             LocalDate dateLocation = dpDateLocation.getValue();
             LocalDate dateFin = dpDateFinLocation.getValue();
@@ -97,12 +103,10 @@ public class AjouterParcelleController {
             parcelleService.ajouter(p);
             new Alert(Alert.AlertType.INFORMATION, "✅ Parcelle ajoutée avec succès !").show();
 
-            // ✅ Rafraîchir la liste
             if (onAjoutSuccess != null) {
                 onAjoutSuccess.run();
             }
 
-            // ✅ Fermer la fenêtre
             Stage stage = (Stage) tfDescription.getScene().getWindow();
             stage.close();
 
@@ -110,6 +114,7 @@ public class AjouterParcelleController {
             showError("Veuillez entrer des nombres valides pour superficie et prix.");
         }
     }
+
     private void showError(String message) {
         new Alert(Alert.AlertType.ERROR, "❌ " + message).show();
     }
@@ -125,9 +130,7 @@ public class AjouterParcelleController {
         dpDateFinLocation.setValue(null);
         cbEtat.getSelectionModel().clearSelection();
         cbTypeSol.getSelectionModel().clearSelection();
-
     }
-
 
     @FXML
     private void retourAfficherParcelle(ActionEvent event) {
@@ -145,11 +148,16 @@ public class AjouterParcelleController {
 
         File selectedFile = fileChooser.showOpenDialog(tfImage.getScene().getWindow());
         if (selectedFile != null) {
-            tfImage.setText(selectedFile.toURI().toString());  // Important pour ImageView
+            tfImage.setText(selectedFile.toURI().toString());
         }
     }
+
     public void setOnAjoutSuccess(Runnable onAjoutSuccess) {
         this.onAjoutSuccess = onAjoutSuccess;
     }
 
+    // 🌱 Méthode pour préremplir la culture depuis la suggestion
+    public void préremplirCulture(Culture culture) {
+        cbCulture.getSelectionModel().select(culture);
+    }
 }

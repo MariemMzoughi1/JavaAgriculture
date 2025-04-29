@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.Controllers.AlertesParcellesController"
+            prefWidth="800" prefHeight="550"
+            style="-fx-background-color: linear-gradient(to bottom, #eef2f7, #ffffff);">
+
+    <children>
+
+        <VBox spacing="20" alignment="TOP_CENTER"
+              AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+
+            <!-- Titre de la page -->
+            <Label text="📍 Alertes : Parcelles proches de la fin de location"
+                   style="-fx-font-size: 26px; -fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-underline: true;" />
+
+            <!-- Scroll des alertes -->
+            <ScrollPane fitToWidth="true" fitToHeight="true" prefHeight="470" style="-fx-background-color: transparent;">
+                <content>
+
+                    <!-- Conteneur d'alertes -->
+                    <VBox fx:id="alertesVBox" spacing="15" alignment="TOP_CENTER"
+                          style="-fx-background-color: transparent;">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                    </VBox>
+
+                </content>
+            </ScrollPane>
+
+        </VBox>
+
+    </children>
+</AnchorPane>

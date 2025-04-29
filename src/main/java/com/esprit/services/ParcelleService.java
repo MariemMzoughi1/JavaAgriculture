@@ -119,5 +119,30 @@ public class ParcelleService {
         }
         return list;
     }
+    public List<Parcelle> getParcellesEnFinDeLocation() {
+        List<Parcelle> list = new ArrayList<>();
+        String sql = "SELECT * FROM parcelle WHERE DATEDIFF(date_de_fin_location, CURDATE()) <= 7";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Parcelle(
+                        rs.getInt("id"),
+                        rs.getInt("culture_actuelle_id"),
+                        rs.getString("description"),
+                        rs.getString("zone"),
+                        rs.getDouble("superficie"),
+                        rs.getDouble("prix_de_location"),
+                        rs.getDate("date_de_location").toLocalDate(),
+                        rs.getDate("date_de_fin_location").toLocalDate(),
+                        rs.getString("etat"),
+                        rs.getString("type_sol"),
+                        rs.getString("image")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 }
