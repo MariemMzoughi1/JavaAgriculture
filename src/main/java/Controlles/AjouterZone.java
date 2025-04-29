@@ -125,7 +125,7 @@ public class AjouterZone {
 
     @FXML
     public void retourliste(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeZones.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeZonesUser.fxml"));
         Parent root = loader.load();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));

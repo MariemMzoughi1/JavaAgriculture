@@ -1,28 +1,26 @@
 package Controlles;
 
 import Entites.Grange;
+import Services.GrangeService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.Node;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import Services.GrangeService;
 
 import java.io.IOException;
 
 public class ListeGrangesUser {
 
-    @FXML private TableView<Grange> tableGranges;
-    @FXML private TableColumn<Grange, String> colType;
-    @FXML private TableColumn<Grange, Float> colCapacite;
-    @FXML private TableColumn<Grange, Float> colProductivite;
-    @FXML private TableColumn<Grange, Integer> colZone;
+    @FXML private FlowPane grangeContainer;
     @FXML private TextField searchField;
 
     private ObservableList<Grange> grangesList;
@@ -31,62 +29,45 @@ public class ListeGrangesUser {
     @FXML
     public void initialize() {
         grangesList = FXCollections.observableArrayList(grangeService.find());
+        afficherGranges(grangesList);
 
-        colType.setCellValueFactory(new PropertyValueFactory<>("type_grange"));
-        colCapacite.setCellValueFactory(new PropertyValueFactory<>("capacite"));
-        colProductivite.setCellValueFactory(new PropertyValueFactory<>("productivite"));
-        colZone.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getZone() != null) {
-                return new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getZone().getId()).asObject();
-            } else {
-                return new javafx.beans.property.SimpleIntegerProperty(0).asObject();
-            }
-        });
-
-        colProductivite.setCellFactory(param -> new TableCell<Grange, Float>() {
-            @Override
-            protected void updateItem(Float item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    String niveau;
-                    if (item < 20) {
-                        niveau = "Faible";
-                        setStyle("-fx-text-fill: red;");
-                    } else if (item >= 20 && item <= 50) {
-                        niveau = "Moyenne";
-                        setStyle("-fx-text-fill: orange;");
-                    } else {
-                        niveau = "Élevée";
-                        setStyle("-fx-text-fill: green;");
-                    }
-                    setText(String.format("%.2f - %s", item, niveau));
-                }
-            }
-        });
-
-        tableGranges.setItems(grangesList);
-
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filterGranges(newValue);
+        // 🔍 Écouteur de recherche
+        searchField.textProperty().addListener((obs, oldText, newText) -> {
+            filterGranges(newText);
         });
     }
 
-    @FXML
-    public void trierParType() {
-        grangesList.sort((grange1, grange2) -> grange1.getType_grange().compareTo(grange2.getType_grange()));
+    private void afficherGranges(ObservableList<Grange> granges) {
+        grangeContainer.getChildren().clear();
+
+        for (Grange grange : granges) {
+            VBox card = new VBox(5);
+            card.setPadding(new Insets(10));
+            card.setPrefWidth(200);
+            card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 6, 0, 0, 4);");
+
+            Label typeLabel = new Label("Type: " + grange.getType_grange());
+            Label capaciteLabel = new Label("Capacité: " + grange.getCapacite());
+            Label productiviteLabel = new Label("Productivité: " + grange.getProductivite() + " - " + getProductiviteNiveau(grange.getProductivite()));
+            Label zoneLabel = new Label("Zone ID: " + (grange.getZone() != null ? grange.getZone().getId() : "Non assignée"));
+
+            productiviteLabel.setStyle("-fx-text-fill: " + getProductiviteCouleur(grange.getProductivite()) + ";");
+
+            card.getChildren().addAll(typeLabel, capaciteLabel, productiviteLabel, zoneLabel);
+            grangeContainer.getChildren().add(card);
+        }
     }
 
-    @FXML
-    public void trierParCapacite() {
-        grangesList.sort((grange1, grange2) -> Float.compare(grange1.getCapacite(), grange2.getCapacite()));
+    private String getProductiviteNiveau(float val) {
+        if (val < 20) return "Faible";
+        else if (val <= 50) return "Moyenne";
+        else return "Élevée";
     }
 
-    @FXML
-    public void trierParProductivite() {
-        grangesList.sort((grange1, grange2) -> Float.compare(grange1.getProductivite(), grange2.getProductivite()));
+    private String getProductiviteCouleur(float val) {
+        if (val < 20) return "red";
+        else if (val <= 50) return "orange";
+        else return "green";
     }
 
     private void filterGranges(String searchText) {
@@ -96,7 +77,25 @@ public class ListeGrangesUser {
                 filtered.add(g);
             }
         }
-        tableGranges.setItems(filtered);
+        afficherGranges(filtered);
+    }
+
+    @FXML
+    public void trierParType() {
+        FXCollections.sort(grangesList, (a, b) -> a.getType_grange().compareToIgnoreCase(b.getType_grange()));
+        afficherGranges(grangesList);
+    }
+
+    @FXML
+    public void trierParCapacite() {
+        FXCollections.sort(grangesList, (a, b) -> Float.compare(a.getCapacite(), b.getCapacite()));
+        afficherGranges(grangesList);
+    }
+
+    @FXML
+    public void trierParProductivite() {
+        FXCollections.sort(grangesList, (a, b) -> Float.compare(a.getProductivite(), b.getProductivite()));
+        afficherGranges(grangesList);
     }
 
     @FXML
@@ -129,13 +128,5 @@ public class ListeGrangesUser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

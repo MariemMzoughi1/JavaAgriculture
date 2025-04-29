@@ -6,15 +6,17 @@ import Utils.ExportCSV;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
@@ -36,48 +38,40 @@ public class ListeZonesUser implements Initializable {
     private Button btnRetour;
 
     @FXML
-    private VBox zoneContainer;
+    private FlowPane zoneContainer;
 
     @FXML
-    private javafx.scene.control.TextField searchField;
+    private TextField searchField;
 
-    private ZoneService zoneService = new ZoneService();
+    private final ZoneService zoneService = new ZoneService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Zone> zones = zoneService.find();
-        for (Zone zone : zones) {
-            HBox box = createZoneBox(zone);
-            zoneContainer.getChildren().add(box);
-        }
-
-        // 🔍 Ajout de l'écouteur de recherche
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            rechercherZones();
-        });
+        afficherToutesLesZones();
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> rechercherZones());
     }
 
-    private HBox createZoneBox(Zone zone) {
-        HBox box = new HBox(10);
-        box.setStyle("-fx-padding: 10px; -fx-background-color: #ffffff; -fx-border-color: #c8e6c9;");
-        box.setAlignment(Pos.CENTER_LEFT);
+    private VBox createZoneCard(Zone zone) {
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(15));
+        card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #c8e6c9; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+        card.setAlignment(Pos.CENTER);
+        card.setPrefWidth(180);
 
-        Text nom = new Text("Nom: " + zone.getNom_zone());
-        Text superficie = new Text("Superficie: " + zone.getSuperficie_zone() + " ha");
-        Text localisation = new Text("Localisation: " + zone.getLocalisation_zone());
+        Text nom = new Text("🌱 " + zone.getNom_zone());
+        nom.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-        // ✅ Nouveau bouton "Consulter"
+        Text superficie = new Text("🌍 " + zone.getSuperficie_zone() + " ha");
+        Text localisation = new Text("📍 " + zone.getLocalisation_zone());
+
         Button consulterBtn = new Button("Consulter");
         consulterBtn.setStyle("-fx-background-color: #388e3c; -fx-text-fill: white;");
         consulterBtn.setOnAction(e -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherZone.fxml"));
                 Parent root = loader.load();
-
-                // Transfert de la zone au contrôleur AfficherZone
                 Controlles.AfficherZone controller = loader.getController();
-                controller.setZone(zone);  // Passer la zone au contrôleur
-
+                controller.setZone(zone);
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.setTitle("Détails de la Zone");
@@ -87,8 +81,16 @@ public class ListeZonesUser implements Initializable {
             }
         });
 
-        box.getChildren().addAll(nom, superficie, localisation, consulterBtn);
-        return box;
+        card.getChildren().addAll(nom, superficie, localisation, consulterBtn);
+        return card;
+    }
+
+    private void afficherToutesLesZones() {
+        List<Zone> zones = zoneService.find();
+        zoneContainer.getChildren().clear();
+        for (Zone zone : zones) {
+            zoneContainer.getChildren().add(createZoneCard(zone));
+        }
     }
 
     @FXML
@@ -96,13 +98,10 @@ public class ListeZonesUser implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterZone.fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
             stage.setTitle("Ajouter une zone");
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +116,7 @@ public class ListeZonesUser implements Initializable {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -127,57 +126,50 @@ public class ListeZonesUser implements Initializable {
     @FXML
     private void rechercherZones() {
         String keyword = searchField.getText().toLowerCase();
-        List<Zone> zones = zoneService.find();
+        List<Zone> zones = zoneService.find().stream()
+                .filter(zone -> zone.getNom_zone().toLowerCase().contains(keyword)
+                        || zone.getLocalisation_zone().toLowerCase().contains(keyword)
+                        || String.valueOf(zone.getSuperficie_zone()).contains(keyword))
+                .collect(Collectors.toList());
 
         zoneContainer.getChildren().clear();
-
         for (Zone zone : zones) {
-            if (zone.getNom_zone().toLowerCase().contains(keyword) ||
-                    zone.getLocalisation_zone().toLowerCase().contains(keyword) ||
-                    String.valueOf(zone.getSuperficie_zone()).contains(keyword)) {
-
-                HBox box = createZoneBox(zone);
-                zoneContainer.getChildren().add(box);
-            }
+            zoneContainer.getChildren().add(createZoneCard(zone));
         }
     }
+
 
     @FXML
     private void trierParNom(ActionEvent event) {
         List<Zone> zonesTriees = zoneService.find().stream()
-                .sorted(Comparator.comparing(Zone::getNom_zone))  // Trie par nom
+                .sorted(Comparator.comparing(Zone::getNom_zone))
                 .collect(Collectors.toList());
 
-        zoneContainer.getChildren().clear();  // Effacer les zones affichées
-        zonesTriees.forEach(zone -> {
-            HBox box = createZoneBox(zone);  // Re-crée les zones triées
-            zoneContainer.getChildren().add(box);
-        });
+        zoneContainer.getChildren().clear();
+        zonesTriees.forEach(zone -> zoneContainer.getChildren().add(createZoneCard(zone)));
     }
+
 
     @FXML
     private void trierParSuperficie(ActionEvent event) {
         List<Zone> zonesTriees = zoneService.find().stream()
-                .sorted(Comparator.comparingDouble(Zone::getSuperficie_zone))  // Trie par superficie
+                .sorted(Comparator.comparingDouble(Zone::getSuperficie_zone))
                 .collect(Collectors.toList());
 
-        zoneContainer.getChildren().clear();  // Effacer les zones affichées
-        zonesTriees.forEach(zone -> {
-            HBox box = createZoneBox(zone);  // Re-crée les zones triées
-            zoneContainer.getChildren().add(box);
-        });
+        zoneContainer.getChildren().clear();
+        zonesTriees.forEach(zone -> zoneContainer.getChildren().add(createZoneCard(zone)));
     }
+
 
     @FXML
     private void exporterCSV(ActionEvent event) {
-        List<Zone> zones = zoneService.find(); // Récupérer la liste des zones
-        ExportCSV.exportZonesToCSV(zones); // Appeler la méthode pour exporter en CSV
+        List<Zone> zones = zoneService.find();
+        ExportCSV.exportZonesToCSV(zones);
     }
 
     @FXML
     private void exporterPDF(ActionEvent event) {
         List<Zone> zones = zoneService.find();
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Enregistrer le PDF");
         fileChooser.setInitialFileName("zones.pdf");
