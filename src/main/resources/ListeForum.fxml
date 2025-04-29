@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="scrollPane" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.forum.ListeForum" fitToWidth="true" prefHeight="600.0" prefWidth="800.0" stylesheets="@/forum.css">
-    <content>
-        <!-- Conteneur de la liste avec un bouton en haut -->
-        <VBox fx:id="cardContainer" spacing="20">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.forum.ListeForum"
+            prefHeight="600.0" prefWidth="800.0"
+            stylesheets="@/forum.css">
 
-            <!-- Bouton pour créer un forum -->
-            <Button fx:id="createForumButton" text="Créer un Forum" onAction="#handleCreateForum"/>
+    <!-- Menu à gauche -->
+    <left>
+        <fx:include source="MenuPrincipal.fxml"/>
+    </left>
 
-            <!-- Bouton pour retourner à l'accueil -->
-            <Button text="Retour" onAction="#handleRetour"/>
-        </VBox>
-    </content>
-</ScrollPane>
+    <!-- Partie centrale avec scroll uniquement ici -->
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true">
+            <VBox fx:id="cardContainer" spacing="20">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <Button fx:id="createForumButton" text="Créer un Forum" onAction="#handleCreateForum"/>
+                <Button text="Retour" onAction="#handleRetour"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+    <right>
+        <fx:include source="chatbot.fxml" />
+    </right>
+
+</BorderPane>

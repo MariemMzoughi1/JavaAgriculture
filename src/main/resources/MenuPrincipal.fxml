@@ -1,38 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.MenuPrincipalController"
-            prefWidth="800" prefHeight="600">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="600" prefWidth="179.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="Controllers.MenuPrincipalController">
 
     <!-- Barre latérale gauche -->
     <left>
         <VBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
-            <Button text="Culture" onAction="#ouvrirCulture"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="Parcelle" onAction="#ouvrirParcelle"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="➕ Ajouter une machine" onAction="#handleAddMachine"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="📋 Machines" onAction="#handleMachines"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="📅 Réservations" onAction="#handleReservation"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="💬 Forum" onAction="#handleForum"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="🧺 Produits" onAction="#handleProduit"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
-            <Button text="🔓 Logout" onAction="#handleLogout"  style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" />
+            <Button onAction="#ouvrirCulture" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="Culture" />
+            <Button onAction="#ouvrirParcelle" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="Parcelle" />
+            <Button onAction="#handleAddMachine" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="➕ Ajouter une machine" />
+            <Button onAction="#handleMachines" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="📋 Machines" />
+            <Button onAction="#handleReservation" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="📅 Réservations" />
+            <Button onAction="#handleForum" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="💬 Forum" />
+            <Button onAction="#handleProduit" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="🧺 Produits" />
+            <Button onAction="#handleLogout" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-pref-width: 150;" text="🔓 Logout" />
 
         </VBox>
     </left>
-
-    <!-- Contenu central -->
-
-        <center>
-            <StackPane fx:id="mainContent" style="-fx-background-color: #ecf0f1;">
-                <VBox alignment="CENTER" spacing="10">
-                    <Label fx:id="dateLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-                    <Label fx:id="timeLabel" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50;" />
-                </VBox>
-            </StackPane>
-        </center>
 
 </BorderPane>

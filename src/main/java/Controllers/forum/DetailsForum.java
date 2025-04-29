@@ -37,9 +37,7 @@ public class DetailsForum {
     private Post post;
 
     @FXML
-    private void initialize() {
-        // Méthode appelée automatiquement après le chargement de FXML (facultatif ici)
-    }
+    private void initialize() {}
 
     public void setPost(Post post) {
         this.post = post;
@@ -58,17 +56,17 @@ public class DetailsForum {
                 imageView.setImage(new Image(file.toURI().toString()));
             }
         }
+
         afficherCommentaires();
     }
 
     private void afficherCommentaires() {
         CommentaireService service = new CommentaireService();
         UserService userService = new UserService();
+        int currentUserId = Session.getCurrentUser().getId();
 
         List<Commentaire> commentaires = service.getCommentairesParPostId(post.getId());
         commentairesBox.getChildren().clear();
-
-        int currentUserId = Session.getCurrentUser().getId();
 
         for (Commentaire c : commentaires) {
             VBox commentaireCard = new VBox(5);
@@ -109,16 +107,16 @@ public class DetailsForum {
                         service.modifierCommentaire(c);
                         afficherCommentaires();
                     } catch (IllegalArgumentException ex) {
-                        afficherAlerte("Contenu inapproprié", "Votre commentaire contient des mots ou expressions inappropriés.", Alert.AlertType.WARNING);
+                        afficherAlerte("Contenu inapproprié", "Votre commentaire contient des mots inappropriés.", Alert.AlertType.WARNING);
                     }
                 }
             });
 
             supprimerBtn.setOnAction(e -> {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmation.setTitle("Confirmation de suppression");
-                confirmation.setHeaderText("Voulez-vous vraiment supprimer ce commentaire ?");
-                confirmation.setContentText("Cette action est irréversible.");
+                confirmation.setTitle("Suppression");
+                confirmation.setHeaderText("Confirmer la suppression");
+                confirmation.setContentText("Voulez-vous vraiment supprimer ce commentaire ?");
 
                 Optional<ButtonType> result = confirmation.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -128,12 +126,21 @@ public class DetailsForum {
             });
 
             traduireBtn.setOnAction(e -> {
-                try {
-                    String texteTraduit = traduireTexte(c.getContenu(), "fr", "en");
-                    contenuField.setText(texteTraduit);
-                } catch (IOException ex) {
-                    afficherAlerte("Erreur de traduction", "Erreur lors de la traduction : " + ex.getMessage(), Alert.AlertType.ERROR);
-                }
+                ChoiceDialog<String> dialog = new ChoiceDialog<>("English", "English", "Arabic", "Français");
+                dialog.setTitle("Traduction");
+                dialog.setHeaderText("Traduire le commentaire");
+                dialog.setContentText("Langue cible :");
+
+                Optional<String> result = dialog.showAndWait();
+                result.ifPresent(langueChoisie -> {
+                    String codeLangue = getCodeLangue(langueChoisie);
+                    try {
+                        String texteTraduit = traduireTexte(c.getContenu(), "fr", codeLangue);
+                        contenuField.setText(texteTraduit);
+                    } catch (IOException ex) {
+                        afficherAlerte("Erreur de traduction", "Échec de la traduction : " + ex.getMessage(), Alert.AlertType.ERROR);
+                    }
+                });
             });
 
             boutons.getChildren().addAll(modifierBtn, enregistrerBtn, supprimerBtn, traduireBtn);
@@ -146,7 +153,7 @@ public class DetailsForum {
     private void ajouterCommentaire() {
         String contenu = champCommentaire.getText().trim();
         if (contenu.isEmpty()) {
-            afficherAlerte("Champ vide", "Veuillez écrire quelque chose avant de publier.", Alert.AlertType.WARNING);
+            afficherAlerte("Champ vide", "Veuillez écrire un commentaire.", Alert.AlertType.WARNING);
             return;
         }
 
@@ -159,7 +166,7 @@ public class DetailsForum {
             champCommentaire.clear();
             afficherCommentaires();
         } catch (IllegalArgumentException e) {
-            afficherAlerte("Contenu inapproprié", "Votre commentaire contient des mots ou expressions inappropriés.", Alert.AlertType.WARNING);
+            afficherAlerte("Contenu inapproprié", "Commentaire inapproprié détecté.", Alert.AlertType.WARNING);
         }
     }
 
@@ -175,7 +182,7 @@ public class DetailsForum {
             listestage.setScene(new Scene(loader.load()));
             listestage.show();
         } catch (IOException e) {
-            afficherAlerte("Erreur", "Erreur lors du chargement de la liste des forums.", Alert.AlertType.ERROR);
+            afficherAlerte("Erreur", "Chargement de la liste échoué.", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
@@ -196,35 +203,53 @@ public class DetailsForum {
 
             ((Stage) titreLabel.getScene().getWindow()).close();
         } catch (IOException e) {
-            afficherAlerte("Erreur", "Erreur lors de l'ouverture de la modification du post.", Alert.AlertType.ERROR);
+            afficherAlerte("Erreur", "Ouverture de la modification échouée.", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void traduireContenuPost() {
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("English", "English", "Arabic", "Français");
+        dialog.setTitle("Traduction");
+        dialog.setHeaderText("Traduire le contenu du post");
+        dialog.setContentText("Langue cible :");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(langueChoisie -> {
+            String codeLangue = getCodeLangue(langueChoisie);
+            try {
+                String texteTraduit = traduireTexte(post.getContenu(), "fr", codeLangue);
+                contenuArea.setText(texteTraduit);
+
+                String titreTraduit = traduireTexte(post.getTitre(), "fr", codeLangue);
+                titreLabel.setText(titreTraduit);
+            } catch (IOException e) {
+                afficherAlerte("Erreur", "Traduction impossible : " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
     }
 
     private String traduireTexte(String texte, String sourceLang, String targetLang) throws IOException {
         String encodedTexte = encodeURIComponent(texte);
         String apiUrl = "https://lingva.ml/api/v1/" + sourceLang + "/" + targetLang + "/" + encodedTexte;
-        URL url = new URL(apiUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(apiUrl).openConnection();
         conn.setRequestMethod("GET");
 
-        try (InputStream inputStream = conn.getInputStream();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
+            while ((line = reader.readLine()) != null) response.append(line);
 
             JSONObject json = new JSONObject(response.toString());
             return json.getString("translation");
         }
     }
-    private static String encodeURIComponent(String s) {
+
+    private String encodeURIComponent(String s) {
         try {
             return java.net.URLEncoder.encode(s, StandardCharsets.UTF_8.toString())
-                    .replaceAll("\\+", "%20")  // remplacer les + par %20
+                    .replaceAll("\\+", "%20")
                     .replaceAll("%21", "!")
                     .replaceAll("%27", "'")
                     .replaceAll("%28", "(")
@@ -235,26 +260,19 @@ public class DetailsForum {
         }
     }
 
-
-    @FXML
-    private void traduireContenuPost() {
-        try {
-            String contenuTraduit = traduireTexte(post.getContenu(), "fr", "en");
-            String titreTraduit = traduireTexte(post.getTitre(), "fr", "en");
-
-            contenuArea.setText(contenuTraduit);
-            titreLabel.setText(titreTraduit);
-        } catch (IOException e) {
-            afficherAlerte("Erreur de traduction", "Erreur lors de la traduction du post.", Alert.AlertType.ERROR);
-            e.printStackTrace();
-        }
+    private String getCodeLangue(String langue) {
+        return switch (langue) {
+            case "English" -> "en";
+            case "Arabic" -> "ar";
+            case "Français" -> "fr";
+            default -> "en";
+        };
     }
 
     private void afficherAlerte(String titre, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(titre);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Alert alerte = new Alert(type);
+        alerte.setTitle(titre);
+        alerte.setContentText(message);
+        alerte.showAndWait();
     }
 }

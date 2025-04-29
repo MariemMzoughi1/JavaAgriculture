@@ -5,8 +5,13 @@
 <?import javafx.scene.image.ImageView?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.forum.DetailsForum" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f0f0f0;">
-    <ScrollPane fitToWidth="true" style="-fx-background-color: #f0f0f0;">
-        <content>
+
+    <BorderPane style="-fx-background-color: #f0f0f0;">
+        <left>
+            <fx:include source="MenuPrincipal.fxml" />
+        </left>
+        <center>
+            <ScrollPane fitToWidth="true" style="-fx-background-color: #f0f0f0;">
             <VBox spacing="15" alignment="TOP_CENTER" style="-fx-padding: 30; -fx-background-color: #f0f0f0;">
                 <!-- Titre du post -->
                 <Label fx:id="titreLabel" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 10;"/>
@@ -42,6 +47,8 @@
                 <VBox fx:id="commentairesBox" spacing="15" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-padding: 15;" prefHeight="200"/>
 
             </VBox>
-        </content>
-    </ScrollPane>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+
 </VBox>

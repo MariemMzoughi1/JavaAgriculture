@@ -30,21 +30,9 @@ public class MenuPrincipalController {
     private StackPane mainContent;
     @FXML
     public void initialize() {
-        updateDateTime(); // première mise à jour immédiate
+        ;
+    }
 
-        // Mise à jour toutes les secondes
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0), e -> updateDateTime()),
-                new KeyFrame(Duration.seconds(1))
-        );
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
-    }
-    private void updateDateTime() {
-        LocalDateTime now = LocalDateTime.now();
-        dateLabel.setText("📅 " + now.format(dateFormatter));
-        timeLabel.setText("🕒 " + now.format(timeFormatter));
-    }
     public void ouvrirCulture() {
         chargerVue("/AfficherCulture.fxml");
     }
@@ -68,7 +56,14 @@ public class MenuPrincipalController {
     }
 
     public void handleForum(ActionEvent event) {
-        chargerVue("/ListeForum.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeForum.fxml"));
+            Scene scene = new Scene(loader.load(), 800, 600);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleProduit(ActionEvent event) {
