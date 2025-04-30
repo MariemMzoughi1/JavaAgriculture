@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.machine.MachineHomeController"
+            prefWidth="800" prefHeight="600"
+            style="-fx-background-color: linear-gradient(to bottom, #f3ffe9, #d8f4c2);">
+
+    <HBox prefWidth="800" prefHeight="600">
+
+        <!-- Sidebar -->
+        <VBox prefWidth="220" spacing="20" style="-fx-background-color: #2e5e1a; -fx-padding: 20;">
+            <Label text="🌿 DevHarvest" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: bold;" />
+
+            <Button text="➕ Ajouter une machine" onAction="#handleAddMachine"
+                    styleClass="sidebar-btn"/>
+            <Button text="📋 Liste des machines" onAction="#handleListMachines"
+                    styleClass="sidebar-btn"/>
+            <Button text="📅 Réservations" onAction="#handleReservation"
+                    styleClass="sidebar-btn"/>
+            <Button text="💬 Forum" onAction="#handleForum"
+                    styleClass="sidebar-btn"/>
+            <Button text="🧺 Produits" onAction="#handleProduit"
+                    styleClass="sidebar-btn"/>
+            <Button text="🌾 Cultures" onAction="#handleCulture"
+                    styleClass="sidebar-btn"/>
+            <Button text="🌾 Parcelle" onAction="#handleParcelle"
+                    styleClass="sidebar-btn"/>
+            <Button text="🔓 Logout" onAction="#handleLogout"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px;" />
+        </VBox>
+
+        <!-- Contenu principal (vide pour le moment) -->
+        <AnchorPane fx:id="mainContent" style="-fx-background-color: transparent;" prefWidth="580" />
+    </HBox>
+</AnchorPane>

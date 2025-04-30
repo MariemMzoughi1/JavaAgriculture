@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.produit.ReservationTableViewController"
+            prefWidth="800" prefHeight="600"
+            style="-fx-background-color: #f8f9fa;">
+
+    <top>
+        <VBox spacing="4" style="-fx-padding: 15; -fx-background-color: #2c3e50;">
+            <Label text="Liste des Réservations"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;" />
+            <Label text="Toutes les réservations en cours"
+                   style="-fx-font-size: 12px; -fx-text-fill: #bdc3c7;" />
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="reservationTable" prefWidth="780" style="-fx-padding: 15;">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="clientColumn" text="Client" prefWidth="180"/>
+                <TableColumn fx:id="machineColumn" text="Machine" prefWidth="180"/>
+                <TableColumn fx:id="startColumn" text="Début" prefWidth="140"/>
+                <TableColumn fx:id="endColumn" text="Fin" prefWidth="140"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10 20;">
+            <Button text="⬅ Retour" onAction="#handleBack"
+                    style="-fx-background-color: #636e72; -fx-text-fill: white;" />
+        </HBox>
+    </bottom>
+</BorderPane>

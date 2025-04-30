@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="600" prefWidth="200" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MenuPrincipalController">
+
+    <!-- Barre latérale gauche -->
+    <left>
+        <VBox fx:id="sidebar" spacing="10" stylesheets="@menu_principal.css">
+            <Label prefHeight="51.0" prefWidth="142.0" styleClass="slogan-label" text="         Agri+" />
+            <Separator styleClass="custom-separator" />
+            <Button onAction="#ouvrirCulture" styleClass="sidebar-button" text="Culture" />
+            <Button onAction="#ouvrirParcelle" styleClass="sidebar-button" text="Parcelle" />
+            <Button onAction="#handleAddMachine" styleClass="sidebar-button" text="➕ Ajouter une machine" />
+            <Button onAction="#handleMachines" styleClass="sidebar-button" text="📋 Machines" />
+            <Button onAction="#handleReservation" styleClass="sidebar-button" text="📅 Réservations" />
+            <Button onAction="#handleForum" styleClass="sidebar-button" text="💬 Forum" />
+            <Button onAction="#handleProduit" styleClass="sidebar-button" text="🧺 Produits" />
+            <Button onAction="#handleLogout" styleClass="sidebar-button logout-button" text="🔓 Logout" />
+        </VBox>
+    </left>
+
+</BorderPane>

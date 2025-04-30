@@ -1,0 +1,165 @@
+/* Style général */
+.main-container {
+    -fx-padding: 30px;
+    -fx-background-color: #f8f9fa;
+}
+
+/* En-tête */
+.header-box {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.titre-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.meta-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Contenu */
+.content-box {
+    -fx-background-color: white;
+    -fx-padding: 25px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.post-image {
+    -fx-fit-width: 600px;       /* Largeur maximale */
+    -fx-fit-height: 400px;      /* Hauteur maximale */
+    -fx-preserve-ratio: true;   /* Conserver le ratio d'aspect */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 3);
+    -fx-max-width: 600px;
+    -fx-max-height: 400px;
+}
+
+/* Pour le conteneur de l'image */
+.image-container {
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-background-color: #f0f0f0;
+}
+
+.contenu-area {
+    -fx-font-size: 16px;
+    -fx-font-family: 'Segoe UI';
+    -fx-background-color: transparent;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8px;
+    -fx-padding: 15px;
+}
+
+/* Boutons */
+.nav-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-padding: 10px 25px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 25px;
+    -fx-cursor: hand;
+}
+
+.primary-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-padding: 10px 25px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 25px;
+    -fx-cursor: hand;
+}
+
+.secondary-button {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 8px 20px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+
+.action-button {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-padding: 8px 20px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 20px;
+    -fx-cursor: hand;
+}
+
+.like-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-padding: 8px 20px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 20px;
+    -fx-cursor: hand;
+}
+
+.dislike-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-padding: 8px 20px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 20px;
+    -fx-cursor: hand;
+}
+
+/* Section commentaires */
+.comment-section {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 15px 0;
+}
+
+.comment-input-box {
+    -fx-padding: 0 0 20px 0;
+}
+
+.comment-field {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 20px;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 14px;
+}
+
+/* Hover effects */
+.nav-button:hover {
+    -fx-background-color: #5a6268;
+}
+
+.primary-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.action-button:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+.like-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.dislike-button:hover {
+    -fx-background-color: #c0392b;
+}

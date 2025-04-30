@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.forum.ListeForum"
+            prefHeight="700.0" prefWidth="1200.0"
+            stylesheets="@/forum.css">
+
+    <!-- Menu à gauche -->
+    <left>
+        <fx:include source="MenuPrincipal.fxml"/>
+    </left>
+
+    <!-- Partie centrale -->
+    <center>
+        <VBox spacing="15" styleClass="main-container">
+            <!-- Barre de recherche et filtres -->
+            <HBox styleClass="toolbar" spacing="10" alignment="CENTER">
+                <TextField fx:id="searchField" promptText="Rechercher un post..." styleClass="search-field" onAction="#handleSearch"/>
+                <Button fx:id="searchButton" text="Rechercher" styleClass="action-button" onAction="#handleSearch"/>
+                <Separator orientation="VERTICAL" styleClass="separator"/>
+                <Button fx:id="sortByDateButton" text="Date ▼" styleClass="sort-button" onAction="#sortByDate"/>
+                <Button fx:id="sortByLikesButton" text="Likes" styleClass="sort-button" onAction="#sortByLikes"/>
+                <Button fx:id="sortByDislikesButton" text="Dislikes" styleClass="sort-button" onAction="#sortByDislikes"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="createForumButton" text="+ Nouveau Post" styleClass="primary-button" onAction="#handleCreateForum"/>
+            </HBox>
+
+            <!-- ScrollPane pour les posts -->
+            <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+                <VBox fx:id="cardContainer" spacing="15" alignment="TOP_CENTER" styleClass="posts-container">
+                    <padding>
+                        <Insets top="10" right="15" bottom="20" left="15"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- Chatbot à droite -->
+    <right>
+        <fx:include source="chatbot.fxml"/>
+    </right>
+</BorderPane>

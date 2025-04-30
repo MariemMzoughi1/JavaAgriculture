@@ -1,0 +1,72 @@
+/* Style des cartes produit */
+.card {
+    -fx-background-color: white;
+    -fx-border-radius: 12px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 4);
+    -fx-border-color: #E0E0E0;
+    -fx-background-radius: 12px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 6);
+    -fx-background-color: #f9f9f9;
+}
+
+/* Image du produit */
+.product-image {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+}
+
+/* Titre du produit */
+.product-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 5px 0;
+    -fx-alignment: center;
+}
+
+/* Prix du produit */
+.product-price {
+    -fx-font-size: 14px;
+    -fx-text-fill: #5b5b5b;
+    -fx-padding: 5px 0;
+}
+
+/* Bouton d'ajout au panier */
+.add-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 12px 20px;
+    -fx-border-radius: 25px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    -fx-background-color: #45a049;
+}
+
+/* Bouton Panier */
+button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-padding: 12px 20px;
+    -fx-border-radius: 25px;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-transition: background-color 0.3s ease;
+}
+
+button:hover {
+    -fx-background-color: #1976D2;
+}

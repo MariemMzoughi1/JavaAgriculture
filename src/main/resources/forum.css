@@ -1,0 +1,198 @@
+/* Style général */
+.root {
+    -fx-base: #f8f9fa;
+    -fx-background: #ffffff;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.main-container {
+    -fx-background-color: #f5f7fa;
+    -fx-padding: 15px;
+}
+
+/* Barre d'outils */
+.toolbar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 12px 15px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.search-field {
+    -fx-pref-width: 250px;
+    -fx-pref-height: 36px;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-padding: 0 15px;
+    -fx-font-size: 14px;
+}
+
+.separator {
+    -fx-padding: 0 5px;
+}
+
+/* Boutons */
+.action-button {
+    -fx-background-color: #e9ecef;
+    -fx-text-fill: #495057;
+    -fx-background-radius: 18px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: #dee2e6;
+}
+
+.sort-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6c757d;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 18px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.sort-button:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.primary-button {
+    -fx-background-color: #4361ee;
+    -fx-text-fill: white;
+    -fx-background-radius: 18px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #3a56d4;
+}
+
+.secondary-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-background-radius: 18px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #5a6268;
+}
+
+/* Zone de défilement */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Cartes de post */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 2);
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+}
+
+.card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 15, 0, 0, 3);
+}
+
+.titre-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212529;
+}
+
+.contenu-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #495057;
+    -fx-wrap-text: true;
+}
+
+.meta-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6c757d;
+}
+
+.stats-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4361ee;
+    -fx-font-weight: bold;
+}
+
+/* Boutons dans les cartes */
+.button-voirplus {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #4361ee;
+    -fx-background-radius: 15px;
+    -fx-padding: 6px 12px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-border-color: #4361ee;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+}
+
+.button-voirplus:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.button-supprimer {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #dc3545;
+    -fx-background-radius: 15px;
+    -fx-padding: 6px 12px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-border-color: #dc3545;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+}
+
+.button-supprimer:hover {
+    -fx-background-color: #ffecee;
+}
+
+/* Responsive design */
+@media (max-width: 1000px) {
+    .search-field {
+        -fx-pref-width: 180px;
+    }
+
+    .toolbar {
+        -fx-padding: 10px;
+    }
+}
+
+@media (max-width: 800px) {
+    .toolbar {
+        -fx-wrap-text: true;
+        -fx-spacing: 8px;
+    }
+
+    .search-field {
+        -fx-pref-width: 150px;
+    }
+
+    .card {
+        -fx-padding: 15px;
+    }
+}

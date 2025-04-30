@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.forum.AjouterForum"
+            prefHeight="700.0" prefWidth="1200.0"
+            stylesheets="@/ajouter_forum.css">
+
+    <!-- Menu à gauche -->
+    <left>
+        <fx:include source="MenuPrincipal.fxml"/>
+    </left>
+
+    <!-- Partie centrale -->
+    <center>
+        <VBox spacing="20" styleClass="form-container" alignment="TOP_CENTER">
+            <Label text="Ajouter un Post Forum" styleClass="form-title"/>
+
+            <GridPane styleClass="form-grid" hgap="10" vgap="15">
+                <padding><Insets top="10" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="Titre :" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="titreField" styleClass="form-field" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+                <Label text="Contenu :" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextArea fx:id="contenuField" styleClass="form-textarea" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+                <Label text="Image :" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                    <TextField fx:id="imageField" styleClass="image-field" editable="false"/>
+                    <Button text="Parcourir" styleClass="browse-button" onAction="#parcourirImage"/>
+                </HBox>
+
+                <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="150" preserveRatio="true"
+                           GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.halignment="LEFT"/>
+            </GridPane>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Ajouter" styleClass="primary-button" onAction="#ajouterPost"/>
+                <Button text="Retour" styleClass="secondary-button" onAction="#retour"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

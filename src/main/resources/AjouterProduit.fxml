@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="Controllers.produit.AjouterProduit"
+            prefWidth="900" prefHeight="700"
+            stylesheets="@style.css">
+
+   <children>
+      <VBox alignment="TOP_CENTER" spacing="30" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50"
+            AnchorPane.topAnchor="30" AnchorPane.bottomAnchor="30" styleClass="form-container">
+         <children>
+
+            <Label text="Ajouter un nouveau produit"
+                   styleClass="form-title"
+                   textAlignment="CENTER" underline="true" />
+
+            <GridPane hgap="20" vgap="20" styleClass="form-fields">
+               <columnConstraints>
+                  <ColumnConstraints minWidth="120" halignment="RIGHT"/>
+                  <ColumnConstraints hgrow="ALWAYS"/>
+               </columnConstraints>
+
+               <children>
+                  <Label text="Nom Produit:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                  <TextField fx:id="nomTextField" promptText="Entrez le nom du produit"
+                             GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                  <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                  <TextField fx:id="descriptionTextField" promptText="Entrez la description"
+                             GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                  <Label text="Catégorie:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                  <TextField fx:id="categorieTextField" promptText="Entrez la catégorie"
+                             GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                  <Label text="Prix Unitaire:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                  <TextField fx:id="prixUnitaireTextField" promptText="Entrez le prix unitaire"
+                             GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                  <Label text="Quantité en Stock:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                  <TextField fx:id="quantiteStockTextField" promptText="Quantité en stock"
+                             GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                  <Label text="Image :" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
+                  <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                     <children>
+                        <TextField fx:id="imageTextField" editable="false" HBox.hgrow="ALWAYS"/>
+                        <Button text="Parcourir..." onAction="#choisirImage"/>
+                     </children>
+                  </HBox>
+
+                  <Label text="Aperçu :" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="form-label"/>
+                  <ImageView fx:id="imagePreview" fitWidth="150" fitHeight="150" preserveRatio="true"
+                             GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+               </children>
+            </GridPane>
+
+            <Button text="Ajouter Produit" onAction="#ajouterProduit" styleClass="btn-ajouter"/>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

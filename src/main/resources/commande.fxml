@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.Region?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.produit.CommandeController"
+            style="-fx-background-color: #f4f4f9;">
+
+    <!-- En-tête avec bouton retour et titre -->
+    <HBox alignment="CENTER_LEFT" spacing="20" layoutX="20" layoutY="20">
+        <!-- Bouton Retour -->
+        <Button fx:id="btnRetour" text="↩ Retour"
+                onAction="#retourAfficherProduit"
+                style="-fx-background-color: #3498db;
+                       -fx-text-fill: white;
+                       -fx-font-weight: bold;
+                       -fx-padding: 6px 12px;
+                       -fx-background-radius: 15;
+                       -fx-cursor: hand;
+                       -fx-font-size: 13px;" />
+
+        <Label fx:id="labelTitre"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               text="📦 Liste des Produits" />
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
+
+    <!-- Bouton Panier en haut à droite -->
+    <Button fx:id="btnPanier" text="🛒 Panier" layoutX="700" layoutY="20" onAction="#ouvrirPanier" style="
+        -fx-background-color: #FF5722;
+        -fx-text-fill: white;
+        -fx-padding: 8px 16px;
+        -fx-background-radius: 20px;
+        -fx-font-size: 14px;
+        -fx-font-weight: bold;
+        -fx-cursor: hand;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2);
+    "/>
+
+    <!-- Zone défilante contenant les cartes produit -->
+    <FlowPane fx:id="produitsContainer" layoutX="20" layoutY="70" hgap="20" vgap="20" prefWidth="800" style="-fx-alignment: center;">
+        <!-- Les cartes produit seront ajoutées dynamiquement ici -->
+    </FlowPane>
+
+    <!-- Message si le panier est vide ou s'il contient des produits -->
+    <Label fx:id="panierMessage" layoutX="20" layoutY="650" text="Panier vide !" visible="false" style="
+        -fx-font-size: 14px;
+        -fx-font-family: 'Arial', sans-serif;
+        -fx-text-fill: #FF5722;
+        -fx-font-weight: bold;">
+    </Label>
+</AnchorPane>

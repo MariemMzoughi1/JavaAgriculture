@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.forum.ModifierPost"
+            prefHeight="700.0" prefWidth="1200.0"
+            stylesheets="@/modifier_forum.css">
+
+    <!-- Menu à gauche -->
+    <left>
+        <fx:include source="MenuPrincipal.fxml"/>
+    </left>
+
+    <!-- Partie centrale -->
+    <center>
+        <VBox spacing="20" styleClass="form-container" alignment="TOP_CENTER">
+            <Label text="Modifier le Post" styleClass="form-title"/>
+
+            <GridPane styleClass="form-grid" hgap="10" vgap="15">
+                <padding><Insets top="10" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="Titre :" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="titreField" styleClass="form-field" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Contenu :" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextArea fx:id="contenuArea" styleClass="form-textarea" wrapText="true"
+                          GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
+
+                <ImageView fx:id="imageView" fitWidth="300" preserveRatio="true"
+                           GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.halignment="LEFT"/>
+
+                <Button fx:id="boutonImage" text="Choisir une image" styleClass="browse-button"
+                        onAction="#handleChoisirImage" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Enregistrer" styleClass="primary-button" onAction="#handleEnregistrer"/>
+                <Button text="Annuler" styleClass="secondary-button" onAction="#handleAnnuler"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
