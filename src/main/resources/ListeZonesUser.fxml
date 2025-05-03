@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="780.0" style="-fx-background-color: #e8f5e9;" stylesheets="@ListeZones.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.ListeZonesUser">
+<AnchorPane prefHeight="600.0" prefWidth="780.0" style="-fx-background-color: #e8f5e9;" stylesheets="@ListeZonesUser.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.ListeZonesUser">
 
     <!-- 🌿 Titre -->
     <Text layoutX="230.0" layoutY="30.0" style="-fx-font-size: 24px; -fx-fill: #2e7d32;" text="🌿 Liste des Zones 🌿" />
@@ -36,8 +36,7 @@
     <!-- ➕ Boutons bas -->
     <Button fx:id="ajouterBtn" layoutX="51.0" layoutY="530.0" onAction="#ajouterZone"
             style="-fx-background-color: #66bb6a; -fx-text-fill: white; -fx-font-weight: bold;" text="Ajouter" />
-    <Button fx:id="retourBtn" layoutX="130.0" layoutY="530.0" onAction="#retourAccueil"
-            style="-fx-background-color: #8d6e63; -fx-text-fill: white; -fx-font-weight: bold;" text="Accueil" />
+
     <Button layoutX="490.0" layoutY="530.0" onAction="#exporterCSV"
             style="-fx-background-color: #f5d505; -fx-text-fill: white;" text="Exporter en CSV" />
     <Button layoutX="620.0" layoutY="530.0" onAction="#exporterPDF"

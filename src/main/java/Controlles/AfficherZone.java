@@ -89,13 +89,8 @@ public class AfficherZone {
     }
 
     @FXML
-    private void retourListeZones(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeZones.fxml"));
-        Parent root = loader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Liste des zones");
-        stage.show();
+    private void retourListeZones(ActionEvent event) {
+        Sidebar.getInstance().chargerVue("ListeZonesUser.fxml");
     }
 
     public void setZone(Zone zone) {

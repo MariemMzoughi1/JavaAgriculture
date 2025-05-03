@@ -25,22 +25,22 @@ public class ProductiviteChartZone implements Initializable {
 
     private final GrangeService grangeService = new GrangeService();
 
-    private int zoneId; // L'ID de la zone qu'on va recevoir
+    private int zoneId;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // On ne charge pas tout de suite car on doit recevoir l'ID d'abord
+
     }
 
     public void setZoneId(int zoneId) {
         this.zoneId = zoneId;
-        chargerDonnees(); // Charger les données après avoir reçu l'ID
+        chargerDonnees();
     }
 
     private void chargerDonnees() {
         List<Grange> toutesLesGranges = grangeService.find();
 
-        // Filtrer uniquement les granges de la zone concernée
+
         List<Grange> grangesPourZone = toutesLesGranges.stream()
                 .filter(grange -> grange.getZone() != null && grange.getZone().getId() == zoneId)
                 .collect(Collectors.toList());
@@ -61,7 +61,7 @@ public class ProductiviteChartZone implements Initializable {
             serie.getData().add(new XYChart.Data<>(label, productivite));
         }
 
-        productiviteChart.getData().clear(); // Vider avant d'ajouter une nouvelle série
+        productiviteChart.getData().clear();
         productiviteChart.getData().add(serie);
     }
 

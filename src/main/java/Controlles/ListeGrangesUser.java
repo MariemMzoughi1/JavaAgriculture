@@ -120,35 +120,15 @@ public class ListeGrangesUser {
         afficherGranges(grangesList);
     }
 
+
+
     @FXML
-    void retourAccueil(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Acceuil.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
+    private void ajouterGrange(ActionEvent event) {
+        Sidebar.getInstance().chargerVue("AjouterGrange.fxml");
     }
 
     @FXML
-    void ajouterGrange(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterGrange.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = new Stage();
-        stage.setTitle("Ajouter une Grange");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    private void ouvrirChartProductivite() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/productivite_chart.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Graphique de Productivité");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void ouvrirChartProductivite(ActionEvent event) {
+        Sidebar.getInstance().chargerVue("Productivite_Chart.fxml");
     }
 }

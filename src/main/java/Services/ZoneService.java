@@ -18,20 +18,20 @@ public class ZoneService implements InterfaceCRUD<Zone> {
 
     @Override
     public void add(Zone zone) throws SQLException {
-        // Récupérer l'image depuis l'objet Zone
-        String image = zone.getImage();  // On récupère le chemin de l'image
 
-        // Construire la requête SQL pour insérer une nouvelle zone avec l'image
+        String image = zone.getImage();
+
+
         String req = "INSERT INTO Zone (superficie_zone, nom_zone, localisation_zone, image) VALUES ('"
                 + zone.getSuperficie_zone() + "', '"
                 + zone.getNom_zone() + "', '"
                 + zone.getLocalisation_zone() + "', '"
-                + (image != null ? image : "") + "')";  // Ajouter l'image (ou chaîne vide si aucune image)
+                + (image != null ? image : "") + "')";
 
         Statement st;
         try {
             st = con.createStatement();
-            st.executeUpdate(req);  // Exécuter la requête d'insertion
+            st.executeUpdate(req);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -45,8 +45,8 @@ public class ZoneService implements InterfaceCRUD<Zone> {
         try (PreparedStatement pst = con.prepareStatement(req)) {
             pst.setFloat(1, zone.getSuperficie_zone());
             pst.setString(2, zone.getLocalisation_zone());
-            pst.setString(3, zone.getNom_zone()); // ← nouvelle valeur du nom
-            pst.setInt(4, zone.getId()); // ← condition sur l'id
+            pst.setString(3, zone.getNom_zone());
+            pst.setInt(4, zone.getId());
 
             int rowsUpdated = pst.executeUpdate();
 
@@ -76,9 +76,9 @@ public class ZoneService implements InterfaceCRUD<Zone> {
             }
         } catch (SQLException e) {
             if (e.getMessage().contains("a foreign key constraint fails")) {
-                // ➕ Message clair dans la console
+
                 System.out.println("❌ Impossible de supprimer cette zone : elle est liée à une ou plusieurs granges.");
-                // ➕ Lever une exception personnalisée
+
                 throw new RuntimeException("Impossible de supprimer cette zone car elle est liée à une ou plusieurs granges.");
             } else {
                 System.out.println("❌ Erreur suppression zone : " + e.getMessage());
@@ -103,7 +103,7 @@ public class ZoneService implements InterfaceCRUD<Zone> {
                         rs.getString("localisation_zone"),
                         rs.getString("image")
                 );
-                zones.add(z); // Ajout de la zone à la liste
+                zones.add(z);
             }
         } catch (SQLException e) {
             System.out.println("Erreur dans ZoneService.find() : " + e.getMessage());

@@ -32,10 +32,12 @@ public class AjouterGrange implements Initializable {
     private final GrangeService grangeService = new GrangeService();
     private final ZoneService zoneService = new ZoneService();
 
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
         List<Zone> zones = zoneService.find();
         zoneComboBox.setItems(FXCollections.observableArrayList(zones));
 
+        // Affiche le nom de la zone dans la liste déroulante
         zoneComboBox.setCellFactory(param -> new ListCell<Zone>() {
             @Override
             protected void updateItem(Zone zone, boolean empty) {
@@ -43,11 +45,12 @@ public class AjouterGrange implements Initializable {
                 if (empty || zone == null) {
                     setText(null);
                 } else {
-                    setText(String.valueOf(zone.getId()));
+                    setText(zone.getNom_zone()); // Affiche le nom de la zone
                 }
             }
         });
 
+        // Affiche le nom de la zone dans la cellule sélectionnée
         zoneComboBox.setButtonCell(new ListCell<Zone>() {
             @Override
             protected void updateItem(Zone zone, boolean empty) {
@@ -55,11 +58,12 @@ public class AjouterGrange implements Initializable {
                 if (empty || zone == null) {
                     setText(null);
                 } else {
-                    setText(String.valueOf(zone.getId()));
+                    setText(zone.getNom_zone()); // Affiche aussi le nom ici
                 }
             }
         });
     }
+
 
     @FXML
     private void ajouterGrange(ActionEvent event) {
@@ -87,14 +91,21 @@ public class AjouterGrange implements Initializable {
             Grange grange = new Grange(type, capacite);
             grange.setZone(selectedZone);
 
-            // Calculer la productivité et la stocker (SEULEMENT EN CHIFFRE)
+
             float productivite = calculerProductivite(grange);
             grange.setProductivite(productivite);
 
             grangeService.add(grange);
 
-            showAlert(AlertType.INFORMATION, "Succès", "Grange ajoutée avec succès !");
-            ((Button) event.getSource()).getScene().getWindow().hide();
+
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Succès");
+            alert.setHeaderText(null);
+            alert.setContentText("Grange ajoutée avec succès !");
+            alert.showAndWait();
+
+
+            Sidebar.getInstance().chargerVue("ListeGrangesUser.fxml");
 
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Erreur", "Erreur : " + e.getMessage());
@@ -109,19 +120,22 @@ public class AjouterGrange implements Initializable {
         alert.showAndWait();
     }
 
-    // Nouvelle version qui retourne juste un float (pas de texte)
+
     private float calculerProductivite(Grange grange) {
         String type = grange.getType_grange().toLowerCase();
 
         switch (type) {
             case "vache":
             case "vaches":
+            case "vache1":
                 return grange.getCapacite() * 20f;
             case "mouton":
             case "moutons":
+            case "mouton1":
                 return grange.getCapacite() * 5f;
             case "poule":
             case "poules":
+            case "poule1":
                 return grange.getCapacite() * 1f;
             default:
                 return grange.getCapacite() * 1.2f;

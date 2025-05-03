@@ -185,12 +185,12 @@ public class ListeZones implements Initializable {
     @FXML
     private void trierParNom(ActionEvent event) {
         List<Zone> zonesTriees = zoneService.find().stream()
-                .sorted(Comparator.comparing(Zone::getNom_zone))  // Trie par nom
+                .sorted(Comparator.comparing(Zone::getNom_zone))
                 .collect(Collectors.toList());
 
-        zoneContainer.getChildren().clear();  // Effacer les zones affichées
+        zoneContainer.getChildren().clear();
         zonesTriees.forEach(zone -> {
-            HBox box = createZoneBox(zone);  // Re-crée les zones triées
+            HBox box = createZoneBox(zone);
             zoneContainer.getChildren().add(box);
         });
     }
@@ -198,20 +198,20 @@ public class ListeZones implements Initializable {
     @FXML
     private void trierParSuperficie(ActionEvent event) {
         List<Zone> zonesTriees = zoneService.find().stream()
-                .sorted(Comparator.comparingDouble(Zone::getSuperficie_zone))  // Trie par superficie
+                .sorted(Comparator.comparingDouble(Zone::getSuperficie_zone))
                 .collect(Collectors.toList());
 
-        zoneContainer.getChildren().clear();  // Effacer les zones affichées
+        zoneContainer.getChildren().clear();
         zonesTriees.forEach(zone -> {
-            HBox box = createZoneBox(zone);  // Re-crée les zones triées
+            HBox box = createZoneBox(zone);
             zoneContainer.getChildren().add(box);
         });
     }
 
     @FXML
     private void exporterCSV(ActionEvent event) {
-        List<Zone> zones = zoneService.find(); // Récupérer la liste des zones
-        ExportCSV.exportZonesToCSV(zones); // Appeler la méthode pour exporter en CSV
+        List<Zone> zones = zoneService.find();
+        ExportCSV.exportZonesToCSV(zones);
     }
     @FXML
     private void exporterPDF(ActionEvent event) {

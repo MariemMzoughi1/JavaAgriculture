@@ -43,7 +43,7 @@ public class GrangeService implements InterfaceCRUD<Grange> {
             ps.setString(1, g.getType_grange());
             ps.setFloat(2, g.getCapacite());
             ps.setInt(3, g.getZone().getId());
-            ps.setFloat(4, g.getProductivite()); // ➡️ Directement la productivité venant du contrôleur
+            ps.setFloat(4, g.getProductivite());
             ps.executeUpdate();
             System.out.println("Grange ajoutée avec succès.");
         } catch (SQLException e) {
@@ -59,7 +59,7 @@ public class GrangeService implements InterfaceCRUD<Grange> {
             ps.setString(1, g.getType_grange());
             ps.setFloat(2, g.getCapacite());
             ps.setInt(3, g.getZone().getId());
-            ps.setFloat(4, g.getProductivite()); // ➡️ Directement la productivité venant du contrôleur
+            ps.setFloat(4, g.getProductivite());
             ps.setInt(5, g.getId());
 
             ps.executeUpdate();
@@ -96,7 +96,7 @@ public class GrangeService implements InterfaceCRUD<Grange> {
                 g.setId(rs.getInt("id"));
                 g.setType_grange(rs.getString("type_grange"));
                 g.setCapacite(rs.getFloat("capacite"));
-                g.setProductivite(rs.getFloat("productivite")); // ➡️ On récupère la productivité depuis la BDD
+                g.setProductivite(rs.getFloat("productivite"));
 
                 Zone z = new Zone();
                 z.setId(rs.getInt("zid"));
@@ -119,10 +119,10 @@ public class GrangeService implements InterfaceCRUD<Grange> {
         String req = "SELECT g.*, z.id AS zid, z.superficie_zone, z.nom_zone, z.localisation_zone " +
                 "FROM grange g " +
                 "JOIN zone z ON g.zone_id = z.id " +
-                "WHERE g.zone_id = ?"; // Filtrer par zone_id
+                "WHERE g.zone_id = ?";
 
         try (PreparedStatement ps = con.prepareStatement(req)) {
-            ps.setInt(1, zoneId); // Passer le zoneId comme paramètre
+            ps.setInt(1, zoneId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Grange g = new Grange();

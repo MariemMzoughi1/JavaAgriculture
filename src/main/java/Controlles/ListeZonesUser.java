@@ -67,18 +67,7 @@ public class ListeZonesUser implements Initializable {
         Button consulterBtn = new Button("Consulter");
         consulterBtn.setStyle("-fx-background-color: #388e3c; -fx-text-fill: white;");
         consulterBtn.setOnAction(e -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherZone.fxml"));
-                Parent root = loader.load();
-                Controlles.AfficherZone controller = loader.getController();
-                controller.setZone(zone);
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Détails de la Zone");
-                stage.show();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            Sidebar.getInstance().chargerVueAvecZone("AfficherZone.fxml", zone);
         });
 
         card.getChildren().addAll(nom, superficie, localisation, consulterBtn);
@@ -95,25 +84,10 @@ public class ListeZonesUser implements Initializable {
 
     @FXML
     private void ajouterZone(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterZone.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Ajouter une zone");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Sidebar.getInstance().chargerVue("AjouterZone.fxml");
     }
 
-    @FXML
-    private void retourAccueil(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Acceuil.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

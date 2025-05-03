@@ -48,7 +48,7 @@ public class AjouterZone {
 
     private File selectedImageFile;
 
-    private String imagePath = "";  // Chemin relatif de l'image
+    private String imagePath = "";
 
 
     private double latitude;
@@ -64,7 +64,7 @@ public class AjouterZone {
         String superficieStr = superficieTextField.getText();
         String nomZone = nomzoneTextField.getText();
         String localisation = localisationTextField.getText();
-        String image = imagePathText.getText();  // Récupération du chemin de l'image
+        String image = imagePathText.getText();
 
         if (superficieStr.isEmpty() || nomZone.isEmpty() || localisation.isEmpty() || image.isEmpty()) {
             showAlert("Tous les champs sont obligatoires.");
@@ -89,11 +89,11 @@ public class AjouterZone {
         }
 
         Zone zone = new Zone(superficie, nomZone, localisation, image);
-        zone.setImage(image);  // Utilisation de l'attribut "image" dans la classe Zone
+        zone.setImage(image);
         ZoneService zoneservice = new ZoneService();
 
         try {
-            zoneservice.add(zone);  // Méthode d'ajout dans la base de données
+            zoneservice.add(zone);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Succès");
@@ -101,16 +101,10 @@ public class AjouterZone {
             alert.setContentText("Zone ajoutée avec succès !");
             alert.showAndWait();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherZone.fxml"));
-            Parent root = loader.load();
-            AfficherZone afficherZone = loader.getController();
-            afficherZone.setSuperficie(superficie);
-            afficherZone.setNomdezone(nomZone);
-            afficherZone.setLocalisation(localisation);
-            afficherZone.setImage(image);  // Passer le chemin de l'image au contrôleur suivant
-            superficieTextField.getScene().setRoot(root);
+            Sidebar.getInstance().chargerVue("ListeZonesUser.fxml");
 
-        } catch (SQLException | IOException e) {
+
+        } catch (SQLException e) {
             showAlert("Erreur lors de l'ajout : " + e.getMessage());
         }
     }
@@ -124,15 +118,10 @@ public class AjouterZone {
     }
 
     @FXML
-    public void retourliste(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeZonesUser.fxml"));
-        Parent root = loader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Liste des zones");
-        stage.show();
-
+    private void retourliste(ActionEvent event) {
+        Sidebar.getInstance().chargerVue("ListeZonesUser.fxml");
     }
+
     public void setCoordinates(double lat, double lng) {
         this.latitude = lat;
         this.longitude = lng;
@@ -144,9 +133,9 @@ public class AjouterZone {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterMapZone.fxml"));
             Parent root = loader.load();
 
-            // Récupération du contrôleur Map
+
             AjouterMapZone ajoutermapzone = loader.getController();
-            ajoutermapzone.setAjouterZoneController(this); // Important pour retour coords
+            ajoutermapzone.setAjouterZoneController(this);
 
             Stage stage = new Stage();
             stage.setTitle("Sélectionner une position sur la carte");
@@ -159,7 +148,7 @@ public class AjouterZone {
 
     @FXML
     void choisirImage(ActionEvent event) {
-        // Utiliser FileChooser pour choisir l'image
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir une image");
         fileChooser.getExtensionFilters().addAll(
@@ -168,29 +157,29 @@ public class AjouterZone {
 
         selectedImageFile = fileChooser.showOpenDialog(null);
         if (selectedImageFile != null) {
-            // Afficher le chemin absolu pour vérifier si c'est correct
+
             System.out.println("Chemin absolu de l'image : " + selectedImageFile.getAbsolutePath());
 
-            // Définir le nom du fichier pour éviter les collisions
+
             String imageName = selectedImageFile.getName();
             String targetPath = "resources/images/" + imageName;
 
-            // Créer le dossier "ressources/images" si il n'existe pas
+
             File targetDirectory = new File("resources/images");
             if (!targetDirectory.exists()) {
-                targetDirectory.mkdirs();  // Créer le dossier si il n'existe pas
+                targetDirectory.mkdirs();
             }
 
-            // Déplacer l'image dans le dossier `ressources/images`
+
             try {
                 File targetFile = new File(targetPath);
-                // Si le fichier cible existe déjà, on le remplace
+
                 Files.copy(selectedImageFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                imagePath = targetPath;  // Enregistrer le chemin relatif de l'image
-                imagePathText.setText(imagePath);  // Afficher le chemin de l'image dans le Text
+                imagePath = targetPath;
+                imagePathText.setText(imagePath);
             } catch (IOException e) {
                 showAlert("Erreur lors de la copie de l'image : " + e.getMessage());
-                System.out.println("Erreur lors de la copie de l'image : " + e.getMessage());  // Log pour le débogage
+                System.out.println("Erreur lors de la copie de l'image : " + e.getMessage());
             }
         }
     }

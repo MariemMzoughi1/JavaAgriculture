@@ -191,7 +191,7 @@ public class ListeGranges {
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType); // Utiliser le type passé en paramètre
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

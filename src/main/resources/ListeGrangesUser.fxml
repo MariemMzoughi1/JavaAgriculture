@@ -45,12 +45,7 @@
             </padding>
         </FlowPane>
 
-        <!-- 🔘 Boutons en bas -->
-        <Button fx:id="btnRetour"
-                layoutX="38.0" layoutY="538.0"
-                onAction="#retourAccueil"
-                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;"
-                text="↩ Retour à l'accueil" />
+
 
         <Button fx:id="btnAjouter"
                 layoutX="297.0" layoutY="538.0"

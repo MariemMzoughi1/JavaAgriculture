@@ -13,7 +13,7 @@ public class AfficherMapZone {
     private double latitude;
     private double longitude;
 
-    // Méthode pour initialiser la carte et afficher la localisation
+
     @FXML
     public void initialize() {
         WebEngine webEngine = mapView.getEngine();

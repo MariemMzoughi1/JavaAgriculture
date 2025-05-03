@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="605.0" prefWidth="728.0" style="-fx-background-color: #f4fbe5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.AfficherZone">
+<AnchorPane prefHeight="605.0" prefWidth="728.0" style="-fx-background-color: #f4fbe5;" stylesheets="@AfficherZone.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.AfficherZone">
 
     <children>
 
@@ -24,25 +24,41 @@
         <ImageView fx:id="imageView" fitHeight="214.0" fitWidth="271.0" layoutX="430.0" layoutY="76.0" style="-fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
         <!-- Champ Superficie -->
-        <TextField fx:id="superficie" editable="false" layoutX="64.0" layoutY="76.0" prefHeight="27.0" prefWidth="238.0" promptText="Superficie" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
+        <TextField fx:id="superficie" editable="false" layoutX="73.0" layoutY="167.0" prefHeight="27.0" prefWidth="238.0" promptText="Superficie" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
         <!-- Champ Nom de la zone -->
-        <TextField fx:id="nomdezone" editable="false" layoutX="64.0" layoutY="127.0" prefHeight="27.0" prefWidth="238.0" promptText="Nom de la zone" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
+        <TextField fx:id="nomdezone" editable="false" layoutX="73.0" layoutY="87.0" prefHeight="27.0" prefWidth="238.0" promptText="Nom de la zone" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
         <!-- Champ Localisation -->
-        <TextField fx:id="localisation" editable="false" layoutX="64.0" layoutY="173.0" prefHeight="27.0" prefWidth="238.0" promptText="Localisation" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
+        <TextField fx:id="localisation" editable="false" layoutX="73.0" layoutY="251.0" prefHeight="27.0" prefWidth="238.0" promptText="Localisation" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
         <!-- Carte de localisation -->
         <WebView fx:id="mapView" layoutX="434.0" layoutY="303.0" prefHeight="124.0" prefWidth="271.0" style="-fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
-        <VBox fx:id="grangesList" layoutX="49.0" layoutY="261.0" prefHeight="2.0" prefWidth="319.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
+        <VBox fx:id="grangesList" layoutX="73.0" layoutY="376.0" prefHeight="2.0" prefWidth="319.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #a7dba7; -fx-border-radius: 5;" />
 
-        <Button fx:id="btnAfficherProductivite" layoutX="64.0" layoutY="222.0" onAction="#afficherProductivite" text="Afficher Productivité" />
+        <Button fx:id="btnAfficherProductivite" layoutX="73.0" layoutY="296.0" onAction="#afficherProductivite" text="Afficher Productivité" />
 
         <!-- Bouton Retour -->
-        <Button fx:id="btnRetourListe" layoutX="253.0" layoutY="554.0" onAction="#retourListeZones" prefHeight="37.0" prefWidth="222.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="Retour à la liste des zones" />
+        <Button fx:id="btnRetourListe" layoutX="253.0" layoutY="565.0" onAction="#retourListeZones" prefHeight="37.0" prefWidth="222.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="Retour à la liste des zones" />
 
         <!-- Bouton Proposer Culture -->
-        <Button fx:id="btnProposerCulture" layoutX="225.0" layoutY="508.0" onAction="#proposerCulture" prefHeight="37.0" prefWidth="278.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="propositions des activité agriculture" />
+        <Button fx:id="btnProposerCulture" layoutX="225.0" layoutY="517.0" onAction="#proposerCulture" prefHeight="37.0" prefWidth="278.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text="propositions des activité agriculture" />
+      <Text layoutX="73.0" layoutY="356.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Les granges " />
+      <Text layoutX="73.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="nom de zone">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="73.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Superficie">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="73.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Localisation">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
 
 
     </children>

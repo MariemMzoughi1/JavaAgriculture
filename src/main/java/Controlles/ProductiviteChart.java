@@ -39,7 +39,7 @@ public class ProductiviteChart implements Initializable {
             float productivite = grange.getProductivite();
             String niveau = getNiveauProductivite(productivite);
 
-            // Ex: "Vaches (Élevée)" sur l'axe X
+
             String label = grange.getType_grange() + " (" + niveau + ")";
 
             serie.getData().add(new XYChart.Data<>(label, productivite));

@@ -24,7 +24,7 @@ public class ModifierZone {
     public void setZone(Zone zone) {
         this.zoneAModifier = zone;
 
-        // Pré-remplir les champs avec les valeurs actuelles
+
         nomZoneField.setText(zone.getNom_zone());
         superficieField.setText(String.valueOf(zone.getSuperficie_zone()));
         localisationField.setText(zone.getLocalisation_zone());
@@ -33,23 +33,23 @@ public class ModifierZone {
     @FXML
     private void enregistrerModification() {
         try {
-            // Récupérer les nouvelles valeurs
+
             String nouveauNom = nomZoneField.getText().trim();
             float nouvelleSuperficie = Float.parseFloat(superficieField.getText().trim());
             String nouvelleLocalisation = localisationField.getText().trim();
 
-            // Modifier l'objet zone
+
             zoneAModifier.setNom_zone(nouveauNom);
             zoneAModifier.setSuperficie_zone(nouvelleSuperficie);
             zoneAModifier.setLocalisation_zone(nouvelleLocalisation);
 
-            // Mise à jour en base
+
             zoneService.update(zoneAModifier);
 
-            // Message console
+
             System.out.println("✅ Zone modifiée avec succès : " + zoneAModifier);
 
-            // Fermer la fenêtre
+
             Stage stage = (Stage) nomZoneField.getScene().getWindow();
             stage.close();
 

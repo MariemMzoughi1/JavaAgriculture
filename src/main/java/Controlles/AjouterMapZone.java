@@ -33,9 +33,9 @@ public class AjouterMapZone {
     public class JavaConnector {
         public void sendCoordinates(double lng, double lat) {
             if (ajouterZoneController != null) {
-                ajouterZoneController.setCoordinates(lat, lng); // Repasser les coords
+                ajouterZoneController.setCoordinates(lat, lng);
                 Stage stage = (Stage) mapView.getScene().getWindow();
-                stage.close(); // Fermer la fenêtre une fois sélection terminée
+                stage.close();
             }
         }
     }
