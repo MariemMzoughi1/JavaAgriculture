@@ -274,7 +274,7 @@ public class AdminDetailsForum {
     @FXML
     private void handleRetour() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeForum.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminListeForum.fxml"));
             Stage stage = new Stage();
             stage.setScene(new Scene(loader.load()));
             stage.setTitle("Forum");
