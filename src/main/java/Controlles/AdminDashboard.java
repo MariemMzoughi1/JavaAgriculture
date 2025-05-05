@@ -11,15 +11,23 @@ public class AdminDashboard {
     @FXML
     private AnchorPane contentPane;
 
-    @FXML
-    private void consulterZones(ActionEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/ListeZones.fxml"));
-        contentPane.getChildren().setAll(pane);
+    // Méthode générique pour charger une vue dans contentPane
+    private void chargerVue(String cheminFXML) {
+        try {
+            AnchorPane pane = FXMLLoader.load(getClass().getResource(cheminFXML));
+            contentPane.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace(); // ou afficher une alerte si nécessaire
+        }
     }
 
     @FXML
-    private void consulterGranges(ActionEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/ListeGranges.fxml"));
-        contentPane.getChildren().setAll(pane);
+    private void consulterZones(ActionEvent event) {
+        chargerVue("/ListeZones.fxml");
+    }
+
+    @FXML
+    private void consulterGranges(ActionEvent event) {
+        chargerVue("/ListeGranges.fxml");
     }
 }

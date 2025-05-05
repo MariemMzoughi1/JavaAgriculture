@@ -158,13 +158,7 @@ public class ListeGranges {
         });
     }
 
-    @FXML
-    void retourAccueil(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Acceuil.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+
 
     @FXML
     void ajouterGrange(ActionEvent event) throws IOException {

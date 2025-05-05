@@ -33,7 +33,6 @@
 
     <!-- ➕ Boutons bas -->
     <Button fx:id="ajouterBtn" layoutX="51.0" layoutY="537.0" onAction="#ajouterZone" style="-fx-background-color: #66bb6a; -fx-text-fill: white; -fx-font-weight: bold;" text="Ajouter" />
-    <Button fx:id="retourBtn" layoutX="120.0" layoutY="537.0" onAction="#retourAccueil" style="-fx-background-color: #8d6e63; -fx-text-fill: white; -fx-font-weight: bold;" text="Accueil" />
     <Button layoutX="484.0" layoutY="537.0" onAction="#exporterCSV" style="-fx-background-color: #f5d505; -fx-text-fill: white;" text="Exporter en CSV" />
     <Button layoutX="620.0" layoutY="537.0" onAction="#exporterPDF" style="-fx-background-color: #f4022f; -fx-text-fill: white; -fx-font-weight: bold;" text="Exporter PDF" />
 

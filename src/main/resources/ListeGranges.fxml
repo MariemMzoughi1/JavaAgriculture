@@ -32,9 +32,7 @@
                 <TableColumn fx:id="colProductivite" prefWidth="200" text="Productivité" />
             </columns>
         </TableView>
-
-        <Button fx:id="btnRetour" layoutX="38.0" layoutY="538.0" onAction="#retourAccueil" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="↩ Retour à l'accueil" />
-        <Button fx:id="btnAjouter" layoutX="297.0" layoutY="538.0" onAction="#ajouterGrange" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="➕ Ajouter une Grange" />
+        <Button fx:id="btnAjouter" layoutX="43.0" layoutY="538.0" onAction="#ajouterGrange" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="➕ Ajouter une Grange" />
         <Button layoutX="566.0" layoutY="538.0" onAction="#ouvrirChartProductivite" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" text="📊 Voir Productivité" />
     </children>
 </AnchorPane>

@@ -7,24 +7,33 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Controlles.AdminDashboard"
-            prefWidth="900" prefHeight="600">
+            prefWidth="1100" prefHeight="700"
+            style="-fx-background-color: #f4f6f8;">
 
     <!-- Sidebar -->
     <left>
-        <VBox spacing="15" style="-fx-background-color: #2e7d32;" alignment="TOP_CENTER" prefWidth="200">
-            <padding><Insets top="30" left="10" right="10" bottom="10"/></padding>
+        <VBox spacing="20" alignment="TOP_CENTER"
+              style="-fx-background-color: #2e7d32; -fx-padding: 20;" prefWidth="220">
 
-            <Text text="Admin Panel" style="-fx-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+            <Text text="Admin Panel"
+                  style="-fx-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
 
-            <Button fx:id="btnZones" text="📋 Zones" onAction="#consulterZones"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;" maxWidth="180"/>
-            <Button fx:id="btnGranges" text="🏠 Granges" onAction="#consulterGranges"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;" maxWidth="180"/>
+            <VBox spacing="12" alignment="TOP_CENTER">
+
+                <Button fx:id="btnZones" text="📋 Zones" onAction="#consulterZones"
+                        style="-fx-background-color: #388e3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand; -fx-pref-width: 180;" />
+
+                <Button fx:id="btnGranges" text="🏠 Granges" onAction="#consulterGranges"
+                        style="-fx-background-color: #388e3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand; -fx-pref-width: 180;" />
+
+            </VBox>
         </VBox>
     </left>
 
-    <!-- Contenu -->
+    <!-- Zone centrale : contenu dynamique -->
     <center>
-        <AnchorPane fx:id="contentPane" style="-fx-background-color: #f1f8e9;" />
+        <AnchorPane fx:id="contentPane"
+                    style="-fx-background-color: #ffffff; -fx-padding: 20;" />
     </center>
+
 </BorderPane>

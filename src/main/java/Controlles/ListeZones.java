@@ -104,20 +104,13 @@ public class ListeZones implements Initializable {
 
 
     @FXML
-    private void ajouterZone(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterZone.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Ajouter une zone");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void ajouterZone(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterZone.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Ajouter une Grange");
+        stage.setScene(scene);
+        stage.show();
     }
     @FXML
     private void modifierZone(Zone zone) {
@@ -148,13 +141,7 @@ public class ListeZones implements Initializable {
         }
     }
 
-    @FXML
-    private void retourAccueil(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Acceuil.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
