@@ -1,35 +1,27 @@
-/* 🌱 Style général */
+/* AfficherZone.css */
+
+/* Style de base pour l'AnchorPane */
 .root {
     -fx-background-color: #f4fbe5;
-    -fx-font-family: 'Segoe UI', Arial, sans-serif;
-    -fx-padding: 20px;
+    -fx-padding: 20;
 }
 
-/* 🌿 Titre principal */
-Text {
+/* Style pour les Text (titres) */
+.text {
     -fx-fill: #3e8e41;
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(62, 142, 65, 0.2), 0, 2, 2, 0);
+    -fx-font-family: 'Arial';
 }
 
-/* 🖼️ ImageView */
-.image-view {
-    -fx-border-color: #a7dba7;
-    -fx-border-radius: 5px;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 1);
-}
-
-/* 📝 Champs de texte */
+/* Style pour les TextField */
 .text-field {
     -fx-background-color: white;
     -fx-border-color: #a7dba7;
-    -fx-border-radius: 5px;
-    -fx-border-width: 1.5px;
-    -fx-padding: 5px 10px;
+    -fx-border-radius: 5;
+    -fx-border-width: 1.5;
+    -fx-padding: 5 10;
     -fx-font-size: 14px;
-    -fx-prompt-text-fill: #81c784;
+    -fx-font-family: 'Arial';
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
 }
 
 .text-field:disabled {
@@ -37,82 +29,101 @@ Text {
     -fx-background-color: #f5f5f5;
 }
 
-/* 🗺️ WebView (carte) */
+/* Style pour l'ImageView */
+.image-view {
+    -fx-border-color: #a7dba7;
+    -fx-border-radius: 5;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+/* Style pour le WebView */
 .web-view {
     -fx-border-color: #a7dba7;
-    -fx-border-radius: 5px;
-    -fx-border-width: 1.5px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0.5, 0, 1);
+    -fx-border-radius: 5;
+    -fx-border-width: 1.5;
 }
 
-/* 📦 VBox pour la liste des granges */
-.v-box {
-    -fx-background-color: white;
-    -fx-border-color: #a7dba7;
-    -fx-border-radius: 5px;
-    -fx-border-width: 1.5px;
-    -fx-padding: 10px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 3, 0.5, 0, 1);
-}
-
-/* 🎨 Boutons généraux */
+/* Style pour les boutons généraux */
 .button {
-    -fx-background-radius: 8px;
-    -fx-font-size: 14px;
+    -fx-font-family: 'Arial';
     -fx-font-weight: bold;
-    -fx-padding: 10px 20px;
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0.5, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
     -fx-transition: all 0.3s;
 }
 
 .button:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.5, 0, 2);
-    -fx-translate-y: -1px;
+    -fx-opacity: 0.9;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 2);
 }
 
-/* 🟢 Bouton Retour */
+/* Style spécifique pour le bouton Retour */
 #btnRetourListe {
     -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
+    -fx-background-insets: 0;
 }
 
 #btnRetourListe:hover {
-    -fx-background-color: #43A047;
+    -fx-background-color: #3e8e41;
 }
 
-/* 🔵 Bouton Proposer Culture */
+/* Style spécifique pour le bouton Proposer Culture */
 #btnProposerCulture {
     -fx-background-color: #2196F3;
-    -fx-text-fill: white;
+    -fx-background-insets: 0;
 }
 
 #btnProposerCulture:hover {
-    -fx-background-color: #1E88E5;
+    -fx-background-color: #0b7dda;
 }
 
-/* 🟡 Bouton Productivité */
+/* Style pour le bouton Afficher Productivité */
 #btnAfficherProductivite {
-    -fx-background-color: #FFC107;
-    -fx-text-fill: #333;
+    -fx-background-color: #ff9800;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 8px 15px;
+    -fx-background-radius: 8;
+    -fx-padding: 8 15;
 }
 
 #btnAfficherProductivite:hover {
-    -fx-background-color: #FFB300;
+    -fx-background-color: #e68a00;
 }
 
-/* 🖇️ Style pour les éléments de la liste des granges */
-.grange-item {
-    -fx-background-color: #f1f8e9;
-    -fx-border-color: #c8e6c9;
-    -fx-border-radius: 4px;
-    -fx-padding: 8px;
-    -fx-margin: 5px 0;
+/* Style pour la VBox des granges */
+#grangesList {
+    -fx-background-color: white;
+    -fx-border-color: #a7dba7;
+    -fx-border-radius: 5;
+    -fx-border-width: 1.5;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
 }
 
-.grange-item:hover {
-    -fx-background-color: #e8f5e9;
-    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.2), 3, 0.5, 0, 1);
+/* Style pour les labels des champs */
+.text {
+    -fx-fill: #4a4a4a;
+    -fx-font-family: 'Arial';
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* Style pour le titre principal */
+.text:first-of-type {
+    -fx-font-size: 24px;
+    -fx-fill: #3e8e41;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+/* Style pour les titres des sections */
+.text:has(font[size="15.0"]) {
+    -fx-fill: #3e8e41;
+    -fx-font-weight: bold;
+    -fx-effect: none;
 }

@@ -8,6 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="AjouterGrange.css"
             fx:controller="Controlles.AjouterGrange"
             prefHeight="450.0" prefWidth="500.0"
             style="-fx-background-color: #f4f8fb;">
