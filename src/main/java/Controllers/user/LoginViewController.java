@@ -59,7 +59,7 @@ public class LoginViewController {
             String fxmlPath;
 
             if (role.equals("ADMIN") || role.equals("ROLE_ADMIN")) {
-                fxmlPath = "/admin-dashboard-view.fxml";
+                fxmlPath = "/AdminMenuPrincipal.fxml";
             } else {
                 fxmlPath = "/MenuPrincipal.fxml";
             }

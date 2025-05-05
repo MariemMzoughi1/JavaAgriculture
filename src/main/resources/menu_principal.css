@@ -25,7 +25,47 @@
 
 .logout-button:hover {
     -fx-background-color: #e74c3c;
+}#sidebar {
+     -fx-background-color: #2c3e50;
+     -fx-padding: 20;
+ }
+
+.sidebar-button {
+    -fx-background-color: #34495e;
+    -fx-text-fill: white;
+    -fx-pref-width: 160;
+    -fx-font-size: 14px;
+    -fx-padding: 10 0;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 3, 0.0, 0, 1);
 }
+
+.sidebar-button:hover {
+    -fx-background-color: #3d5a73;
+}
+
+.logout-button {
+    -fx-background-color: #c0392b;
+    -fx-font-weight: bold;
+}
+
+.logout-button:hover {
+    -fx-background-color: #e74c3c;
+}
+
+.slogan-label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0;
+}
+
+.custom-separator {
+    -fx-background-color: white;
+    -fx-pref-width: 160;
+}
+
 
 .slogan-label {
     -fx-text-fill: white;
