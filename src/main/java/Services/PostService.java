@@ -1,6 +1,7 @@
 package Services;
 
 import Entites.Post;
+import Entites.User;
 import Interfaces.InterfaceCRUD;
 import Utils.MyDB;
 import java.sql.*;
@@ -253,4 +254,26 @@ public class PostService implements InterfaceCRUD<Post> {
         }
         return null;
     }
+
+    public User getAuteurByPostId(int postId) {
+        String sql = "SELECT u.id, u.email, u.password, u.role, u.username " +
+                "FROM post p JOIN user u ON p.auteur_id = u.id WHERE p.id = ?";
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, postId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("username")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'auteur : " + e.getMessage());
+        }
+        return null;
+    }
+
 }

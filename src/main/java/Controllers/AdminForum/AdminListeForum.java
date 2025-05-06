@@ -3,6 +3,7 @@ package Controllers.AdminForum;
 import Controllers.forum.DetailsForum;
 import Entites.Post;
 import Entites.User;
+import Services.MailService;
 import Services.PostService;
 import Services.Session;
 import Services.UserService;
@@ -213,11 +214,27 @@ public class AdminListeForum implements Initializable {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
+                // Récupération de l'auteur via postService
+                User auteur = service.getAuteurByPostId(post.getId());
+
+                // Suppression du post
                 service.delete(post);
+
+                // Envoi de l'e-mail à l'auteur
+                if (auteur != null && auteur.getEmail() != null) {
+                    MailService mailService = new MailService();
+                    String subject = "Votre post a été supprimé";
+                    String content = "Bonjour " + auteur.getUsername() + ",\n\nVotre post intitulé \"" + post.getTitre() + "\" a été supprimé par l'administrateur.";
+                    mailService.envoyerMail(auteur.getEmail(), subject, content);
+                }
+
+                // Rafraîchissement de l'affichage
                 loadPosts();
             }
         });
     }
+
+
 
     @FXML
     private void handleCreateForum(ActionEvent event) {
