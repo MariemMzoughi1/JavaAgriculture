@@ -16,7 +16,7 @@ public class Home extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MenuPrincipal.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/commande-table-view.fxml"));
         try{
         Parent root =loader.load();
         Scene scene = new Scene(root);

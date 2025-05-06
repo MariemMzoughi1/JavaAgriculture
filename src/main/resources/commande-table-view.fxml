@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controles.CommandesListeController"
+            prefWidth="800.0" prefHeight="600.0" style="-fx-background-color: #f4f4f4;">
+
+    <VBox spacing="20" alignment="TOP_CENTER" prefWidth="800" layoutX="0" layoutY="20">
+        <Label text="📦 Liste des Commandes" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50;"/>
+
+        <TableView fx:id="tableCommandes" prefHeight="500" prefWidth="760">
+            <columns>
+                <TableColumn fx:id="colEtat" text="État" prefWidth="200"/>
+                <TableColumn fx:id="colDate" text="Date de Commande" prefWidth="200"/>
+                <!-- La colonne d'actions est ajoutée dynamiquement dans le contrôleur Java -->
+            </columns>
+        </TableView>
+    </VBox>
+
+</AnchorPane>
+

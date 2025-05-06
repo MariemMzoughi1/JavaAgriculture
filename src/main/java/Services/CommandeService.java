@@ -108,4 +108,32 @@ public class CommandeService {
         }
         return produits;
     }
+
+    public void delete(Commande commande) {
+    }
+
+
+    public List<Commande> find() {
+        List<Commande> commandes = new ArrayList<>();
+        String sql = "SELECT * FROM commande";
+
+        try (Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Commande cmd = new Commande();
+                cmd.setEtat(rs.getString("etat"));
+                cmd.setDateCommande(rs.getTimestamp("datecommande").toLocalDateTime()); // ou getDate().toLocalDate()
+                cmd.setTotal(rs.getDouble("total"));
+
+                commandes.add(cmd);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des commandes : " + e.getMessage());
+        }
+
+        return commandes;
+    }
+
 }
