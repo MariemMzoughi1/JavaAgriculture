@@ -2,13 +2,20 @@ module com.example.projectjava {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires java.desktop;
+    requires jdk.httpserver;
+    requires org.json;
 
-    // These are good
+    // Vision API is an automatic module from the JAR file
+    requires google.cloud.vision;
+    requires com.google.gson;
+    requires jakarta.mail;
+    requires java.net.http;
+
+
     opens com.example.projectjava to javafx.fxml;
     exports com.example.projectjava;
     exports controllers;
     opens controllers to javafx.fxml;
-
-    // ✅ ADD THIS LINE to fix TableView reflection issue
     opens entities to javafx.base;
 }

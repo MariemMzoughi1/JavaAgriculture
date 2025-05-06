@@ -21,7 +21,6 @@
     <center>
         <TableView fx:id="reservationTable" prefWidth="780" style="-fx-padding: 15;">
             <columns>
-                <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
                 <TableColumn fx:id="clientColumn" text="Client" prefWidth="180"/>
                 <TableColumn fx:id="machineColumn" text="Machine" prefWidth="180"/>
                 <TableColumn fx:id="startColumn" text="Début" prefWidth="140"/>

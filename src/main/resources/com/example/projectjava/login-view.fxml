@@ -7,6 +7,7 @@
 
     <VBox alignment="CENTER" layoutX="150" layoutY="100" prefWidth="350" spacing="20"
           style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.2, 0, 4);">
+
         <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #4A7C59;" text="Connexion Agricole" />
 
         <TextField fx:id="emailField" promptText="Email"
@@ -19,6 +20,11 @@
                 text="Se connecter"
                 style="-fx-background-color: #7BB661; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-pref-width: 250;" />
 
+        <!-- 🔵 New Google Login Button added here -->
+        <Button onAction="#handleGoogleLogin"
+                text="Se connecter avec Google"
+                style="-fx-background-color: #DB4437; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-pref-width: 250;" />
+
         <Label fx:id="statusLabel"
                style="-fx-font-size: 12px; -fx-text-fill: red;" />
     </VBox>
@@ -29,6 +35,14 @@
                text="S'inscrire"
                onMouseClicked="#handleRegister"
                style="-fx-text-fill: #4A7C59; -fx-font-weight: bold; -fx-underline: true; -fx-cursor: hand;" />
+
+        <HBox alignment="CENTER" spacing="5">
+            <Label text="Mot de passe oublié ?" />
+            <Label text="Cliquez ici"
+                   onMouseClicked="#handleForgotPassword"
+                   style="-fx-text-fill: #007acc; -fx-font-weight: bold; -fx-underline: true; -fx-cursor: hand;" />
+        </HBox>
+
     </HBox>
 
 </VBox>

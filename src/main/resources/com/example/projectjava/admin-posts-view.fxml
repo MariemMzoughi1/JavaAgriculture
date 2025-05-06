@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AdminPostController"
+      spacing="20" alignment="TOP_CENTER" prefWidth="900.0" prefHeight="600.0"
+      style="-fx-background-color: #f4f4f4;">
+
+    <padding>
+        <Insets top="20" right="30" bottom="20" left="30"/>
+    </padding>
+
+    <Label text="📑 Gestion des posts"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <TableView fx:id="postTable" prefWidth="850" style="-fx-background-color: white;">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="titreColumn" text="Titre" prefWidth="250"/>
+            <TableColumn fx:id="auteurColumn" text="Auteur" prefWidth="250"/>
+            <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="280"/>
+        </columns>
+    </TableView>
+
+    <Button text="🔙 Retour au Dashboard"
+
+            style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-padding: 8 16 8 16;"/>
+</VBox>

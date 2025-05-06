@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.EditPostController"
+      spacing="20" alignment="CENTER"
+      style="-fx-padding: 30; -fx-background-color: #ffffff;">
+
+    <Label text="✏️ Modifier le Post" style="-fx-font-size: 22px; -fx-text-fill: #2c3e50;" />
+
+    <TextField fx:id="titreField" promptText="Titre du post" maxWidth="400"/>
+    <TextArea fx:id="contenuField" promptText="Contenu" prefRowCount="6" maxWidth="400"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="✅ Enregistrer" onAction="#handleSave" style="-fx-background-color: #27ae60; -fx-text-fill: white;" />
+        <Button text="❌ Annuler" onAction="#handleCancel" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+    </HBox>
+
+</VBox>

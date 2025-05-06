@@ -1,26 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DetailsForum" prefHeight="400.0" prefWidth="600.0"
-      spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20;">
-    <Label fx:id="titreLabel" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-    <Label fx:id="auteurDateLabel" style="-fx-font-size: 12px; -fx-text-fill: gray;" />
-    <ImageView fx:id="imageView" fitWidth="500" preserveRatio="true" />
-    <TextArea fx:id="contenuArea" editable="false" wrapText="true"
-              style="-fx-font-size: 14px;" prefHeight="300" />
-    <Label fx:id="likesDislikesLabel" style="-fx-font-size: 14px;" />
-    <Button text="Retour" onAction="#handleRetour" />
-    <Button text="Modifier" onAction="#handleModifier" />
-    <Label text="Commentaires :" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.DetailsForum"
+      prefHeight="700" prefWidth="1200"
+      stylesheets="@details_forum.css">
 
-    <VBox fx:id="commentairesBox" spacing="10" style="-fx-background-color: #f9f9f9; -fx-padding: 10;" prefHeight="200" />
+    <BorderPane>
 
-    <HBox spacing="10">
-        <TextField fx:id="champCommentaire" promptText="Écrivez un commentaire..." HBox.hgrow="ALWAYS"/>
-        <Button text="Publier" onAction="#ajouterCommentaire"/>
-    </HBox>
 
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+                <VBox styleClass="main-container" spacing="20">
+                    <!-- En-tête -->
+                    <VBox styleClass="header-box" spacing="5">
+                        <Label fx:id="titreLabel" styleClass="titre-label"/>
+                        <Label fx:id="auteurDateLabel" styleClass="meta-label"/>
+                    </VBox>
+
+                    <!-- Contenu principal -->
+                    <VBox spacing="15" styleClass="content-box">
+                        <StackPane styleClass="image-container">
+                            <ImageView fx:id="imageView" styleClass="post-image"
+                                        preserveRatio="true"/>
+                        </StackPane>
+
+                        <TextArea fx:id="contenuArea" styleClass="contenu-area"
+                                  editable="false" wrapText="true"/>
+
+                        <!-- Interactions -->
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Button fx:id="likeBtn" styleClass="like-button" onAction="#handleLike"/>
+                            <Button fx:id="dislikeBtn" styleClass="dislike-button" onAction="#handleDislike"/>
+                            <Button text="Traduire" styleClass="action-button"
+                                    onAction="#traduireContenuPost"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Actions -->
+                    <HBox spacing="20" alignment="CENTER">
+                        <Button text="Retour" styleClass="nav-button" onAction="#handleRetour"/>
+                        <Button fx:id="modifierBtn" text="Modifier" styleClass="primary-button"
+                                onAction="#handleModifier"/>
+                    </HBox>
+
+                    <!-- Section commentaires -->
+                    <VBox spacing="15" styleClass="comment-section">
+                        <Label text="Commentaires" styleClass="section-title"/>
+
+                        <HBox spacing="10" styleClass="comment-input-box">
+                            <TextField fx:id="champCommentaire" promptText="Écrivez un commentaire..."
+                                       styleClass="comment-field" HBox.hgrow="ALWAYS"/>
+                            <Button text="Publier" styleClass="primary-button"
+                                    onAction="#ajouterCommentaire"/>
+                        </HBox>
+
+                        <VBox fx:id="commentairesBox" spacing="10"/>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
 </VBox>

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import services.Session;
@@ -62,4 +63,20 @@ public class AdminDashboardViewController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleManagePosts(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/admin-posts-view.fxml"));
+            VBox root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Gestion des posts");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors de l'ouverture de l'interface de gestion des posts : " + e.getMessage());
+        }
+    }
+
 }

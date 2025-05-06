@@ -34,9 +34,16 @@ public class DbConnection {
     }
 
     // Récupérer la connexion
-    public Connection getConn() {
-        return connection;
+    public static Connection getConn() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println("❌ Erreur lors de la connexion à la base de données : " + e.getMessage());
+            return null;
+        }
     }
+
 
     // Accès direct simplifié (alternative statique)
     public static Connection getConnection() {

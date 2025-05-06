@@ -30,7 +30,6 @@ public class ReservationTableViewController {
     public void initialize() {
         reservationList = FXCollections.observableArrayList(serviceReservation.getReservations());
 
-        idColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getId()).asObject());
         clientColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getClient().getEmail()));
         machineColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getMachine().getName()));
         startColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(

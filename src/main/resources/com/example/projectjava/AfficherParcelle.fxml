@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.AfficherParcelleController"
+            fitToWidth="true"
+            prefWidth="1000" prefHeight="600"
+            style="-fx-background-color: #f9f9f9;"
+            stylesheets="@AfficherParcelle.css">
+
+    <content>
+        <VBox fx:id="root"
+              spacing="20"
+              alignment="TOP_CENTER"
+              style="-fx-padding: 20;">
+
+            <!-- 🌾 Titre -->
+            <Label text="🌾 Liste des Parcelles"
+                   styleClass="title"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="🔍 Rechercher par État :"/>
+                <TextField fx:id="searchField"
+                           promptText="Ex: bon, moyen..."
+                           onKeyReleased="#rechercherParEtat"/>
+            </HBox>
+
+
+
+            <!-- ➕ Bouton Ajouter -->
+            <Button text="➕ Ajouter une Parcelle"
+                    fx:id="ajouterBtn"
+                    onAction="#ajouterParcelle"
+                    styleClass="add-button"/>
+            <Button fx:id="btnRetour" text="← Retour" onAction="#retourAccueil" prefWidth="100" />
+
+            <!-- 📦 Cartes dynamiques -->
+            <VBox fx:id="cardContainer"
+                  spacing="20"
+                  alignment="TOP_CENTER"/>
+        </VBox>
+    </content>
+</ScrollPane>

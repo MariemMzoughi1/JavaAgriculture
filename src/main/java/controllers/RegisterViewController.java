@@ -35,7 +35,7 @@ public class RegisterViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        roleComboBox.getItems().addAll("Admin", "Agriculteur", "Fournisseur", "Client");
+        roleComboBox.getItems().addAll( "Agriculteur", "Fournisseur", "Client");
     }
 
     @FXML

@@ -1,6 +1,7 @@
 package controllers;
 
 import entities.Post;
+import javafx.scene.control.Alert;
 import services.PostService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -58,6 +59,10 @@ public class ModifierPost {
 
     @FXML
     private void handleEnregistrer() {
+        if (!isValidInput()) {
+            return;
+        }
+
         post.setTitre(titreField.getText());
         post.setContenu(contenuArea.getText());
         if (selectedImagePath != null) {
@@ -90,6 +95,69 @@ public class ModifierPost {
 
     @FXML
     private void handleAnnuler() {
-        ((Stage) titreField.getScene().getWindow()).close();
+        try {
+            // Fermer la fenêtre actuelle
+            Stage stage = (Stage) titreField.getScene().getWindow();
+            stage.close();
+
+            // Charger le fichier FXML de la page de détails
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/DetailsForum.fxml"));
+            VBox root = loader.load();
+
+            // Obtenir le contrôleur et lui passer le post
+            DetailsForum controller = loader.getController();
+            controller.setPost(post); // restaurer les infos du post
+
+            // Créer et afficher la nouvelle scène
+            Stage newStage = new Stage();
+            newStage.setTitle("Détails du Forum");
+            newStage.setScene(new Scene(root));
+            newStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+
+    private boolean isValidInput() {
+        boolean isValid = true;
+
+        // Réinitialiser les styles
+        titreField.setStyle("");
+        contenuArea.setStyle("");
+
+        String titre = titreField.getText().trim();
+        String contenu = contenuArea.getText().trim();
+
+        if (titre.isEmpty() || titre.length() < 5) {
+            titreField.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le titre doit contenir au moins 5 caractères.");
+            isValid = false;
+        }
+
+        if (contenu.isEmpty() || contenu.length() < 10) {
+            contenuArea.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le contenu doit contenir au moins 10 caractères.");
+            isValid = false;
+        }
+
+        if (selectedImagePath != null && !selectedImagePath.isEmpty()) {
+            String lowerPath = selectedImagePath.toLowerCase();
+            if (!(lowerPath.endsWith(".png") || lowerPath.endsWith(".jpg") || lowerPath.endsWith(".jpeg"))) {
+                showAlert(Alert.AlertType.WARNING, "Le fichier sélectionné n'est pas une image valide.");
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+    private void showAlert(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }
+

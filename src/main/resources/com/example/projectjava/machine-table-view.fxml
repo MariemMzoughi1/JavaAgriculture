@@ -15,7 +15,6 @@
     <center>
         <TableView fx:id="machineTable" prefWidth="780" style="-fx-padding: 20;">
             <columns>
-                <TableColumn fx:id="idColumn" prefWidth="60" text="ID" />
                 <TableColumn fx:id="nameColumn" prefWidth="160" text="Nom" />
                 <TableColumn fx:id="typeColumn" prefWidth="120" text="Type" />
                 <TableColumn fx:id="etatColumn" prefWidth="100" text="État" />

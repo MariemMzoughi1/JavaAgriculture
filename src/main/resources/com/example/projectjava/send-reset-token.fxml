@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.SendResetTokenController"
+      alignment="CENTER" spacing="20" prefWidth="600" prefHeight="400"
+      style="-fx-padding: 40; -fx-background-color: #f8fff0;">
+
+    <Label text="📧 Réinitialisation du mot de passe"
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4A7C59;" />
+
+    <TextField fx:id="emailField" promptText="Entrez votre email"
+               style="-fx-pref-width: 300;" />
+
+    <Label fx:id="messageLabel" text="" style="-fx-text-fill: red;" />
+
+    <Button text="📩 Envoyer le code"
+            onAction="#handleSendToken"
+            style="-fx-background-color: #7BB661; -fx-text-fill: white; -fx-font-weight: bold;" />
+</VBox>
+

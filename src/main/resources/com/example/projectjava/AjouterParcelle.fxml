@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.AjouterParcelleController"
+            prefWidth="800" prefHeight="600"
+            style="-fx-background-color: #f4f4f4;">
+
+    <children>
+
+        <!-- Titre -->
+        <Label text="Ajouter une nouvelle parcelle"
+               layoutX="220" layoutY="20"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+
+
+        <!-- Formulaire -->
+        <GridPane layoutX="100" layoutY="80" hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="180"/>
+                <ColumnConstraints prefWidth="350"/>
+            </columnConstraints>
+
+            <!-- Ligne 1 : ComboBox Culture -->
+            <Label text="Culture:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCulture" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 2 -->
+            <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfDescription" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 3 -->
+            <Label text="Zone:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfZone" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 4 -->
+            <Label text="Superficie (m²):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfSuperficie" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 5 -->
+            <Label text="Prix de Location:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfPrix" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 6 -->
+            <Label text="Date de Location:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dpDateLocation" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 7 -->
+            <Label text="Date fin de Location:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dpDateFinLocation" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 8 -->
+            <Label text="État:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbEtat" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 9 -->
+            <Label text="Type de Sol:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbTypeSol" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+            <!-- Ligne 10 -->
+            <Label text="Image (URL):" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+            <HBox spacing="10" GridPane.rowIndex="9" GridPane.columnIndex="1">
+                <TextField fx:id="tfImage" prefWidth="250"/>
+                <Button text="📂" onAction="#parcourirImage"/>
+            </HBox>
+
+            <!-- Ligne 11 : Boutons côte à côte -->
+            <HBox spacing="15" GridPane.rowIndex="10" GridPane.columnIndex="1">
+                <Button text="⬅ Retour"
+                        onAction="#retourAfficherParcelle"
+                        style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+
+                <Button text="Ajouter Parcelle"
+                        onMouseClicked="#ajouterParcelle"
+                        fx:id="btnAjouter"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            </HBox>
+
+
+
+        </GridPane>
+
+    </children>
+</AnchorPane>

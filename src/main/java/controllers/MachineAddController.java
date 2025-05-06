@@ -1,5 +1,9 @@
 package controllers;
 
+
+import com.google.cloud.vision.v1.ImageAnnotatorClient;
+
+
 import entities.Machine;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -8,7 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -19,7 +22,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MachineAddController {
@@ -80,7 +87,8 @@ public class MachineAddController {
 
                 relativeImagePath = "images/" + fileName;
                 imageLabel.setText(fileName);
-                imagePreview.setImage(new Image(destFile.toURI().toString()));
+                imagePreview.setImage(new javafx.scene.image.Image(destFile.toURI().toString()));
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -88,6 +96,8 @@ public class MachineAddController {
             }
         }
     }
+
+
 
     @FXML
     private void handleAddMachine() {
@@ -148,16 +158,14 @@ public class MachineAddController {
 
     @FXML
     private void handleBack(ActionEvent event) throws IOException {
-        String fxml = "";
-        if(Objects.equals(Session.getCurrentUser().getRole(), "Admin")){
+        String fxml;
+        if (Objects.equals(Session.getCurrentUser().getRole(), "Admin")) {
             fxml = "/com/example/projectjava/admin-dashboard-view.fxml";
-
-        }else{
+        } else {
             fxml = "/com/example/projectjava/machine-home.fxml";
-
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-        Scene scene = new Scene(loader.load(),800,600);
+        Scene scene = new Scene(loader.load(), 800, 600);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle("🌾 Gestion des Machines");

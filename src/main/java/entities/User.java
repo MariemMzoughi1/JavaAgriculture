@@ -10,6 +10,7 @@ public class User {
 
     private String role;
 
+
     private String reset_token;
 
     public User(int id, String email, String password, String role, String reset_token) {

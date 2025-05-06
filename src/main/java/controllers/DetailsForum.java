@@ -2,6 +2,8 @@ package controllers;
 
 import entities.Commentaire;
 import entities.Post;
+import entities.User;
+import org.json.JSONObject;
 import services.CommentaireService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,174 +14,374 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import services.PostService;
+import services.Session;
+import services.UserService;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public class DetailsForum {
 
+    // Composants FXML
     @FXML private Label titreLabel;
     @FXML private Label auteurDateLabel;
     @FXML private TextArea contenuArea;
-    @FXML private Label likesDislikesLabel;
     @FXML private ImageView imageView;
     @FXML private VBox commentairesBox;
     @FXML private TextField champCommentaire;
+    @FXML private Button modifierBtn;
+    @FXML private Button likeBtn;
+    @FXML private Button dislikeBtn;
+
+    // Services
+    private final PostService postService = new PostService();
+    private final CommentaireService commentaireService = new CommentaireService();
+    private final UserService userService = new UserService();
 
     private Post post;
 
-    private void afficherCommentaires() {
-        CommentaireService service = new CommentaireService();
-        List<Commentaire> commentaires = service.getCommentairesParPostId(post.getId());
-
-        commentairesBox.getChildren().clear();
-
-        for (Commentaire c : commentaires) {
-            VBox commentaireCard = new VBox(5);
-            commentaireCard.setStyle("-fx-background-color: #e6e6e6; -fx-padding: 10; -fx-background-radius: 8;");
-
-            Label auteurLabel = new Label("Auteur ID " + c.getAuteurId());
-            TextField contenuField = new TextField(c.getContenu());
-            contenuField.setEditable(false); // non éditable au début
-            contenuField.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-
-            HBox boutons = new HBox(10);
-            Button modifierBtn = new Button("Modifier");
-            Button enregistrerBtn = new Button("Enregistrer");
-            Button supprimerBtn = new Button("Supprimer");
-
-            enregistrerBtn.setVisible(false); // caché par défaut
-
-            modifierBtn.setOnAction(e -> {
-                contenuField.setEditable(true);
-                contenuField.setStyle(""); // enlever le style transparent
-                enregistrerBtn.setVisible(true);
-                modifierBtn.setVisible(false);
-            });
-
-            enregistrerBtn.setOnAction(e -> {
-                String nouveauTexte = contenuField.getText().trim();
-                if (!nouveauTexte.isEmpty()) {
-                    c.setContenu(nouveauTexte);
-                    new CommentaireService().modifierCommentaire(c);
-                    afficherCommentaires(); // rafraîchir
-                }
-            });
-
-            supprimerBtn.setOnAction(e -> {
-                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmation.setTitle("Confirmation");
-                confirmation.setHeaderText("Voulez-vous vraiment supprimer ce commentaire ?");
-                confirmation.setContentText("Cette action est irréversible.");
-
-                Optional<ButtonType> result = confirmation.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    service.supprimerCommentaire(c.getId());
-                    afficherCommentaires(); // rafraîchir
-                }
-            });
-
-            // Tu peux aussi ajouter ici un check si l'utilisateur connecté est bien l'auteur
-            boutons.getChildren().addAll(modifierBtn, enregistrerBtn, supprimerBtn);
-
-            commentaireCard.getChildren().addAll(auteurLabel, contenuField, boutons);
-            commentairesBox.getChildren().add(commentaireCard);
-        }
-
+    @FXML
+    public void initialize() {
+        // Configuration initiale si nécessaire
+        contenuArea.setWrapText(true);
     }
 
-
-    @FXML
-    private void ajouterCommentaire() {
-        String contenu = champCommentaire.getText().trim();
-        if (contenu.isEmpty()) {
-            return;
-        }
-
-        Commentaire commentaire = new Commentaire(post.getId(), contenu, 1, new Date()); // remplacer 1 par l'ID de l'utilisateur connecté
-        CommentaireService service = new CommentaireService();
-        service.ajouterCommentaire(commentaire);
-
-        champCommentaire.clear();
+    public void setPost(Post post) {
+        this.post = post;
+        loadPostData();
+        setupModifierButton();
+        loadImage();
         afficherCommentaires();
     }
 
-    private void modifierCommentaire(Commentaire c) {
-        TextInputDialog dialog = new TextInputDialog(c.getContenu());
+    private void loadPostData() {
+        titreLabel.setText(post.getTitre());
+
+        String email = userService.getEmailById(post.getAuteurId()); // 👈 Utilisation de l'email
+        String dateStr = post.getDate() != null ? post.getDate().toString() : "Date inconnue";
+        auteurDateLabel.setText("Publié par " + email + " • " + dateStr);
+
+        contenuArea.setText(post.getContenu());
+        updateLikeDislikeButtons();
+    }
+
+
+    private void setupModifierButton() {
+        User currentUser = Session.getCurrentUser();
+        modifierBtn.setVisible(currentUser != null && currentUser.getId() == post.getAuteurId());
+    }
+
+    private void loadImage() {
+        if (post.getImage() != null && !post.getImage().isEmpty()) {
+            try {
+                File file = new File(post.getImage());
+                if (file.exists()) {
+                    Image image = new Image(file.toURI().toString(), 600, 400, true, true);
+                    imageView.setImage(image);
+
+                    // Optionnel: ajustement supplémentaire si nécessaire
+                    imageView.setPreserveRatio(true);
+                    imageView.setFitWidth(600);
+                    imageView.setFitHeight(400);
+                }
+            } catch (Exception e) {
+                System.out.println("Erreur de chargement de l'image: " + e.getMessage());
+                // Optionnel: afficher une image par défaut ou un placeholder
+            }
+        } else {
+            // Cacher l'ImageView s'il n'y a pas d'image
+            imageView.setVisible(false);
+        }
+    }
+
+    private void updateLikeDislikeButtons() {
+        likeBtn.setText("👍 " + post.getLikes());
+        dislikeBtn.setText("👎 " + post.getDislikes());
+    }
+
+    @FXML
+    private void handleLike() {
+        User currentUser = Session.getCurrentUser();
+        if (currentUser != null) {
+            postService.likePost(post.getId(), currentUser.getId());
+            refreshPostData();
+        } else {
+            showAlert("Connexion requise", "Vous devez être connecté pour voter", Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void handleDislike() {
+        User currentUser = Session.getCurrentUser();
+        if (currentUser != null) {
+            postService.dislikePost(post.getId(), currentUser.getId());
+            refreshPostData();
+        } else {
+            showAlert("Connexion requise", "Vous devez être connecté pour voter", Alert.AlertType.WARNING);
+        }
+    }
+
+    private void refreshPostData() {
+        post = postService.getPostById(post.getId());
+        updateLikeDislikeButtons();
+    }
+
+    private void afficherCommentaires() {
+        commentairesBox.getChildren().clear();
+
+        List<Commentaire> commentaires = commentaireService.getCommentairesParPostId(post.getId());
+        User currentUser = Session.getCurrentUser();
+
+        for (Commentaire commentaire : commentaires) {
+            VBox commentCard = createCommentCard(commentaire, currentUser);
+            commentairesBox.getChildren().add(commentCard);
+        }
+    }
+
+    private VBox createCommentCard(Commentaire commentaire, User currentUser) {
+        VBox card = new VBox(8);
+        card.getStyleClass().add("comment-card");
+        card.setPadding(new javafx.geometry.Insets(12));
+
+        // En-tête du commentaire
+        HBox headerBox = new HBox(10);
+        String username = userService.getEmailById(commentaire.getAuteurId());
+        Label authorLabel = new Label(username);
+        authorLabel.getStyleClass().add("comment-author");
+
+        String dateStr = commentaire.getDate() != null ? commentaire.getDate().toString() : "";
+        Label dateLabel = new Label(dateStr);
+        dateLabel.getStyleClass().add("comment-date");
+
+        headerBox.getChildren().addAll(authorLabel, dateLabel);
+
+        // Contenu du commentaire
+        Label contentLabel = new Label(commentaire.getContenu());
+        contentLabel.getStyleClass().add("comment-content");
+        contentLabel.setWrapText(true);
+
+        // Boutons d'action
+        HBox actionBox = new HBox(10);
+        if (currentUser != null && currentUser.getId() == commentaire.getAuteurId()) {
+            Button editBtn = new Button("Modifier");
+            editBtn.getStyleClass().add("action-button");
+            editBtn.setOnAction(e -> handleEditComment(commentaire, contentLabel));
+
+            Button deleteBtn = new Button("Supprimer");
+            deleteBtn.getStyleClass().add("secondary-button");
+            deleteBtn.setOnAction(e -> handleDeleteComment(commentaire));
+
+            actionBox.getChildren().addAll(editBtn, deleteBtn);
+        }
+
+        Button translateBtn = new Button("Traduire");
+        translateBtn.getStyleClass().add("action-button");
+        translateBtn.setOnAction(e -> handleTranslateComment(contentLabel, commentaire.getContenu()));
+
+        actionBox.getChildren().add(translateBtn);
+
+        card.getChildren().addAll(headerBox, contentLabel, actionBox);
+        return card;
+    }
+
+    private void handleEditComment(Commentaire commentaire, Label contentLabel) {
+        TextInputDialog dialog = new TextInputDialog(contentLabel.getText());
         dialog.setTitle("Modifier le commentaire");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Nouveau contenu :");
+        dialog.setHeaderText("Modifiez votre commentaire");
+        dialog.setContentText("Nouveau contenu:");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(newContenu -> {
-            if (!newContenu.trim().isEmpty()) {
-                c.setContenu(newContenu.trim());
-                new CommentaireService().modifierCommentaire(c);
-                afficherCommentaires();
+        result.ifPresent(newContent -> {
+            if (!newContent.trim().isEmpty()) {
+                try {
+                    commentaire.setContenu(newContent);
+                    commentaireService.modifierCommentaire(commentaire);
+                    afficherCommentaires();
+                } catch (IllegalArgumentException e) {
+                    showAlert("Contenu inapproprié", "Votre commentaire contient des mots inappropriés.", Alert.AlertType.WARNING);
+                }
             }
         });
     }
 
+    private void handleDeleteComment(Commentaire commentaire) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer ce commentaire ?");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?");
 
-    public void setPost(Post post) {
-        this.post = post;
-
-        // Remplir l'interface
-        titreLabel.setText(post.getTitre());
-        auteurDateLabel.setText("Auteur ID : " + post.getAuteurId() + " | Date : " + post.getDate());
-        contenuArea.setText(post.getContenu());
-        likesDislikesLabel.setText("👍 " + post.getLikes() + "    👎 " + post.getDislikes());
-
-        if (post.getImage() != null && !post.getImage().isEmpty()) {
-            File file = new File(post.getImage());
-            if (file.exists()) {
-                imageView.setImage(new Image(file.toURI().toString()));
-            }
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            commentaireService.supprimerCommentaire(commentaire.getId());
+            afficherCommentaires();
         }
-        afficherCommentaires();
+    }
+
+    private void handleTranslateComment(Label targetLabel, String originalText) {
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("English", List.of("English", "Français", "Arabic"));
+        dialog.setTitle("Traduction");
+        dialog.setHeaderText("Choisissez la langue de traduction");
+        dialog.setContentText("Langue:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(language -> {
+            try {
+                String targetLang = getLanguageCode(language);
+                String translatedText = translateText(originalText, "fr", targetLang);
+                targetLabel.setText(translatedText);
+            } catch (IOException e) {
+                showAlert("Erreur de traduction", "Impossible de traduire le texte: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
+    }
+
+    @FXML
+    private void ajouterCommentaire() {
+        String content = champCommentaire.getText().trim();
+        if (content.isEmpty()) {
+            showAlert("Champ vide", "Veuillez écrire un commentaire", Alert.AlertType.WARNING);
+            return;
+        }
+
+        User currentUser = Session.getCurrentUser();
+        if (currentUser == null) {
+            showAlert("Connexion requise", "Vous devez être connecté pour commenter", Alert.AlertType.WARNING);
+            return;
+        }
+
+        Commentaire newComment = new Commentaire(
+                post.getId(),
+                content,
+                currentUser.getId(),
+                new Date()
+        );
+
+        try {
+            commentaireService.ajouterCommentaire(newComment);
+            champCommentaire.clear();
+            afficherCommentaires();
+        } catch (IllegalArgumentException e) {
+            showAlert("Contenu inapproprié", "Votre commentaire contient des mots inappropriés", Alert.AlertType.WARNING);
+        }
     }
 
     @FXML
     private void handleRetour() {
-        // Fermer la fenêtre actuelle
-        Stage stage = (Stage) titreLabel.getScene().getWindow();
-        stage.close();
-
-        // Réouvrir la fenêtre principale (liste des forums)
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/ListeForum.fxml"));
-            Stage listestage = new Stage();
-            listestage.setTitle("Liste des Forums");
-            listestage.setScene(new Scene(loader.load()));
-            listestage.show();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            stage.setTitle("Forum");
+
+            // Fermer la fenêtre actuelle
+            Stage currentStage = (Stage) titreLabel.getScene().getWindow();
+            currentStage.close();
+
+            stage.show();
         } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger la liste des posts", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
+
     @FXML
     private void handleModifier() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/ModifierPost.fxml"));
-            VBox root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
 
             ModifierPost controller = loader.getController();
-            controller.setPost(post); // Passer le post à modifier
-
-            Stage stage = new Stage();
-            stage.setTitle("Modifier le Post");
-            stage.setScene(new Scene(root));
-            stage.show();
+            controller.setPost(post);
 
             // Fermer la fenêtre actuelle
-            ((Stage) titreLabel.getScene().getWindow()).close();
+            Stage currentStage = (Stage) titreLabel.getScene().getWindow();
+            currentStage.close();
 
+            stage.setTitle("Modifier le post");
+            stage.show();
         } catch (IOException e) {
+            showAlert("Erreur", "Impossible d'ouvrir l'éditeur de post", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
 
+    @FXML
+    private void traduireContenuPost() {
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("English", List.of("English", "Français", "Arabic"));
+        dialog.setTitle("Traduction");
+        dialog.setHeaderText("Choisissez la langue de traduction");
+        dialog.setContentText("Langue:");
 
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(language -> {
+            try {
+                String targetLang = getLanguageCode(language);
+                String translatedContent = translateText(post.getContenu(), "fr", targetLang);
+                String translatedTitle = translateText(post.getTitre(), "fr", targetLang);
+
+                contenuArea.setText(translatedContent);
+                titreLabel.setText(translatedTitle);
+            } catch (IOException e) {
+                showAlert("Erreur de traduction", "Impossible de traduire le contenu: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
+    }
+
+    // Méthodes utilitaires
+    private String translateText(String text, String sourceLang, String targetLang) throws IOException {
+        String encodedText = encodeURIComponent(text);
+        String apiUrl = "https://lingva.ml/api/v1/" + sourceLang + "/" + targetLang + "/" + encodedText;
+
+        HttpURLConnection conn = (HttpURLConnection) new URL(apiUrl).openConnection();
+        conn.setRequestMethod("GET");
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+
+            JSONObject json = new JSONObject(response.toString());
+            return json.getString("translation");
+        }
+    }
+
+    private String encodeURIComponent(String s) {
+        try {
+            return java.net.URLEncoder.encode(s, StandardCharsets.UTF_8.toString())
+                    .replaceAll("\\+", "%20")
+                    .replaceAll("%21", "!")
+                    .replaceAll("%27", "'")
+                    .replaceAll("%28", "(")
+                    .replaceAll("%29", ")")
+                    .replaceAll("%7E", "~");
+        } catch (UnsupportedEncodingException e) {
+            return s;
+        }
+    }
+
+    private String getLanguageCode(String language) {
+        return switch (language) {
+            case "Français" -> "fr";
+            case "Arabic" -> "ar";
+            default -> "en";
+        };
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

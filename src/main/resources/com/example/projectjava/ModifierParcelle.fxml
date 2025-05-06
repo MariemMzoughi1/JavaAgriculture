@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ModifierParcelleController"
+            prefWidth="500" prefHeight="600"
+            stylesheets="@ModifierParcelle.css">
+
+    <children>
+        <VBox alignment="CENTER" spacing="12.0" layoutX="75.0" layoutY="30.0"
+              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" style="-fx-padding: 20;">
+
+            <!-- Titre -->
+            <Label text="Modifier une Parcelle" styleClass="label-title"/>
+
+            <!-- Champ ID caché pour la modification -->
+            <TextField fx:id="tfId" promptText="ID Parcelle"
+                       styleClass="text-field" visible="false" managed="false"/>
+
+
+            <!-- Champs du formulaire -->
+            <TextField fx:id="tfCultureId"
+                       promptText="ID Culture"
+                       styleClass="text-field"
+                       editable="false" focusTraversable="false"/>
+            <TextField fx:id="tfDescription" promptText="Description" styleClass="text-field"/>
+            <TextField fx:id="tfZone" promptText="Zone" styleClass="text-field"/>
+            <TextField fx:id="tfSuperficie" promptText="Superficie" styleClass="text-field"/>
+            <TextField fx:id="tfPrix" promptText="Prix de Location" styleClass="text-field"/>
+
+            <DatePicker fx:id="dpDateLocation" promptText="Date de Location" styleClass="date-picker"/>
+            <DatePicker fx:id="dpDateFinLocation" promptText="Date Fin Location" styleClass="date-picker"/>
+
+            <TextField fx:id="tfEtat" promptText="État" styleClass="text-field"/>
+            <TextField fx:id="tfTypeSol" promptText="Type de Sol" styleClass="text-field"/>
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="tfImage" promptText="URL de l'image" styleClass="text-field" />
+                <Button text="Parcourir" onAction="#parcourirImage" />
+            </HBox>
+
+            <!-- Bouton Modifier -->
+            <Button text="Modifier"
+                    onMouseClicked="#modifierParcelle"
+                    styleClass="button"/>
+            <Button text="⬅ Retour"
+                    layoutX="20" layoutY="20"
+                    onAction="#retourAfficherParcelle"
+                    style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+        </VBox>
+    </children>
+</AnchorPane>

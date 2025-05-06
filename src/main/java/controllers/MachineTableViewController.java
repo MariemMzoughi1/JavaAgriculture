@@ -34,7 +34,6 @@ public class MachineTableViewController {
     public void initialize() {
         ObservableList<Machine> machineList = FXCollections.observableArrayList(serviceMachine.getMachines());
 
-        idColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getId()).asObject());
         nameColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getName()));
         typeColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getType()));
         etatColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEtat()));

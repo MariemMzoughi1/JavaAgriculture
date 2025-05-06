@@ -1,6 +1,8 @@
 package controllers;
 
 import entities.Post;
+import entities.User;
+import services.GeminiAPIService;
 import services.PostService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,8 +15,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import services.Session;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Objects;
 
 public class AjouterForum {
@@ -52,17 +56,47 @@ public class AjouterForum {
 
     @FXML
     void ajouterPost(ActionEvent event) {
+        if (!isValidInput()) {
+            return;
+        }
+
         String titre = titreField.getText().trim();
         String contenu = contenuField.getText().trim();
         String imagePath = imageField.getText().trim();
 
-        if (titre.isEmpty() || contenu.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Veuillez remplir tous les champs obligatoires.");
-            return;
-        }
-
         try {
+
+            if (GeminiAPIService.contientBadWords(titre)) {
+                showAlert(Alert.AlertType.ERROR, "Le titre contient des propos inappropriés. Veuillez corriger votre titre.");
+                return;
+            }
+            if (!GeminiAPIService.estLieAAgriculture(titre)) {
+                showAlert(Alert.AlertType.ERROR, "Le titre n'est pas lié à l'agriculture. Veuillez respecter le thème du forum.");
+                return;
+            }
+            if (GeminiAPIService.contientBadWords(contenu)) {
+                showAlert(Alert.AlertType.ERROR, "Le contenu contient des propos inappropriés. Veuillez corriger votre texte.");
+                return;
+            }
+
+            if (!GeminiAPIService.estLieAAgriculture(contenu)) {
+                showAlert(Alert.AlertType.ERROR, "Le contenu n'est pas lié à l'agriculture. Veuillez respecter le thème du forum.");
+                return;
+            }
+
+            // Récupération de l'utilisateur connecté
+            User currentUser = Session.getCurrentUser();
+            if (currentUser == null) {
+                showAlert(Alert.AlertType.ERROR, "Aucun utilisateur connecté !");
+                return;
+            }
+
             Post post = new Post(titre, contenu);
+            post.setDate(new Date());
+            post.setLikes(0);
+            post.setDislikes(0);
+            post.setAuteurId(currentUser.getId()); // Association de l'auteur
+
             if (!imagePath.isEmpty()) {
                 post.setImage(imagePath);
             }
@@ -70,17 +104,15 @@ public class AjouterForum {
             postService.add(post);
             showAlert(Alert.AlertType.INFORMATION, "Post ajouté avec succès !");
 
-            // Fermer la fenêtre actuelle
-            ((Stage) (((javafx.scene.Node) event.getSource()).getScene().getWindow())).close();
+            // Fermer la fenêtre actuelle et ouvrir la liste
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.close();
 
-            // Ouvrir la nouvelle interface ListeForum.fxml
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
-                    getClass().getResource("/com/example/projectjava/ListeForum.fxml"),
-                    "Fichier FXML ListeForum.fxml introuvable"));
-            Stage stage = new Stage();
-            stage.setTitle("Liste des Forums");
-            stage.setScene(new Scene(loader.load()));
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/ListeForum.fxml"));
+            Stage newStage = new Stage();
+            newStage.setTitle("Liste des Forums");
+            newStage.setScene(new Scene(loader.load()));
+            newStage.show();
 
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur lors de l'ajout du post : " + e.getMessage());
@@ -88,16 +120,16 @@ public class AjouterForum {
         }
     }
 
+
+
     @FXML
     void retour(ActionEvent event) {
         try {
             // Fermer la fenêtre actuelle
-            ((Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow()).close();
+            ((Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow()).close();
 
-            // Charger la vue ListeForum.fxml
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
-                    getClass().getResource("/com/example/projectjava/ListeForum.fxml"),
-                    "Fichier FXML ListeForum.fxml introuvable"));
+            // Charger la vue de la liste des forums
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/ListeForum.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Liste des Forums");
             stage.setScene(new Scene(loader.load()));
@@ -108,6 +140,7 @@ public class AjouterForum {
             e.printStackTrace();
         }
     }
+
 
     private void clearFields() {
         titreField.clear();
@@ -123,4 +156,41 @@ public class AjouterForum {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    private boolean isValidInput() {
+        boolean isValid = true;
+
+        // Reset styles
+        titreField.setStyle("");
+        contenuField.setStyle("");
+
+        String titre = titreField.getText().trim();
+        String contenu = contenuField.getText().trim();
+
+        if (titre.isEmpty() || titre.length() < 5) {
+            titreField.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le titre doit contenir au moins 5 caractères.");
+            isValid = false;
+        }
+
+        if (contenu.isEmpty() || contenu.length() < 10) {
+            contenuField.setStyle("-fx-border-color: red;");
+            showAlert(Alert.AlertType.WARNING, "Le contenu doit contenir au moins 10 caractères.");
+            isValid = false;
+        }
+
+        if (!imageField.getText().trim().isEmpty()) {
+            String lowerPath = imageField.getText().toLowerCase();
+            if (!(lowerPath.endsWith(".png") || lowerPath.endsWith(".jpg") || lowerPath.endsWith(".jpeg"))) {
+                imageField.setStyle("-fx-border-color: red;");
+                showAlert(Alert.AlertType.WARNING, "Le fichier sélectionné n'est pas une image valide.");
+                isValid = false;
+            } else {
+                imageField.setStyle("");
+            }
+        }
+
+        return isValid;
+    }
+
 }

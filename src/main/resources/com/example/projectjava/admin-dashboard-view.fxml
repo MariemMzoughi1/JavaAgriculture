@@ -26,6 +26,9 @@
     <Button text="🚜 Manage Machines"
             onAction="#handleManageMachines"
             style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #e67e22; -fx-text-fill: white;" />
+    <Button text="📝 Manage Posts"
+            onAction="#handleManagePosts"
+            style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #16a085; -fx-text-fill: white;" />
 
     <Button text="📊 View Reports"
             style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #8e44ad; -fx-text-fill: white;" />

@@ -2,56 +2,106 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.control.ScrollPane?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.MachineHomeController"
             prefWidth="800" prefHeight="600"
             style="-fx-background-color: linear-gradient(to bottom, #f3ffe9, #d8f4c2);">
 
-    <VBox alignment="CENTER" spacing="25"
-          layoutX="50" layoutY="30"
-          prefWidth="500" prefHeight="340"
-          AnchorPane.topAnchor="30" AnchorPane.leftAnchor="50"
-          AnchorPane.rightAnchor="50">
+    <HBox spacing="10">
+        <!-- Sidebar -->
+        <VBox alignment="TOP_CENTER" spacing="15"
+              prefWidth="200"
+              style="-fx-background-color: #34495e; -fx-padding: 20;">
 
-        <Label text="🌿 Welcome Agriculteur"
-               style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2e5e1a;" />
+            <Label text="🌿 Menu"
+                   style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;"/>
 
-        <Button text="➕ Ajouter une machine"
-                onAction="#handleAddMachine"
-                style="-fx-background-color: #3498db; -fx-text-fill: white;
+            <Button text="➕ Ajouter une machine"
+                    onAction="#handleAddMachine"
+                    prefWidth="160"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
+
+            <Button text="📋 Liste des machines"
+                    onAction="#handleListMachines"
+                    prefWidth="160"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
+
+            <Button text="📅 Réservations"
+                    onAction="#handleReservation"
+                    prefWidth="160"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
+
+            <Button text="🔎 Réserver une machine disponible"
+                    onAction="#handleOpenMachineReservationList"
+                    style="-fx-background-color: #9b59b6; -fx-text-fill: white;
                        -fx-font-size: 15px; -fx-padding: 10 30; -fx-background-radius: 8;" />
 
-        <Button text="📋 Liste des machines"
-                onAction="#handleListMachines"
-                style="-fx-background-color: #27ae60; -fx-text-fill: white;
-                       -fx-font-size: 15px; -fx-padding: 10 30; -fx-background-radius: 8;" />
+            <Button text="💬 Forum"
+                    onAction="#handleForum"
+                    prefWidth="160"
+                    style="-fx-background-color: #8e44ad; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
 
-        <Button text="📅 Réservations"
-                onAction="#handleReservation"
-                style="-fx-background-color: #f39c12; -fx-text-fill: white;
-                       -fx-font-size: 15px; -fx-padding: 10 30; -fx-background-radius: 8;" />
-        <Button text="💬 Forum"
-                onAction="#handleForum"
-                style="-fx-background-color: #8e44ad; -fx-text-fill: white;
-               -fx-font-size: 15px; -fx-padding: 10 30; -fx-background-radius: 8;" />
-        <Button text="🏠 Accueil Zone et Grange"
-                onAction="#handleAccueil"
-                style="-fx-background-color: #2c3e50; -fx-text-fill: white;
-               -fx-font-size: 15px; -fx-padding: 10 30; -fx-background-radius: 8;" />
-        <Button text="🧺 Produits"
-                onAction="#handleProduits"
-                style="-fx-background-color: #16a085; -fx-text-fill: white;
-               -fx-font-size: 15px; -fx-padding: 10 30; -fx-background-radius: 8;" />
+            <Button text="🏠 Accueil Zone et Grange"
+                    onAction="#handleAccueil"
+                    prefWidth="160"
+                    style="-fx-background-color: #2c3e50; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
 
+            <Button text="🧺 Produits"
+                    onAction="#handleProduits"
+                    prefWidth="160"
+                    style="-fx-background-color: #16a085; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
 
+            <Button text="🌾 Culture"
+                    onAction="#handleCulture"
+                    prefWidth="160"
+                    style="-fx-background-color: #1abc9c; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
 
-        <Button onAction="#handleLogout" text="🔓 Logout"
-                style="-fx-font-size: 14px; -fx-background-color: #e74c3c; -fx-text-fill: white;" />
+            <Button text="🗺️ Parcelle"
+                    onAction="#handleParcelle"
+                    prefWidth="160"
+                    style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
 
-    </VBox>
+            <Button text="🔓 Logout"
+                    onAction="#handleLogout"
+                    prefWidth="160"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-background-radius: 8;"/>
+            <Button text="👤 Modifier Profil"
+                    onAction="#handleEditProfile"
+                    prefWidth="160"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white;
+               -fx-font-size: 14px; -fx-background-radius: 8;" />
+
+        </VBox>
+
+        <!-- Main content placeholder -->
+        <AnchorPane fx:id="mainContentArea"
+                    prefWidth="600"
+                    style="-fx-padding: 20;">
+
+            <VBox fx:id="newsContainer" spacing="10">
+                <Label text="📰 Dernières Actualités" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <ScrollPane prefHeight="500" fitToWidth="true">
+                    <VBox fx:id="newsList" spacing="10"/>
+                </ScrollPane>
+            </VBox>
+
+        </AnchorPane>
+
+    </HBox>
+
 </AnchorPane>

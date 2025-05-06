@@ -67,8 +67,7 @@
                     <Insets top="10" />
                 </padding>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button text="Rollback" onAction="#handleRollback" />
-                <Button text="Export" />
+                <Button text="📊 Statistiques" onAction="#handleShowStatistics" />
                 <Button onAction="#handleAddUser" text="Add New User" />
             </HBox>
         </VBox>
@@ -78,5 +77,16 @@
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 10 20; -fx-background-color: #e9ecef;">
             <Label style="-fx-text-fill: #6c757d; -fx-font-size: 12px;" text="Last updated: Today at 14:32" />
         </HBox>
+        <VBox spacing="5" style="-fx-background-color: #ffffff; -fx-padding: 5; -fx-border-color: #cccccc; -fx-border-width: 1;">
+            <Label text="🤖 Chatbot" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+
+            <TextArea fx:id="chatArea" prefHeight="100" editable="false" wrapText="true"
+                      style="-fx-background-color: #f9f9f9; -fx-border-color: #dddddd;"/>
+
+            <HBox spacing="5">
+                <TextField fx:id="userInput" promptText="Type your message..." HBox.hgrow="ALWAYS"/>
+                <Button text="Send" onAction="#handleSendMessage" />
+            </HBox>
+        </VBox>
     </bottom>
 </BorderPane>

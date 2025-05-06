@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ModifierCultureController"
+            prefWidth="600" prefHeight="600"
+            style="-fx-background-color: #f8f9fa;"
+            stylesheets="@style-modifier.css">
+
+    <children>
+        <VBox spacing="15" alignment="CENTER" layoutX="50" layoutY="20" prefWidth="500">
+            <Label text="✏️ Modifier une Culture" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #343a40;"/>
+
+            <TextField fx:id="tfId" promptText="ID" editable="false" styleClass="input-field"/>
+
+            <TextField fx:id="tfNom" promptText="Nom" styleClass="input-field"/>
+            <TextField fx:id="tfDescription" promptText="Description" styleClass="input-field"/>
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="tfImage" promptText="URL de l'image" styleClass="input-field" />
+                <Button text="Parcourir" onAction="#parcourirImage" />
+            </HBox>
+
+            <HBox spacing="10">
+                <DatePicker fx:id="dpDatePlantation" promptText="Date de plantation" styleClass="input-field"/>
+                <DatePicker fx:id="dpDateRecolte" promptText="Date de récolte" styleClass="input-field"/>
+            </HBox>
+
+            <TextField fx:id="tfSaison" promptText="Saison" styleClass="input-field"/>
+            <TextField fx:id="tfQuantite" promptText="Quantité (kg)" styleClass="input-field"/>
+            <TextField fx:id="tfCategorie" promptText="Catégorie" styleClass="input-field"/>
+
+            <Button text="💾 Modifier"
+                    onAction="#modifierCulture"
+                    styleClass="primary-button"/>
+            <Button text="⬅ Retour"
+                    layoutX="20" layoutY="20"
+                    onAction="#retourAfficherParcelle"
+                    style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+        </VBox>
+    </children>
+</AnchorPane>
