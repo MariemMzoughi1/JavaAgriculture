@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.Controllers.ModifierParcelleBackController"
+            prefWidth="500" prefHeight="600"
+            style="-fx-background-color: #f7f9fb;">
+
+    <VBox spacing="15" alignment="TOP_CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20"
+          style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;">
+
+        <Label text="✏️ Modifier Parcelle"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+        <TextField fx:id="zoneField" promptText="Zone"/>
+        <TextArea fx:id="descriptionArea" promptText="Description" prefRowCount="3"/>
+        <TextField fx:id="superficieField" promptText="Superficie (m²)"/>
+        <TextField fx:id="prixLocationField" promptText="Prix de Location"/>
+        <DatePicker fx:id="dateLocationPicker"/>
+        <DatePicker fx:id="dateFinLocationPicker"/>
+        <ComboBox fx:id="etatComboBox" promptText="État"/>
+        <ComboBox fx:id="solComboBox" promptText="Type de sol"/>
+        <TextField fx:id="imageField" promptText="URL de l'image"/>
+
+        <Button fx:id="saveButton" text="✅ Enregistrer"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8;"/>
+    </VBox>
+</AnchorPane>

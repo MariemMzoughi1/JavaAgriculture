@@ -5,6 +5,7 @@ import com.esprit.services.ParcelleService;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -17,11 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.AWTException;
-import java.awt.Image;
-import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
+import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,23 +26,12 @@ import java.util.List;
 
 public class MenuPrincipalController {
 
-    @FXML
-    private Label dateLabel;
-
-    @FXML
-    private Label timeLabel;
-
-    @FXML
-    private StackPane mainContent;
-
-    @FXML
-    private VBox sidebar;
-
-    @FXML
-    private Button toggleSidebarButton;
-
-    @FXML
-    private Label sidebarTitle;
+    @FXML private Label dateLabel;
+    @FXML private Label timeLabel;
+    @FXML private StackPane mainContent;
+    @FXML private VBox sidebar;
+    @FXML private Button toggleSidebarButton;
+    @FXML private Label sidebarTitle;
 
     private boolean sidebarOpen = true;
 
@@ -75,20 +61,18 @@ public class MenuPrincipalController {
     @FXML
     private void toggleSidebar() {
         if (sidebarOpen) {
-            sidebar.setPrefWidth(60); // Fermer
+            sidebar.setPrefWidth(60);
             sidebarTitle.setVisible(false);
-
             for (Node node : sidebar.getChildren()) {
                 if (node instanceof Button button && button != toggleSidebarButton) {
-                    button.setText(""); // Cacher texte
+                    button.setText("");
                     button.setPrefWidth(40);
                 }
             }
             sidebarOpen = false;
         } else {
-            sidebar.setPrefWidth(200); // Ouvrir
+            sidebar.setPrefWidth(200);
             sidebarTitle.setVisible(true);
-
             int i = 0;
             for (Node node : sidebar.getChildren()) {
                 if (node instanceof Button button && button != toggleSidebarButton) {
@@ -100,6 +84,8 @@ public class MenuPrincipalController {
                         case 5 -> button.setText("🧠 Suggestion");
                         case 6 -> button.setText("📊 Statistiques");
                         case 7 -> button.setText("☀️ Météo");
+                        case 8 -> button.setText("🌾 Culture Back");
+                        case 9 -> button.setText("🟩 Parcelle Back");
                     }
                     button.setPrefWidth(180);
                     i++;
@@ -119,67 +105,35 @@ public class MenuPrincipalController {
 
     @FXML
     public void ouvrirAlertesParcelles() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AlertesParcelles.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("📍 Alertes de fin de location");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ouvrirFenetre("AlertesParcelles.fxml", "📍 Alertes de fin de location");
     }
 
     @FXML
     private void ouvrirPrevisionRecolte() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PrevisionRecolte.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Prévision de Récolte");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ouvrirFenetre("PrevisionRecolte.fxml", "Prévision de Récolte");
     }
 
     @FXML
     private void ouvrirSuggestionCulture() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SuggestionCulture.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Suggestion de Culture");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ouvrirFenetre("SuggestionCulture.fxml", "Suggestion de Culture");
     }
 
     @FXML
     private void ouvrirStatistiquesQuantites() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DashboardQuantite.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("📊 Statistiques des Quantités par Catégorie");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ouvrirFenetre("DashboardQuantite.fxml", "📊 Statistiques des Quantités par Catégorie");
     }
 
     @FXML
     private void ouvrirMeteo() {
+        ouvrirFenetre("MeteoView.fxml", "📈 Météo Tunis");
+    }
+
+    private void ouvrirFenetre(String fxml, String titre) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MeteoView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxml));
             Parent root = loader.load();
             Stage stage = new Stage();
-            stage.setTitle("📈 Météo Tunis");
+            stage.setTitle(titre);
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -189,7 +143,8 @@ public class MenuPrincipalController {
 
     private void chargerVue(String vue) {
         try {
-            Node content = FXMLLoader.load(getClass().getResource("/" + vue));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + vue));
+            Node content = loader.load();
             mainContent.getChildren().setAll(content);
         } catch (IOException e) {
             e.printStackTrace();
@@ -227,5 +182,15 @@ public class MenuPrincipalController {
                 );
             }
         }
+    }
+
+    @FXML
+    public void ouvrirCultureBack(ActionEvent event) {
+        chargerVue("AfficherCultureBack.fxml");
+    }
+
+    @FXML
+    public void ouvrirParcelleBack() {
+        chargerVue("ParcelleBack.fxml");
     }
 }

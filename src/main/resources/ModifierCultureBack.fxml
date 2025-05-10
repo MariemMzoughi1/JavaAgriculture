@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.Controllers.ModifierCultureBackController"
+            prefWidth="500" prefHeight="600"
+            style="-fx-background-color: #fdfefe;">
+
+    <VBox spacing="15" alignment="TOP_CENTER"
+          AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+
+        <Label text="✏️ Modifier Culture"
+               style="-fx-font-size: 22px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+
+        <TextField fx:id="nomField" promptText="Nom" maxWidth="400"/>
+        <TextField fx:id="categorieField" promptText="Catégorie" maxWidth="400"/>
+        <TextArea fx:id="descriptionArea" promptText="Description" prefRowCount="3" maxWidth="400"/>
+        <TextField fx:id="saisonField" promptText="Saison" maxWidth="400"/>
+        <TextField fx:id="quantiteField" promptText="Quantité (kg ou t)" maxWidth="400"/>
+        <TextField fx:id="imageUrlField" promptText="Lien ou chemin image" maxWidth="400"/>
+        <DatePicker fx:id="datePlantationPicker" promptText="Date Plantation" maxWidth="400"/>
+        <DatePicker fx:id="dateRecoltePicker" promptText="Date Récolte" maxWidth="400"/>
+
+        <Button fx:id="btnEnregistrer"
+                text="💾 Enregistrer"
+                onAction="#handleModifier"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 8;"/>
+    </VBox>
+</AnchorPane>

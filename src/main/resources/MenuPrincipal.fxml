@@ -38,6 +38,12 @@
                         style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
                 <Button text="☀️ Météo" onAction="#ouvrirMeteo"
                         style="-fx-background-color: #2c2f3a; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-pref-width: 180;" />
+                <Button text="🌾 Back Culture" onAction="#ouvrirCultureBack"/>
+                <Button text="🧱 Parcelles"
+                        onAction="#ouvrirParcelleBack"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10;"
+                        prefWidth="180" />
+
             </VBox>
 
         </VBox>
