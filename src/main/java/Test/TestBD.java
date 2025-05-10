@@ -1,4 +1,4 @@
-package Test;
+/*package Test;
 
 import Entites.Produit;
 import Services.ProduitService;
@@ -21,3 +21,4 @@ public class TestBD {
         System.out.println("Connexion DB utilisée : " + db);
     }
 }
+*/
