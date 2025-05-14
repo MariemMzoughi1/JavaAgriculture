@@ -1,183 +1,147 @@
 package controllers;
 
-import entities.Commande;
 import entities.Produit;
 import services.CommandeService;
+import entities.Commande;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PanierController {
 
+    @FXML private TableView<PanierItem> tablePanier;
+    @FXML private TableColumn<PanierItem, String> colProduit;
+    @FXML private TableColumn<PanierItem, Integer> colQuantite;
+    @FXML private TableColumn<PanierItem, Void> colActions;
+    @FXML private Label labelTotal;
+    @FXML private Button btnVider, btnCommander, btnRetour;
     @FXML
-    private VBox panierContainer;
+    private VBox formulaireVBox;
+    private ObservableList<PanierItem> panier;
 
-    private List<Produit> produitsPanier = new ArrayList<>();
-    private CommandeService commandeService;
-    private boolean commandePassee = false;
-
-    // Liste des commandes affichées
-    private List<Commande> commandesList = new ArrayList<>();
-
-
-
-
-    public void setProduitsPanier(List<Produit> produits) {
-        this.produitsPanier = produits;
-        afficherPanier();
+    public PanierController() {
+        panier = FXCollections.observableArrayList(); // Initialisation
     }
 
-    public void setCommandeService(CommandeService service) {
-        this.commandeService = service;
+    @FXML
+    public void initialize() {
+        // Lier les colonnes aux propriétés de PanierItem
+        colProduit.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProduit().getNom()));
+        colQuantite.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getQuantite()).asObject());
+
+        tablePanier.setItems(panier);
+        ajouterBoutonsActions();
+        updateTotal();
     }
 
-    public boolean isCommandePassee() {
-        return commandePassee;
-    }
-
-
-    private void afficherPanier() {
-        panierContainer.getChildren().clear();
-        double total = 0.0;
-
-        // Affichage des produits dans le panier
-        for (Produit produit : produitsPanier) {
-            VBox produitBox = new VBox();
-            produitBox.setSpacing(3);
-
-            Label nomLabel = new Label("Nom : " + produit.getNom());
-            Label prixLabel = new Label("Prix : " + produit.getPrix_unitaire() + " DT");
-            Button supprimerBtn = new Button("Supprimer");
-            supprimerBtn.setOnAction(e -> {
-                produitsPanier.remove(produit);
-                afficherPanier();
-            });
-
-            produitBox.getChildren().addAll(nomLabel, prixLabel, supprimerBtn);
-            produitBox.setStyle("-fx-border-color: #ccc; -fx-padding: 5; -fx-background-color: #fff;");
-            panierContainer.getChildren().add(produitBox);
-
-            total += produit.getPrix_unitaire();
+    public void setPanier(List<Produit> panierList) {
+        panier.clear();
+        for (Produit produit : panierList) {
+            panier.add(new PanierItem(produit));
         }
+        tablePanier.setItems(panier);
+        updateTotal();
+    }
 
-        // Si le panier n'est pas vide, afficher le bouton "Passer commande"
-        if (!produitsPanier.isEmpty()) {
-            Label totalLabel = new Label("Total : " + total + " DT");
-            Button passerCommandeBtn = new Button("Passer commande");
+    private void updateTotal() {
+        double total = 0;
+        for (PanierItem item : panier) {
+            total += item.getTotalPrix();
+        }
+        labelTotal.setText("Total: " + total + " DT");
+    }
 
-            passerCommandeBtn.setOnAction(e -> {
-                // Afficher la confirmation avant de passer commande
-                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmation.setTitle("Confirmation");
-                confirmation.setHeaderText("Confirmer la commande");
-                confirmation.setContentText("Voulez-vous vraiment passer cette commande ?");
+    private void ajouterBoutonsActions() {
+        colActions.setCellFactory(param -> new TableCell<PanierItem, Void>() {
+            private final Button btnPlus = new Button("+");
+            private final Button btnMoins = new Button("-");
 
-                confirmation.showAndWait().ifPresent(response -> {
-                    switch (response.getButtonData()) {
-                        case OK_DONE:
-                            passerCommande();  // Appel de la méthode existante
-                            break;
-                        case CANCEL_CLOSE:
-                            afficherMessage("Commande annulée", "La commande n'a pas été envoyée.");
-                            break;
+            {
+                btnPlus.setOnAction(event -> {
+                    PanierItem item = getTableView().getItems().get(getIndex());
+                    item.setQuantite(item.getQuantite() + 1);
+                    tablePanier.refresh();
+                    updateTotal();
+                });
+
+                btnMoins.setOnAction(event -> {
+                    PanierItem item = getTableView().getItems().get(getIndex());
+                    if (item.getQuantite() > 1) {
+                        item.setQuantite(item.getQuantite() - 1);
+                        tablePanier.refresh();
+                        updateTotal();
                     }
                 });
-            });
+            }
 
-            VBox commandeBox = new VBox(10, totalLabel, passerCommandeBtn);
-            commandeBox.setStyle("-fx-padding: 10; -fx-background-color: #f5f5f5; -fx-border-color: #ccc;");
-            panierContainer.getChildren().add(commandeBox);
-        }
+            private final HBox pane = new HBox(10, btnPlus, btnMoins);
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(pane);
+                }
+            }
+        });
     }
 
     @FXML
-    private void passerCommande() {
-        if (produitsPanier.isEmpty()) {
-            afficherMessage("Panier vide", "Ajoutez des produits avant de commander.");
+    public void onCommander(ActionEvent actionEvent) {
+        if (panier.isEmpty()) {
+            afficherMessage("Panier vide", "Ajoutez des produits avant de passer une commande.");
             return;
         }
 
-        double total = produitsPanier.stream().mapToDouble(Produit::getPrix_unitaire).sum();
-        Commande commande = new Commande("En attente", LocalDateTime.now(), total);
-        commandeService.ajouterCommande(commande);
-        commandesList.add(commande);  // Ajoute la commande à la liste
-
-        afficherMessage("Commande passée", "Commande enregistrée avec succès !");
-        commandePassee = true;
-
-        // Fermer la fenêtre du panier
-        Stage stage = (Stage) panierContainer.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    private void afficherCommandes() {
-        // Vide le conteneur des anciennes commandes
-        panierContainer.getChildren().clear();
-
-        // Affichage de chaque commande avec un bouton d'action
-        for (Commande commande : commandesList) {
-            VBox commandeBox = new VBox();
-            commandeBox.setSpacing(10);
-            Label commandeLabel = new Label("Commande : " + commande.getId() + " - " + commande.getEtat());
-            Label totalCommandeLabel = new Label("Total : " + commande.getTotal() + " DT");
-
-            Button ajouterBtn = new Button("Ajouter au panier");
-            ajouterBtn.setOnAction(e -> {
-                // Ajouter la commande ou produits au panier (à ajuster selon logique)
-                afficherMessage("Ajouté au panier", "Produit de la commande ajouté au panier.");
-            });
-
-            Button supprimerBtn = new Button("Supprimer");
-            supprimerBtn.setOnAction(e -> {
-                commandesList.remove(commande);
-                afficherCommandes();
-            });
-
-            Button passerCommandeBtn = new Button("Passer commande");
-            passerCommandeBtn.setOnAction(e -> passerCommande());
-
-            commandeBox.getChildren().addAll(commandeLabel, totalCommandeLabel, ajouterBtn, supprimerBtn, passerCommandeBtn);
-            commandeBox.setStyle("-fx-border-color: #ccc; -fx-padding: 5; -fx-background-color: #fff;");
-            panierContainer.getChildren().add(commandeBox);
-        }
-    }
-
-    @FXML
-
-
-    private Button btnRetour;
-
-    @FXML
-    private void retourCommande(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/commande.fxml")); // Remplace par le bon chemin
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/FormulaireCommande.fxml"));
+            AnchorPane formulaireView = loader.load();
+            // Passer le total au formulaire
+            FormulaireCommandeController controller = loader.getController();
+            double total = panier.stream().mapToDouble(PanierItem::getTotalPrix).sum();
+            controller.setTotalCommande(total);
 
-            // Optionnel : récupérer le contrôleur si tu veux lui passer des données
-            // CommandeController controller = loader.getController();
+            // Ouvrir une nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Formulaire de Commande");
+            stage.setScene(new Scene(formulaireView));
+            stage.show();
 
-            // Afficher la nouvelle scène
-            Stage stage = (Stage) btnRetour.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
+        }  catch (IOException e) {
             e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur de Chargement");
+            alert.setContentText("Erreur : " + e.getMessage());
+            alert.showAndWait();
         }
+
     }
 
 
+    @FXML
+    public void onViderPanier(ActionEvent actionEvent) {
+        panier.clear();
+        tablePanier.getItems().clear();
+        updateTotal();
+        afficherMessage("Panier vidé", "Tous les produits ont été retirés du panier.");
+    }
 
     private void afficherMessage(String titre, String contenu) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -185,5 +149,21 @@ public class PanierController {
         alert.setHeaderText(null);
         alert.setContentText(contenu);
         alert.showAndWait();
+    }
+
+    @FXML
+    public void onRetourListeProduits(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/commande.fxml"));
+            AnchorPane view = loader.load();
+            Scene scene = new Scene(view);
+
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Commandes");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -22,46 +22,29 @@ import services.UserService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import javafx.scene.control.*;
-
-import javafx.scene.layout.*;
-
 
 public class ListeForum implements Initializable {
 
-    @FXML
-    private VBox cardContainer;
+    @FXML private VBox cardContainer;
+    @FXML private Button createForumButton;
+    @FXML private TextField searchField;
+    @FXML private Button searchButton;
+    @FXML private Button sortByDateButton;
+    @FXML private Button sortByLikesButton;
+    @FXML private Button sortByDislikesButton;
 
-    @FXML
-    private Button createForumButton;
-
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private Button searchButton;
-
-    @FXML
-    private Button sortByDateButton;
-
-    @FXML
-    private Button sortByLikesButton;
-
-    @FXML
-    private Button sortByDislikesButton;
-
-    private UserService userService = new UserService();
-    private PostService service = new PostService();
+    private final UserService userService = new UserService();
+    private final PostService service = new PostService();
     private List<Post> allPosts;
     private List<Post> displayedPosts;
     private boolean isDateAscending = false;
     private boolean isLikesAscending = false;
     private boolean isDislikesAscending = false;
+
+    // 🔵 Chemin local vers le dossier uploads de Symfony (adapter à ton projet !)
+    private static final String SYMFONY_IMAGE_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/posts/";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -70,26 +53,23 @@ public class ListeForum implements Initializable {
     }
 
     private void setupResponsiveBehavior() {
-        cardContainer.widthProperty().addListener((obs, oldVal, newVal) -> {
-            refreshPosts();
-        });
+        cardContainer.widthProperty().addListener((obs, oldVal, newVal) -> refreshPosts());
     }
 
     private void loadPosts() {
         allPosts = service.find();
-        if (allPosts == null) {
-            allPosts = new ArrayList<>();
-        }
+        if (allPosts == null) allPosts = new ArrayList<>();
 
-        // Tri par date décroissante (du plus récent au plus ancien)
+        // Tri initial par date décroissante
         allPosts.sort((p1, p2) -> {
             if (p1.getDate() == null || p2.getDate() == null) return 0;
-            return p2.getDate().compareTo(p1.getDate()); // Ordre décroissant
+            return p2.getDate().compareTo(p1.getDate());
         });
 
         displayedPosts = new ArrayList<>(allPosts);
         refreshPosts();
     }
+
     private void refreshPosts() {
         refreshPosts(displayedPosts);
     }
@@ -110,45 +90,35 @@ public class ListeForum implements Initializable {
         card.setSpacing(12);
         card.getStyleClass().add("card");
 
-        // Titre
         Label titre = new Label(post.getTitre() != null ? post.getTitre() : "Sans titre");
         titre.getStyleClass().add("titre-label");
-        titre.setMaxWidth(Double.MAX_VALUE);
 
-        // Métadonnées : nom auteur + date
         String username = post.getAuteurId() != null ? userService.getEmailById(post.getAuteurId()) : "N/A";
         Label meta = new Label("Auteur : " + username + " | Date : " +
                 (post.getDate() != null ? post.getDate().toString() : "N/A"));
         meta.getStyleClass().add("meta-label");
-        meta.setMaxWidth(Double.MAX_VALUE);
 
-        // Contenu
         Label contenu = new Label(post.getContenu() != null ? post.getContenu() : "");
         contenu.setWrapText(true);
         contenu.getStyleClass().add("contenu-label");
-        contenu.setMaxWidth(Double.MAX_VALUE);
 
-        // Image
         ImageView imageView = new ImageView();
         if (post.getImage() != null && !post.getImage().isEmpty()) {
-            try {
-                File file = new File(post.getImage());
-                if (file.exists()) {
-                    Image image = new Image(file.toURI().toString());
+            File imageFile = new File(SYMFONY_IMAGE_DIR + post.getImage());
+            if (imageFile.exists()) {
+                try {
+                    Image image = new Image(imageFile.toURI().toString());
                     imageView.setImage(image);
                     imageView.setPreserveRatio(true);
                     imageView.setSmooth(true);
-                    imageView.setFitWidth(300); // Taille fixe ou ajuste comme tu veux
-                    imageView.setFitHeight(200); // Limiter la hauteur
+                    imageView.setFitWidth(300);
+                    imageView.setFitHeight(200);
+                } catch (Exception e) {
+                    System.out.println("Erreur de chargement de l'image : " + e.getMessage());
                 }
-            } catch (Exception e) {
-                System.out.println("Erreur chargement image: " + e.getMessage());
             }
         }
 
-
-
-        // Boutons d'action
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
         Button voirPlusBtn = new Button("Voir plus");
@@ -164,7 +134,7 @@ public class ListeForum implements Initializable {
         buttonBox.getChildren().addAll(voirPlusBtn, likeBtn, dislikeBtn);
 
         User currentUser = Session.getCurrentUser();
-        boolean isAuthor = post.getAuteurId() != null && post.getAuteurId().equals(currentUser.getId());
+        boolean isAuthor = post.getAuteurId() != null && currentUser != null && post.getAuteurId().equals(currentUser.getId());
         if (isAuthor) {
             buttonBox.getChildren().add(supprimerBtn);
         }
@@ -184,23 +154,16 @@ public class ListeForum implements Initializable {
         });
 
         voirPlusBtn.setOnAction(e -> openDetailsWindow(post));
+        supprimerBtn.setOnAction(e -> confirmAndDeletePost(post));
 
-        if (isAuthor) {
-            supprimerBtn.setOnAction(e -> confirmAndDeletePost(post));
-        }
-
-        // Ajout des éléments dans l'ordre demandé
         card.getChildren().addAll(titre, meta, contenu);
-        if (imageView.getImage() != null) {
-            card.getChildren().add(imageView);
-        }
-        card.getChildren().addAll( buttonBox);
+        if (imageView.getImage() != null) card.getChildren().add(imageView);
+        card.getChildren().add(buttonBox);
 
         card.prefWidthProperty().bind(cardContainer.widthProperty().subtract(40));
 
         return card;
     }
-
 
     private void openDetailsWindow(Post post) {
         try {
@@ -219,7 +182,6 @@ public class ListeForum implements Initializable {
             detailStage.show();
         } catch (IOException ex) {
             ex.printStackTrace();
-            System.out.println("Erreur lors de l'ouverture des détails du forum : " + ex.getMessage());
         }
     }
 
@@ -250,81 +212,48 @@ public class ListeForum implements Initializable {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de l'ouverture de l'interface AjouterForum : " + e.getMessage());
         }
     }
-
 
     @FXML
     private void handleSearch(ActionEvent event) {
         String query = searchField.getText().trim().toLowerCase();
+        displayedPosts = query.isEmpty() ? new ArrayList<>(allPosts)
+                : allPosts.stream()
+                .filter(post -> (post.getTitre() != null && post.getTitre().toLowerCase().contains(query)) ||
+                        (post.getContenu() != null && post.getContenu().toLowerCase().contains(query)))
+                .collect(Collectors.toList());
 
-        if (query.isEmpty()) {
-            displayedPosts = new ArrayList<>(allPosts);
-        } else {
-            displayedPosts = allPosts.stream()
-                    .filter(post ->
-                            (post.getTitre() != null && post.getTitre().toLowerCase().contains(query)) ||
-                                    (post.getContenu() != null && post.getContenu().toLowerCase().contains(query)))
-                    .collect(Collectors.toList());
-        }
-
-        // Conserver le tri actuel après la recherche
-        if (sortByDateButton.getText().contains("Date")) {
-            sortByDate(null);
-        } else if (sortByLikesButton.getText().contains("Likes")) {
-            sortByLikes(null);
-        } else if (sortByDislikesButton.getText().contains("Dislikes")) {
-            sortByDislikes(null);
-        } else {
-            refreshPosts();
-        }
+        refreshPosts();
     }
 
     @FXML
     private void sortByDate(ActionEvent event) {
         isDateAscending = !isDateAscending;
-
         displayedPosts.sort((p1, p2) -> {
             if (p1.getDate() == null || p2.getDate() == null) return 0;
-            return isDateAscending ? p1.getDate().compareTo(p2.getDate())
-                    : p2.getDate().compareTo(p1.getDate());
+            return isDateAscending ? p1.getDate().compareTo(p2.getDate()) : p2.getDate().compareTo(p1.getDate());
         });
 
         sortByDateButton.setText(isDateAscending ? "Date ▲" : "Date ▼");
-        sortByLikesButton.setText("Likes");
-        sortByDislikesButton.setText("Dislikes");
-
         refreshPosts();
     }
 
     @FXML
     private void sortByLikes(ActionEvent event) {
         isLikesAscending = !isLikesAscending;
-
-        displayedPosts.sort((p1, p2) ->
-                isLikesAscending ? Integer.compare(p1.getLikes(), p2.getLikes())
-                        : Integer.compare(p2.getLikes(), p1.getLikes()));
-
+        displayedPosts.sort((p1, p2) -> isLikesAscending ?
+                Integer.compare(p1.getLikes(), p2.getLikes()) : Integer.compare(p2.getLikes(), p1.getLikes()));
         sortByLikesButton.setText(isLikesAscending ? "Likes ▲" : "Likes ▼");
-        sortByDateButton.setText("Date");
-        sortByDislikesButton.setText("Dislikes");
-
         refreshPosts();
     }
 
     @FXML
     private void sortByDislikes(ActionEvent event) {
         isDislikesAscending = !isDislikesAscending;
-
-        displayedPosts.sort((p1, p2) ->
-                isDislikesAscending ? Integer.compare(p1.getDislikes(), p2.getDislikes())
-                        : Integer.compare(p2.getDislikes(), p1.getDislikes()));
-
+        displayedPosts.sort((p1, p2) -> isDislikesAscending ?
+                Integer.compare(p1.getDislikes(), p2.getDislikes()) : Integer.compare(p2.getDislikes(), p1.getDislikes()));
         sortByDislikesButton.setText(isDislikesAscending ? "Dislikes ▲" : "Dislikes ▼");
-        sortByDateButton.setText("Date");
-        sortByLikesButton.setText("Likes");
-
         refreshPosts();
     }
 }

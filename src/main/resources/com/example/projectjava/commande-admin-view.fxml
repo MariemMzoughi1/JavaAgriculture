@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.CommandeAdminController"
+      spacing="20" alignment="CENTER" style="-fx-padding: 30; -fx-background-color: #fdfefe;">
+
+    <Label text="🧾 Liste des Commandes" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="tableCommandes" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="colId" text="ID"/>
+            <TableColumn fx:id="colEtat" text="État"/>
+            <TableColumn fx:id="colDate" text="Date"/>
+            <TableColumn fx:id="colTotal" text="Total (DT)"/>
+            <TableColumn fx:id="colActions" text="Actions"/>
+        </columns>
+    </TableView>
+
+    <Button text="🔙 Retour au dashboard" onAction="#handleRetour"
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px;" />
+</VBox>

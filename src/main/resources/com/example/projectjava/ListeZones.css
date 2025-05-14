@@ -1,0 +1,58 @@
+/* Style général pour le fond */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #fafafa, #e0e0e0);
+    -fx-padding: 20px;
+}
+
+/* Titre principal */
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 10 0 20 0;
+}
+
+/* Style du bouton "Ajouter" */
+.add-button {
+    -fx-font-size: 14px;
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 8px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+/* Style des cartes */
+.card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 5, 0.1, 0, 1);
+}
+
+/* Texte dans les cartes */
+.card-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* Boutons dans les cartes */
+.button {
+    -fx-font-size: 13px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+/* Modifier */
+.modify-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+}
+
+/* Supprimer */
+.delete-button {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+}

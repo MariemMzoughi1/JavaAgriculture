@@ -22,7 +22,7 @@ public class Acceuil {
 
     @FXML
     private void consulterZones(ActionEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/com/example/projectjava/ListeZones.fxml"));
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/com/example/projectjava/ListeZonesUser.fxml"));
         rootPane.getChildren().setAll(pane);
     }
 
@@ -31,7 +31,7 @@ public class Acceuil {
 
     @FXML
     private void consulterGranges(ActionEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/com/example/projectjava/ListeGranges.fxml"));
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/com/example/projectjava/ListeGrangesUser.fxml"));
         rootPane.getChildren().setAll(pane);
     }
 }

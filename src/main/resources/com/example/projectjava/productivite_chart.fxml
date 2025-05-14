@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ProductiviteChart">
+    <BarChart fx:id="productiviteChart" prefWidth="800" prefHeight="600">
+        <xAxis>
+            <CategoryAxis fx:id="xAxis" label="Grange" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yAxis" label="Niveau de productivité" />
+        </yAxis>
+    </BarChart>
+</StackPane>

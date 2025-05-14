@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.ProduitAdminController"
+      spacing="20" alignment="CENTER" style="-fx-padding: 30; -fx-background-color: #fdfefe;">
+
+    <Label text="🧺 Liste des Produits" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <HBox spacing="15">
+        <Button text="➕ Ajouter un produit"
+                onAction="#handleAjouterProduit"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white;" />
+    </HBox>
+    <TableView fx:id="tableProduits" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="colId" text="ID"/>
+            <TableColumn fx:id="colNom" text="Nom"/>
+            <TableColumn fx:id="colCategorie" text="Catégorie"/>
+            <TableColumn fx:id="colPrix" text="Prix (DT)"/>
+            <TableColumn fx:id="colQuantite" text="Stock"/>
+            <TableColumn fx:id="colDate" text="Ajout"/>
+            <TableColumn fx:id="colImage" text="Image"/>
+            <TableColumn fx:id="colActions" text="Actions"/>
+        </columns>
+    </TableView>
+
+    <Button text="🔙 Retour au dashboard" onAction="#handleRetour"
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px;" />
+</VBox>

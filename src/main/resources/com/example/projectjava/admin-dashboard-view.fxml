@@ -30,6 +30,15 @@
             onAction="#handleManagePosts"
             style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #16a085; -fx-text-fill: white;" />
 
+    <Button text="🧺 Gérer les produits"
+            onAction="#handleManageProduits"
+            style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #1abc9c; -fx-text-fill: white;" />
+
+
+    <Button text="📦 Gérer les commandes"
+            onAction="#handleManageCommandes"
+            style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #f39c12; -fx-text-fill: white;" />
+
     <Button text="📊 View Reports"
             style="-fx-font-size: 16px; -fx-pref-width: 300; -fx-background-color: #8e44ad; -fx-text-fill: white;" />
 

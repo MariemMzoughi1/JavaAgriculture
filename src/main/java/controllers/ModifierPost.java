@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class ModifierPost {
 
@@ -26,7 +28,10 @@ public class ModifierPost {
     @FXML private Button boutonImage;
 
     private Post post;
-    private String selectedImagePath = null;
+    private File selectedImageFile;
+
+    // 🔁 Adapter le chemin vers le dossier uploads de Symfony sur ta machine :
+    private static final String SYMFONY_UPLOAD_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/posts/";
 
     public void setPost(Post post) {
         this.post = post;
@@ -34,8 +39,9 @@ public class ModifierPost {
         titreField.setText(post.getTitre());
         contenuArea.setText(post.getContenu());
 
+        // Charger l'image depuis Symfony si elle existe
         if (post.getImage() != null && !post.getImage().isEmpty()) {
-            File file = new File(post.getImage());
+            File file = new File(SYMFONY_UPLOAD_DIR + post.getImage());
             if (file.exists()) {
                 imageView.setImage(new Image(file.toURI().toString()));
             }
@@ -50,29 +56,40 @@ public class ModifierPost {
                 new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png")
         );
 
-        File selectedFile = fileChooser.showOpenDialog(titreField.getScene().getWindow());
-        if (selectedFile != null) {
-            selectedImagePath = selectedFile.getAbsolutePath();
-            imageView.setImage(new Image(selectedFile.toURI().toString()));
+        selectedImageFile = fileChooser.showOpenDialog(titreField.getScene().getWindow());
+        if (selectedImageFile != null) {
+            imageView.setImage(new Image(selectedImageFile.toURI().toString()));
         }
     }
 
     @FXML
     private void handleEnregistrer() {
-        if (!isValidInput()) {
-            return;
-        }
+        if (!isValidInput()) return;
 
         post.setTitre(titreField.getText());
         post.setContenu(contenuArea.getText());
-        if (selectedImagePath != null) {
-            post.setImage(selectedImagePath);
+
+        if (selectedImageFile != null) {
+            try {
+                String fileName = selectedImageFile.getName();
+                File destination = new File(SYMFONY_UPLOAD_DIR + fileName);
+
+                // Copier l'image dans le dossier Symfony
+                Files.copy(selectedImageFile.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                // Enregistrer uniquement le nom
+                post.setImage(fileName);
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Erreur lors de la copie de l'image : " + e.getMessage());
+                return;
+            }
         }
 
+        // Mise à jour dans la base
         PostService postService = new PostService();
         postService.updatePost(post);
 
-        // Retour à la page de détails du forum avec le post modifié
+        // Retour à la page de détails
         try {
             Stage stage = (Stage) titreField.getScene().getWindow();
             stage.close();
@@ -81,48 +98,43 @@ public class ModifierPost {
             VBox root = loader.load();
 
             DetailsForum controller = loader.getController();
-            controller.setPost(post); // Important : passer le post mis à jour
+            controller.setPost(post);
 
             Stage newStage = new Stage();
             newStage.setTitle("Détails du Forum");
             newStage.setScene(new Scene(root));
             newStage.show();
         } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur lors du retour aux détails : " + e.getMessage());
             e.printStackTrace();
         }
     }
-
 
     @FXML
     private void handleAnnuler() {
         try {
-            // Fermer la fenêtre actuelle
             Stage stage = (Stage) titreField.getScene().getWindow();
             stage.close();
 
-            // Charger le fichier FXML de la page de détails
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/DetailsForum.fxml"));
             VBox root = loader.load();
 
-            // Obtenir le contrôleur et lui passer le post
             DetailsForum controller = loader.getController();
-            controller.setPost(post); // restaurer les infos du post
+            controller.setPost(post);
 
-            // Créer et afficher la nouvelle scène
             Stage newStage = new Stage();
             newStage.setTitle("Détails du Forum");
             newStage.setScene(new Scene(root));
             newStage.show();
         } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur lors de l'annulation : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-
     private boolean isValidInput() {
         boolean isValid = true;
 
-        // Réinitialiser les styles
         titreField.setStyle("");
         contenuArea.setStyle("");
 
@@ -141,16 +153,17 @@ public class ModifierPost {
             isValid = false;
         }
 
-        if (selectedImagePath != null && !selectedImagePath.isEmpty()) {
-            String lowerPath = selectedImagePath.toLowerCase();
-            if (!(lowerPath.endsWith(".png") || lowerPath.endsWith(".jpg") || lowerPath.endsWith(".jpeg"))) {
-                showAlert(Alert.AlertType.WARNING, "Le fichier sélectionné n'est pas une image valide.");
+        if (selectedImageFile != null) {
+            String name = selectedImageFile.getName().toLowerCase();
+            if (!(name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg"))) {
+                showAlert(Alert.AlertType.WARNING, "Fichier image non valide.");
                 isValid = false;
             }
         }
 
         return isValid;
     }
+
     private void showAlert(Alert.AlertType type, String message) {
         Alert alert = new Alert(type);
         alert.setTitle("Information");
@@ -158,6 +171,4 @@ public class ModifierPost {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
-

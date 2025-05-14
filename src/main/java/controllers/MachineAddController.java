@@ -1,9 +1,5 @@
 package controllers;
 
-
-import com.google.cloud.vision.v1.ImageAnnotatorClient;
-
-
 import entities.Machine;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -12,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -19,14 +16,10 @@ import services.ServiceMachine;
 import services.Session;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MachineAddController {
@@ -43,6 +36,9 @@ public class MachineAddController {
 
     private String relativeImagePath;
     private final ServiceMachine serviceMachine = new ServiceMachine();
+
+    // ✅ Dossier cible Symfony
+    private static final String SYMFONY_UPLOAD_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/images/";
 
     @FXML
     public void initialize() {
@@ -70,25 +66,17 @@ public class MachineAddController {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             try {
-                File destDir = new File("images");
-                if (!destDir.exists()) destDir.mkdir();
+                File destDir = new File(SYMFONY_UPLOAD_DIR);
+                if (!destDir.exists()) destDir.mkdirs();
 
                 String fileName = System.currentTimeMillis() + "_" + selectedFile.getName();
                 File destFile = new File(destDir, fileName);
 
-                try (FileInputStream fis = new FileInputStream(selectedFile);
-                     FileOutputStream fos = new FileOutputStream(destFile)) {
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = fis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, length);
-                    }
-                }
+                Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                relativeImagePath = "images/" + fileName;
+                relativeImagePath = fileName; // ✅ seul le nom du fichier
                 imageLabel.setText(fileName);
-                imagePreview.setImage(new javafx.scene.image.Image(destFile.toURI().toString()));
-
+                imagePreview.setImage(new Image(destFile.toURI().toString()));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -96,8 +84,6 @@ public class MachineAddController {
             }
         }
     }
-
-
 
     @FXML
     private void handleAddMachine() {
@@ -108,7 +94,7 @@ public class MachineAddController {
                 priceField.getText().isEmpty() ||
                 brandComboBox.getValue() == null) {
 
-            showAlert("Veuillez remplir tous les champs obligatoires.");
+            showAlert("❌ Veuillez remplir tous les champs obligatoires.");
             return;
         }
 
@@ -117,7 +103,7 @@ public class MachineAddController {
             price = Integer.parseInt(priceField.getText());
             if (price < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            showAlert("Le prix doit être un nombre entier positif.");
+            showAlert("❌ Le prix doit être un nombre entier positif.");
             return;
         }
 
@@ -128,7 +114,7 @@ public class MachineAddController {
                 Timestamp.valueOf(datePicker.getValue().atStartOfDay()),
                 price,
                 brandComboBox.getValue(),
-                relativeImagePath
+                relativeImagePath // ✅ nom de l’image
         );
 
         serviceMachine.addMachine(machine);

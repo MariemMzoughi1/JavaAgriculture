@@ -52,14 +52,14 @@ public class LoginViewController {
 
         List<User> users = userService.getAllUsers();
         for (User user : users) {
-            if (user.getEmail().equals(email) && user.getPassword().equals(hashedInput)) {
+            if (user.getEmail().equals(email) && PasswordUtils.checkPassword(password, user.getPassword()))
+            {
                 Session.setCurrentUser(user);
                 statusLabel.setText("✅ Login successful!");
                 redirectUser();
                 return;
             }
         }
-
         statusLabel.setText("❌ Invalid email or password.");
     }
 
@@ -79,7 +79,29 @@ public class LoginViewController {
     }
 
     @FXML
+    private void handleGoogleLogin() {
 
+
+            // 🔵 Start server first if not already running
+            if (server == null) {
+                startLocalServer(clientId, clientSecret, redirectUri);
+            }
+
+            // 🔵 Then open browser
+            String authUrl = "https://accounts.google.com/o/oauth2/v2/auth"
+                    + "?client_id=" + clientId
+                    + "&redirect_uri=" + redirectUri
+                    + "&response_type=code"
+                    + "&scope=email%20profile"
+                    + "&access_type=offline";
+
+            Desktop.getDesktop().browse(new URI(authUrl));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            statusLabel.setText("❌ Failed to start Google login.");
+        }
+    }
 
     private void startLocalServer(String clientId, String clientSecret, String redirectUri) {
         new Thread(() -> {
@@ -211,7 +233,7 @@ public class LoginViewController {
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Scene scene = new Scene(loader.load(), 800, 600);
+            Scene scene = new Scene(loader.load(), 1000, 800);
 
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(scene);

@@ -33,6 +33,8 @@ public class MachineIndexController {
 
     private final ServiceMachine serviceMachine = new ServiceMachine();
 
+    private static final String SYMFONY_IMAGE_PATH = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/images/";
+
     @FXML
     public void initialize() {
         sortComboBox.getItems().addAll("Nom (A-Z)", "Nom (Z-A)", "Prix (Croissant)", "Prix (Décroissant)");
@@ -52,12 +54,16 @@ public class MachineIndexController {
             card.setStyle("-fx-padding: 15; -fx-background-color: white; -fx-background-radius: 10;"
                     + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.1, 0, 2);");
 
-            String imagePath;
-            File userImage = (machine.getImage_url() != null) ? new File(machine.getImage_url()) : null;
+            // 🔁 Image
+            String imagePath = null;
+            if (machine.getImage_url() != null && !machine.getImage_url().isEmpty()) {
+                File userImage = new File(SYMFONY_IMAGE_PATH + machine.getImage_url());
+                if (userImage.exists()) {
+                    imagePath = userImage.toURI().toString();
+                }
+            }
 
-            if (userImage != null && userImage.exists()) {
-                imagePath = userImage.toURI().toString();
-            } else {
+            if (imagePath == null) {
                 File fallback = new File("images/default.png");
                 if (fallback.exists()) {
                     imagePath = fallback.toURI().toString();

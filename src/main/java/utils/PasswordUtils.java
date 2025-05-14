@@ -1,25 +1,18 @@
 package utils;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordUtils {
 
-    public static String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashed = md.digest(password.getBytes());
+    // Hachage du mot de passe avec BCrypt ($2a$ → $2y$ pour compatibilité PHP)
+    public static String hashPassword(String plainPassword) {
+        String hashed = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+        return hashed.replace("$2a$", "$2y$");
+    }
 
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashed) {
-                sb.append(String.format("%02x", b));
-            }
-
-            return sb.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("⚠️ Error hashing password: " + e.getMessage());
-        }
+    // Vérification du mot de passe
+    public static boolean checkPassword(String plainPassword, String hashedPassword) {
+        String compatibleHash = hashedPassword.replace("$2y$", "$2a$");
+        return BCrypt.checkpw(plainPassword, compatibleHash);
     }
 }
-

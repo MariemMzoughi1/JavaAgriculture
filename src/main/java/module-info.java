@@ -11,6 +11,11 @@ module com.example.projectjava {
     requires com.google.gson;
     requires jakarta.mail;
     requires java.net.http;
+    requires javafx.web;
+    requires jdk.jsobject;
+    requires stripe.java;
+    requires itext;
+    requires jbcrypt;
 
 
     opens com.example.projectjava to javafx.fxml;

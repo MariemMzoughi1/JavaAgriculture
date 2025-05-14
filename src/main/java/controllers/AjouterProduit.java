@@ -14,6 +14,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 
 public class AjouterProduit {
@@ -30,13 +33,14 @@ public class AjouterProduit {
     private TextField quantiteStockTextField;
     @FXML
     private TextField imageTextField;
-
     @FXML
     private ImageView imagePreview;
 
     private File selectedImageFile;
 
-    // Bouton pour choisir une image
+    // 🔁 Adapter ce chemin vers le dossier images de Symfony
+    private static final String SYMFONY_PRODUIT_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/produits/";
+
     @FXML
     void choisirImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -45,18 +49,16 @@ public class AjouterProduit {
                 new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
         );
 
-        // Récupération de la fenêtre active
         Stage stage = (Stage) nomTextField.getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         if (selectedFile != null) {
             selectedImageFile = selectedFile;
-            imageTextField.setText(selectedFile.getAbsolutePath());
+            imageTextField.setText(selectedFile.getName());
             imagePreview.setImage(new Image(selectedFile.toURI().toString()));
         }
     }
 
-    // Bouton pour ajouter un produit
     @FXML
     void ajouterProduit(ActionEvent event) {
         String nom = nomTextField.getText().trim();
@@ -65,23 +67,17 @@ public class AjouterProduit {
         String prixStr = prixUnitaireTextField.getText().trim();
         String quantiteStr = quantiteStockTextField.getText().trim();
 
-        // Vérifier que tous les champs sont remplis
-        if (nom.isEmpty() || description.isEmpty() || categorie.isEmpty()
-                || prixStr.isEmpty() || quantiteStr.isEmpty()) {
+        if (nom.isEmpty() || description.isEmpty() || categorie.isEmpty() || prixStr.isEmpty() || quantiteStr.isEmpty()) {
             showAlert("Veuillez remplir tous les champs.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Vérifier que le nom ne contient pas de chiffres
         if (!nom.matches("[a-zA-Z\\s]+")) {
             showAlert("Le nom du produit ne doit contenir que des lettres.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Vérifier que le prix et la quantité sont des entiers positifs
-        int prixUnitaire;
-        int quantiteStock;
-
+        int prixUnitaire, quantiteStock;
         try {
             prixUnitaire = Integer.parseInt(prixStr);
             quantiteStock = Integer.parseInt(quantiteStr);
@@ -91,54 +87,54 @@ public class AjouterProduit {
                 return;
             }
         } catch (NumberFormatException e) {
-            showAlert("Prix ou quantité invalide. Veuillez entrer des valeurs numériques valides.", Alert.AlertType.ERROR);
+            showAlert("Prix ou quantité invalide. Veuillez entrer des nombres valides.", Alert.AlertType.ERROR);
             return;
         }
 
-        // Vérification image
         if (selectedImageFile == null) {
-            showAlert("Veuillez sélectionner une image pour le produit.", Alert.AlertType.WARNING);
+            showAlert("Veuillez sélectionner une image.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Création de l'objet Produit
+        // Copie de l’image dans Symfony
+        String fileName = selectedImageFile.getName();
+        File destination = new File(SYMFONY_PRODUIT_DIR + fileName);
+        try {
+            Files.copy(selectedImageFile.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            showAlert("Erreur lors de la copie de l'image : " + e.getMessage(), Alert.AlertType.ERROR);
+            return;
+        }
+
+        // Création du produit
         Produit produit = new Produit();
         produit.setNom(nom);
         produit.setDescription(description);
         produit.setCategorie(categorie);
         produit.setPrix_unitaire(prixUnitaire);
         produit.setQuantite_stock(quantiteStock);
-        produit.setImage(selectedImageFile.getAbsolutePath());
-        produit.setAgriculteur_id(1); // à remplacer selon l'utilisateur connecté
+        produit.setImage(fileName); // 🔁 enregistrer uniquement le nom du fichier
+        produit.setAgriculteur_id(1); // adapter selon l'utilisateur
         produit.setDate_ajout(LocalDate.now());
 
         new ProduitService().add(produit);
 
-        // Afficher un message de succès
-        showAlert("Produit ajouté avec succès !", Alert.AlertType.INFORMATION);
-
-        // Changer de vue pour la liste des produits
+        showAlert("✅ Produit ajouté avec succès !", Alert.AlertType.INFORMATION);
         allerVersListeProduits();
-
     }
 
-    // Méthode pour changer la scène et afficher la liste des produits
     private void allerVersListeProduits() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/AfficherProduit.fxml"));
             Parent root = loader.load();
-
-            // Récupérer la fenêtre active et changer son contenu
             Stage stage = (Stage) nomTextField.getScene().getWindow();
             stage.getScene().setRoot(root);
-
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Erreur lors de l'affichage de la liste des produits.", Alert.AlertType.ERROR);
+            showAlert("Erreur lors du changement de vue.", Alert.AlertType.ERROR);
         }
     }
 
-    // Alerte réutilisable
     private void showAlert(String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle("Information");

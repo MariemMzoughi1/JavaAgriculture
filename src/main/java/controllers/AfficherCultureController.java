@@ -15,16 +15,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class AfficherCultureController {
-    @FXML private TextField searchCategorieField;
 
-    @FXML
-    private VBox cardContainer;
+    @FXML private TextField searchCategorieField;
+    @FXML private VBox conseilsBox;
+    @FXML private VBox cardContainer;
 
     private final CultureService cultureService = new CultureService();
+
+    // 🔵 Chemin local vers les images Symfony
+    private static final String SYMFONY_IMAGE_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/images/";
 
     public void initialize() {
         cardContainer.getStylesheets().add(getClass().getResource("/com/example/projectjava/styles.css").toExternalForm());
@@ -52,22 +56,27 @@ public class AfficherCultureController {
         card.setStyle("-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 5);");
         card.setPrefWidth(800);
 
-        // ✅ ImageView avec vérification URL
         VBox left = new VBox();
         ImageView imageView = new ImageView();
-        String imageUrl = culture.getImage();
+
         try {
-            if (imageUrl == null || imageUrl.isBlank()) {
-                throw new IllegalArgumentException("Image URL vide");
+            if (culture.getImage() != null && !culture.getImage().isBlank()) {
+                File imageFile = new File(SYMFONY_IMAGE_DIR + culture.getImage());
+                if (imageFile.exists()) {
+                    imageView.setImage(new Image(imageFile.toURI().toString(), 200, 150, false, false));
+                } else {
+                    throw new IOException("Image non trouvée");
+                }
+            } else {
+                throw new IOException("Chemin image vide");
             }
-            imageView.setImage(new Image(imageUrl, 200, 150, false, false));
         } catch (Exception e) {
             imageView.setImage(new Image(getClass().getResource("/images/default-image.jpg").toExternalForm(), 200, 150, false, false));
         }
+
         imageView.setStyle("-fx-border-radius: 10; -fx-background-radius: 10;");
         left.getChildren().add(imageView);
 
-        // 📋 Détails de la culture
         VBox right = new VBox(8);
         Label nom = new Label("🌿 " + culture.getNom());
         nom.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -79,9 +88,8 @@ public class AfficherCultureController {
         Label saison = new Label("🗓 Saison : " + culture.getSaison());
         Label categorie = new Label("🧪 Catégorie : " + culture.getCategorie());
 
-        // 🖊 Modifier
         Button btnModifier = new Button("✏️ Modifier");
-        btnModifier.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        btnModifier.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 6 14;");
         btnModifier.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/ModifierCulture.fxml"));
@@ -99,24 +107,32 @@ public class AfficherCultureController {
             }
         });
 
-        // 🗑 Supprimer
         Button btnSupprimer = new Button("🗑 Supprimer");
-        btnSupprimer.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+        btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 6 14;");
         btnSupprimer.setOnAction(event -> {
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Voulez-vous vraiment supprimer cette culture ?",
-                    ButtonType.YES, ButtonType.NO);
-            confirm.setTitle("Confirmation");
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Suppression de Culture");
+            confirm.setHeaderText("🗑 Voulez-vous vraiment supprimer cette culture ?");
+            confirm.setContentText("Nom : " + culture.getNom() + "\nCatégorie : " + culture.getCategorie());
+
+            ButtonType confirmButton = new ButtonType("✅ Oui, Supprimer", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType("❌ Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+            confirm.getButtonTypes().setAll(confirmButton, cancelButton);
+
             confirm.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
+                if (response == confirmButton) {
                     boolean success = cultureService.supprimer(culture.getId());
                     if (success) {
                         refreshCards();
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "✅ Culture supprimée !");
-                        alert.show();
+                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                        successAlert.setTitle("Suppression réussie");
+                        successAlert.setContentText("✅ Culture supprimée avec succès !");
+                        successAlert.show();
                     } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "❌ Échec de la suppression.");
-                        alert.show();
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Erreur");
+                        errorAlert.setContentText("❌ Échec de la suppression !");
+                        errorAlert.show();
                     }
                 }
             });
@@ -124,7 +140,6 @@ public class AfficherCultureController {
 
         HBox buttons = new HBox(10, btnModifier, btnSupprimer);
         right.getChildren().addAll(nom, desc, plantation, recolte, quantite, saison, categorie, buttons);
-
         card.getChildren().addAll(left, right);
         return card;
     }
@@ -144,6 +159,7 @@ public class AfficherCultureController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void rechercherParCategorie() {
         String keyword = searchCategorieField.getText().trim().toLowerCase();
@@ -154,20 +170,6 @@ public class AfficherCultureController {
                     .filter(c -> c.getCategorie().toLowerCase().contains(keyword))
                     .toList();
             afficherCultures(results);
-        }
-    }
-    @FXML
-    private void retourAccueil(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/machine-home.fxml")); // remplace le chemin
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -214,4 +216,17 @@ public class AfficherCultureController {
         }
     }
 
+    @FXML
+    private void retourAccueil(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/machine-home.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

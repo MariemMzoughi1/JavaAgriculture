@@ -6,12 +6,23 @@ public class Grange {
     private int id;
     private String type_grange;
     private float capacite;
+    private float productivite;
+    private Zone zone;
+
 
     public Grange(){}
 
     public Grange(String type_grange, float capacite) {
         this.type_grange = type_grange;
         this.capacite = capacite;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getType_grange() {
@@ -30,14 +41,34 @@ public class Grange {
         this.capacite = capacite;
     }
 
+    public float getProductivite() {
+        return productivite;
+    }
+
+    public void setProductivite(float productivite) {
+        this.productivite = productivite;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
+    }
+
+
     @Override
     public String toString() {
         return "Grange{" +
                 "id=" + id +
                 ", type_grange='" + type_grange + '\'' +
                 ", capacite=" + capacite +
+                ", productivite=" + productivite +
+                ", zone=" + (zone != null ? zone.getNom_zone() : "Aucune") +
                 '}';
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -50,5 +81,7 @@ public class Grange {
     public int hashCode() {
         return Objects.hash(id, type_grange, capacite);
     }
+
+
 
 }

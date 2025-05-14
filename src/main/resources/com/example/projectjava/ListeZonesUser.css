@@ -1,0 +1,84 @@
+/* ListeZonesUser.css - Style Agricole */
+
+.root {
+    -fx-background-color: #f5f9f3;
+    -fx-background-image: url('file:background-agriculture.jpg');
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-font-family: 'Roboto', 'Arial', sans-serif;
+}
+
+/* Effet de surcouche pour améliorer la lisibilité */
+.root::before {
+    -fx-fill: rgba(245, 249, 243, 0.85);
+}
+
+/* Style du texte */
+.text {
+    -fx-fill: #2d572c;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 0, 0, 0, 1);
+}
+
+/* Titre principal */
+.text:first-of-type {
+    -fx-font-size: 26px;
+    -fx-fill: #1a4719;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.9), 2, 0.5, 0, 1);
+}
+
+/* Style des labels */
+.text[style*="15.0"] {
+    -fx-fill: #3e6d3b;
+    -fx-font-weight: 600;
+}
+
+/* Champ de recherche */
+#searchField {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-color: #a3c293;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #7d9974;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.05), 2, 0, 0, 1);
+}
+
+#searchField:focused {
+    -fx-border-color: #5d8c4a;
+    -fx-effect: dropshadow(one-pass-box, rgba(93,140,74,0.2), 2, 0, 0, 2);
+}
+
+/* Conteneur des cartes */
+#zoneContainer {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #c1d7b5;
+    -fx-padding: 15;
+}
+
+/* Cartes individuelles */
+.zone-card {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #d8e8d0;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.05), 3, 0, 0, 1);
+}
+
+.zone-card:hover {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(one-pass-box, rgba(93,140,74,0.15), 5, 0, 0, 2);
+}
+
+/* Conserve le style original des boutons du FXML */
+.button {
+    /* Styles conservés tels qu'ils sont dans le FXML */
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+.button:hover {
+    -fx-opacity: 0.9;
+}

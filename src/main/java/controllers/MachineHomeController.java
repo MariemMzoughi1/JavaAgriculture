@@ -4,17 +4,20 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entities.User;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import services.Session;
 
 import java.io.IOException;
@@ -24,8 +27,8 @@ import java.net.URL;
 
 public class MachineHomeController {
 
-    @FXML
-    private VBox newsList;
+    @FXML private VBox newsList;
+    @FXML private AnchorPane mainContentArea;
 
     @FXML
     public void initialize() {
@@ -68,62 +71,108 @@ public class MachineHomeController {
         return (javafx.application.HostServices) newsList.getScene().getWindow().getProperties().get("hostServices");
     }
 
-    @FXML
-    private void handleAddMachine(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/machine-add.fxml");
-    }
-
-    @FXML
-    private void handleForum(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/ListeForum.fxml");
-    }
-
-    @FXML
-    private void handleListMachines(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/machine-index.fxml");
-    }
-
-    @FXML
-    private void handleReservation(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/reservation-view.fxml");
-    }
-
-    @FXML
-    private void handleCulture(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/AfficherCulture.fxml");
-    }
-
-    @FXML
-    private void handleParcelle(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/AfficherParcelle.fxml");
-    }
-
-    private void loadPage(ActionEvent event, String fxmlPath) throws IOException {
+    // ✅ Correction : Parent au lieu d’AnchorPane + transition fade-in
+    private void loadPage(String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Scene scene = new Scene(loader.load(), 800, 600);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.setTitle("🌿 DevHarvest - Gestion");
-        stage.show();
+        Parent newContent = loader.load();
+
+        AnchorPane.setTopAnchor(newContent, 0.0);
+        AnchorPane.setBottomAnchor(newContent, 0.0);
+        AnchorPane.setLeftAnchor(newContent, 0.0);
+        AnchorPane.setRightAnchor(newContent, 0.0);
+
+        mainContentArea.getChildren().setAll(newContent);
+
+        // ✅ Transition animée
+        FadeTransition ft = new FadeTransition(Duration.millis(400), newContent);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
     }
 
-    @FXML
-    private void handleAccueil(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/Acceuil.fxml");
+    // ---- Handlers ----
+
+    @FXML private void handleAddMachine(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/machine-add.fxml");
     }
 
-    @FXML
-    private void handleProduits(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/AfficherProduit.fxml"));
-        AnchorPane root = loader.load();
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    @FXML private void handleListMachines(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/machine-index.fxml");
     }
 
-    @FXML
-    private void handleLogout(ActionEvent event){
+    @FXML private void handleReservation(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/reservation-view.fxml");
+    }
+
+    @FXML private void handleOpenMachineReservationList(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/machine-reservation-list.fxml");
+    }
+
+    @FXML private void handleForum(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/ListeForum.fxml");
+    }
+
+    @FXML private void handleAccueil(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/Acceuil.fxml");
+    }
+
+    @FXML private void handleProduits(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/AfficherProduit.fxml");
+    }
+
+    @FXML private void handleCommande(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/commande.fxml"));
+            Parent commandeView = loader.load();
+
+            AnchorPane.setTopAnchor(commandeView, 0.0);
+            AnchorPane.setBottomAnchor(commandeView, 0.0);
+            AnchorPane.setLeftAnchor(commandeView, 0.0);
+            AnchorPane.setRightAnchor(commandeView, 0.0);
+
+            mainContentArea.getChildren().setAll(commandeView);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(400), commandeView);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Chargement échoué");
+            alert.setContentText("Impossible de charger la vue commande.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML private void handleCulture(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/AfficherCulture.fxml");
+    }
+
+    @FXML private void handleParcelle(ActionEvent event) throws IOException {
+        loadPage("/com/example/projectjava/AfficherParcelle.fxml");
+    }
+
+    @FXML private void handleEditProfile() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/edit-user-view.fxml"));
+            Scene scene = new Scene(loader.load(), 400, 300);
+
+            User currentUser = Session.getCurrentUser();
+            EditUserController controller = loader.getController();
+            controller.setUser(currentUser);
+
+            Stage stage = new Stage();
+            stage.setTitle("Modifier Profil");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void handleLogout(ActionEvent event) {
         Session.clear();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/login-view.fxml"));
@@ -133,31 +182,5 @@ public class MachineHomeController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    private void handleEditProfile() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/edit-user-view.fxml"));
-            Scene scene = new Scene(loader.load(), 400, 300);
-
-            // Pass current user
-            User currentUser = services.Session.getCurrentUser();
-            EditUserController controller = loader.getController();
-            controller.setUser(currentUser);
-
-            Stage stage = new Stage();
-            stage.setTitle("Modifier Profil");
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void handleOpenMachineReservationList(ActionEvent event) throws IOException {
-        loadPage(event, "/com/example/projectjava/machine-reservation-list.fxml");
     }
 }

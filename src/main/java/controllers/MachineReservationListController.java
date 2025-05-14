@@ -1,8 +1,5 @@
 package controllers;
 
-
-
-
 import entities.Machine;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,13 +19,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-
 public class MachineReservationListController {
 
     @FXML
     private TilePane machineTilePane;
 
     private final ServiceMachine serviceMachine = new ServiceMachine();
+
+    // 🔁 Adapter ce chemin selon ton PC
+    private static final String SYMFONY_MACHINE_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/images/";
 
     @FXML
     public void initialize() {
@@ -49,9 +48,18 @@ public class MachineReservationListController {
         ImageView imageView = new ImageView();
         imageView.setFitWidth(200);
         imageView.setFitHeight(120);
-        String imagePath = (machine.getImage_url() != null && new File(machine.getImage_url()).exists())
-                ? new File(machine.getImage_url()).toURI().toString()
-                : new File("images/default.png").toURI().toString();
+
+        // ✅ Construction du chemin absolu local vers Symfony
+        String imageFileName = machine.getImage_url(); // ex: "tracteur.jpg"
+        File imageFile = new File(SYMFONY_MACHINE_DIR + imageFileName);
+
+        String imagePath;
+        if (imageFile.exists()) {
+            imagePath = imageFile.toURI().toString();
+        } else {
+            imagePath = new File("images/default.png").toURI().toString(); // image par défaut
+        }
+
         imageView.setImage(new Image(imagePath));
 
         Label nameLabel = new Label(machine.getName());
@@ -74,7 +82,7 @@ public class MachineReservationListController {
             Scene scene = new Scene(loader.load());
 
             ReservationViewController controller = loader.getController();
-            controller.setSelectedMachine(machine); // Envoyer la machine sélectionnée
+            controller.setSelectedMachine(machine);
 
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -84,6 +92,7 @@ public class MachineReservationListController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void handleBack(ActionEvent event) {
         try {
@@ -97,9 +106,4 @@ public class MachineReservationListController {
             e.printStackTrace();
         }
     }
-
 }
- 
-
-
-

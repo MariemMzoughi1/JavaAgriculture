@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="589.0" prefWidth="741.0" style="-fx-background-color: #f0f4f8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ListeGrangesUser">
+
+    <children>
+        <Label layoutX="20" layoutY="10" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📋 Liste des Granges" />
+
+        <!-- 🔍 Champ de recherche -->
+        <TextField fx:id="searchField" layoutX="20" layoutY="40" prefWidth="610" promptText="Rechercher une grange..." />
+
+        <!-- 🔃 Boutons de tri -->
+        <HBox layoutX="20" layoutY="70" spacing="10">
+            <Button onAction="#trierParType" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Trier par Type" />
+            <Button onAction="#trierParCapacite" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Trier par Capacité" />
+            <Button onAction="#trierParProductivite" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Trier par Productivité" />
+        </HBox>
+
+        <!-- 🆕 Container pour afficher les cartes de granges -->
+        <FlowPane fx:id="grangeContainer" hgap="15" layoutX="20" layoutY="110" prefHeight="406" prefWidth="696" style="-fx-background-color: transparent;" vgap="15">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+        </FlowPane>
+
+
+
+        <Button fx:id="btnAjouter" layoutX="27.0" layoutY="538.0" onAction="#ajouterGrange" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="➕ Ajouter une Grange" />
+
+        <Button layoutX="209.0" layoutY="538.0" onAction="#ouvrirChartProductivite" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" text="📊 Voir Productivité" />
+    </children>
+</AnchorPane>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.effect.InnerShadow?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.CommandeDetailsController">
+    <children>
+        <!-- Conteneur principal centré avec des espacements -->
+        <VBox alignment="CENTER" spacing="20.0">
+            <!-- Padding autour du conteneur -->
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Titre centré avec un style moderne -->
+            <Label text="Détails de la Commande" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" />
+
+            <!-- Conteneur GridPane pour un alignement organisé -->
+            <GridPane hgap="20" vgap="10" alignment="CENTER">
+                <!-- Lignes pour l'état -->
+                <Label text="État :" style="-fx-font-size: 16px; -fx-text-fill: #34495E;" GridPane.rowIndex="0" />
+                <Label fx:id="labelEtat" style="-fx-font-size: 16px; -fx-text-fill: #34495E;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <!-- Lignes pour le total -->
+                <Label text="Total :" style="-fx-font-size: 16px; -fx-text-fill: #34495E;" GridPane.rowIndex="1" />
+                <Label fx:id="labelTotal" style="-fx-font-size: 16px; -fx-text-fill: #34495E;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            </GridPane>
+
+            <!-- Espacement entre les éléments -->
+            <Region prefHeight="20" />
+
+            <!-- Bouton avec des effets de style et interaction -->
+            <Button text="Fermer" onAction="#fermer"
+                    style="-fx-font-size: 16px;
+                           -fx-background-color: #3498DB;
+                           -fx-text-fill: white;
+                           -fx-padding: 10 30;
+                           -fx-border-radius: 5;
+                           -fx-cursor: hand;
+                           -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.5, 2, 2);"
+            />
+        </VBox>
+    </children>
+</AnchorPane>

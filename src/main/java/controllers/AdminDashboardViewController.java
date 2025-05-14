@@ -78,5 +78,29 @@ public class AdminDashboardViewController {
             System.out.println("❌ Erreur lors de l'ouverture de l'interface de gestion des posts : " + e.getMessage());
         }
     }
+    @FXML
+    private void handleManageCommandes(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/commande-admin-view.fxml"));
+            VBox root = loader.load();
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gestion des Commandes");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleManageProduits(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/produit-admin-view.fxml"));
+            VBox root = loader.load();
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gestion des Produits");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -19,10 +19,7 @@ import services.ServiceMachine;
 import services.ServiceReservation;
 import services.UserService;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -30,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public class ReservationViewController {
 
@@ -48,12 +46,19 @@ public class ReservationViewController {
     @FXML private Label machineType;
     @FXML private Label machineEtat;
     @FXML private Label machinePrix;
+
     @FXML private TextArea chatArea;
     @FXML private TextField userInput;
+    @FXML private Label weatherLabel;
 
     private final ServiceMachine serviceMachine = new ServiceMachine();
     private final ServiceReservation serviceReservation = new ServiceReservation();
     private final UserService userService = new UserService();
+
+    // 🔁 Adapter ce chemin vers ton dossier Symfony local
+    private static final String SYMFONY_MACHINE_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/images/";
+
+    private final String API_KEY = "783ac35576b137642b4f2f2e061714e1"; // Clé API OpenWeather
 
     @FXML
     public void initialize() {
@@ -67,6 +72,7 @@ public class ReservationViewController {
                 setText(empty || machine == null ? null : machine.getName());
             }
         });
+
         machineComboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(Machine machine, boolean empty) {
@@ -103,9 +109,17 @@ public class ReservationViewController {
         machineEtat.setText("État: " + machine.getEtat());
         machinePrix.setText("Prix: " + machine.getPricePerDay() + " DT / jour");
 
-        String imagePath = (machine.getImage_url() != null && new File(machine.getImage_url()).exists())
-                ? new File(machine.getImage_url()).toURI().toString()
-                : new File("images/default.png").toURI().toString();
+        String imagePath;
+        if (machine.getImage_url() != null) {
+            File imageFile = new File(SYMFONY_MACHINE_DIR + machine.getImage_url());
+            if (imageFile.exists()) {
+                imagePath = imageFile.toURI().toString();
+            } else {
+                imagePath = new File("images/default.png").toURI().toString();
+            }
+        } else {
+            imagePath = new File("images/default.png").toURI().toString();
+        }
 
         machineImage.setImage(new Image(imagePath));
         machineCard.setVisible(true);
@@ -133,24 +147,7 @@ public class ReservationViewController {
             }
         });
 
-        endDatePicker.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                setDisable(false);
-                for (Reservation res : reservations) {
-                    LocalDate resStart = res.getDateDebut().toLocalDateTime().toLocalDate();
-                    LocalDate resEnd = res.getDateFin().toLocalDateTime().toLocalDate();
-                    if ((date.isEqual(resStart) || date.isEqual(resEnd)) || (date.isAfter(resStart) && date.isBefore(resEnd))) {
-                        setDisable(true);
-                        setStyle("-fx-background-color: #f8d7da;");
-                    }
-                }
-                if (date.isBefore(LocalDate.now())) {
-                    setDisable(true);
-                }
-            }
-        });
+        endDatePicker.setDayCellFactory(startDatePicker.getDayCellFactory());
     }
 
     @FXML
@@ -174,7 +171,7 @@ public class ReservationViewController {
 
         User user = userService.getUser(34);
         if (user == null) {
-            messageLabel.setText("❌ Utilisateur non trouvé (ID 2).");
+            messageLabel.setText("❌ Utilisateur non trouvé.");
             return;
         }
 
@@ -185,7 +182,6 @@ public class ReservationViewController {
         Timestamp endTimestamp = Timestamp.valueOf(endDateTime);
 
         boolean available = serviceReservation.isReservationAvailable(selectedMachine.getId(), startTimestamp, endTimestamp);
-
         if (!available) {
             messageLabel.setText("❌ Cette machine est déjà réservée pendant cette période.");
             return;
@@ -205,11 +201,11 @@ public class ReservationViewController {
         endDatePicker.setValue(null);
         machineCard.setVisible(false);
     }
+
     public void setSelectedMachine(Machine machine) {
         machineComboBox.getSelectionModel().select(machine);
         showMachineDetails(machine);
     }
-
 
     @FXML
     private void handleBack(ActionEvent event) {
@@ -220,17 +216,13 @@ public class ReservationViewController {
             stage.setScene(scene);
             stage.setTitle("🌾 Accueil des Machines");
             stage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    @FXML
-    private Label weatherLabel;
-
-    private final String API_KEY = "783ac35576b137642b4f2f2e061714e1"; // Remplace par ta vraie clé OpenWeatherMap
 
     public void fetchWeather() {
-        String city = "Tunis"; // ou tu peux rendre dynamique selon l'utilisateur plus tard
+        String city = "Tunis";
         String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY + "&units=metric";
 
         try {
@@ -239,8 +231,8 @@ public class ReservationViewController {
             con.setRequestMethod("GET");
 
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
             StringBuilder content = new StringBuilder();
+            String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
@@ -254,81 +246,55 @@ public class ReservationViewController {
             JSONObject weather = obj.getJSONArray("weather").getJSONObject(0);
             String description = weather.getString("description");
 
-            // Afficher dans le label
             weatherLabel.setText("🌤 Température : " + temperature + "°C, " + description);
-
         } catch (IOException e) {
             weatherLabel.setText("❌ Impossible de récupérer la météo");
-            System.out.println("Erreur API météo : " + e.getMessage());
         }
     }
-    // 💬 Chatbot
 
+    // === Chatbot ===
     @FXML
     private void handleSend() {
         String input = userInput.getText();
-        if (input.isEmpty()) {
-            return;
-        }
+        if (input.isEmpty()) return;
 
         chatArea.appendText("[Vous] : " + input + "\n");
         String response = getBotResponse(input);
         chatArea.appendText("[Bot] : " + response + "\n");
-
         userInput.clear();
     }
 
     private String getBotResponse(String input) {
         input = input.toLowerCase();
 
-        if (input.contains("bonjour") || input.contains("salut")) {
-            return "👋 Bonjour ! Comment puis-je vous aider pour vos machines agricoles ?";
-        }
-        if (input.contains("types de machines") || input.contains("type de machine")) {
-            return "🚜 Il existe : tracteurs, moissonneuses-batteuses, semoirs, pulvérisateurs, herses...";
-        }
-        if (input.contains("prix") && input.contains("location") && input.contains("2025")) {
-            return "💸 En 2025, la location d'un tracteur est estimée entre 250 et 400 DT par jour selon le modèle.";
-        }
-        if (input.contains("réserver") && (input.contains("semaine") || input.contains("jours"))) {
-            return "📅 Oui ! Vous pouvez réserver sur plusieurs jours via notre formulaire.";
-        }
-        if (input.contains("entretenir") && (input.contains("moissonneuse") || input.contains("machine"))) {
-            return "🛠️ Entretien : Vérifiez les lames, graissez les roulements, changez l'huile.";
-        }
-        if (input.contains("météo")) {
-            return "🌦️ Consultez la météo agricole au-dessus du formulaire.";
-        }
-        if (input.contains("merci")) {
-            return "🙏 Merci à vous !";
-        }
+        if (input.contains("bonjour") || input.contains("salut")) return "👋 Bonjour ! Comment puis-je vous aider ?";
+        if (input.contains("types de machines")) return "🚜 Tracteurs, moissonneuses, semoirs, herses, pulvérisateurs...";
+        if (input.contains("prix") && input.contains("2025")) return "💸 Entre 250 et 400 DT/jour selon le modèle.";
+        if (input.contains("réserver")) return "📅 Oui, vous pouvez réserver pour plusieurs jours.";
+        if (input.contains("entretenir")) return "🛠️ Nettoyer, graisser, vérifier les fluides et les filtres.";
+        if (input.contains("météo")) return "🌦️ Consultez la météo en haut du formulaire.";
+        if (input.contains("merci")) return "🙏 Avec plaisir !";
 
-        return "🤔 Désolé, je ne connais pas encore cette information. Essayez une autre question sur les machines agricoles.";
+        return "🤔 Je ne connais pas encore cette information. Essayez une autre question.";
     }
 
-    // 💬 Boutons rapides
-    @FXML
-    private void handleQuickTypes() {
+    @FXML private void handleQuickTypes() {
         userInput.setText("Quels types de machines agricoles existent ?");
         handleSend();
     }
 
-    @FXML
-    private void handleQuickPrice() {
+    @FXML private void handleQuickPrice() {
         userInput.setText("Quel est le prix de location d'un tracteur en 2025 ?");
         handleSend();
     }
 
-    @FXML
-    private void handleQuickMaintenance() {
+    @FXML private void handleQuickMaintenance() {
         userInput.setText("Comment entretenir une moissonneuse-batteuse ?");
         handleSend();
     }
 
-    @FXML
-    private void handleQuickReservation() {
+    @FXML private void handleQuickReservation() {
         userInput.setText("Puis-je réserver une machine pour une semaine ?");
         handleSend();
-
-}
+    }
 }

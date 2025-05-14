@@ -1,36 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controles.PanierController"
-            prefWidth="900" prefHeight="700" style="-fx-background-color: #f4f4f9;">
+<?import javafx.scene.layout.VBox?>
 
-    <!-- Bouton Retour en haut à gauche -->
-    <Button fx:id="btnRetour"
-            text="← Retour"
-            layoutX="20" layoutY="20"
-            onAction="#retourCommande"
-            style="-fx-background-color: #3F51B5; -fx-text-fill: white;" />
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.PanierController"
+            prefWidth="600" prefHeight="450">
 
-    <!-- Table des commandes -->
-    <TableView fx:id="tableCommandes"
-               layoutX="20" layoutY="70"
-               prefWidth="860" prefHeight="500">
-        <columns>
-            <TableColumn fx:id="colIdCommande" text="ID Commande" prefWidth="100" />
-            <TableColumn fx:id="colNomProduit" text="Nom Produit" prefWidth="300" />
-            <TableColumn fx:id="colPrix" text="Prix" prefWidth="100" />
-            <TableColumn fx:id="colAction" text="Actions" prefWidth="200" />
-        </columns>
-    </TableView>
+    <VBox alignment="TOP_CENTER" spacing="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+        <!-- Titre -->
+        <Label text="🛒 Mon Panier"
+               style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-    <!-- Total -->
-    <Label fx:id="totalLabel"
-           layoutX="20" layoutY="600"
-           text="Total : 0.00 DT"
-           style="-fx-font-size: 16px; -fx-text-fill: #FF5722; -fx-font-weight: bold;" />
+        <!-- Tableau des produits -->
+        <TableView fx:id="tablePanier" prefHeight="250">
+            <columns>
+                <TableColumn text="Produit" fx:id="colProduit" prefWidth="300"/>
+                <TableColumn text="Quantité" fx:id="colQuantite" prefWidth="100"/>
+                <TableColumn text="Actions" fx:id="colActions" prefWidth="200"/>
+            </columns>
+        </TableView>
+
+        <!-- Total + boutons -->
+        <HBox alignment="CENTER_RIGHT" spacing="15">
+            <Label fx:id="labelTotal"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Button text=" Vider"
+                    fx:id="btnVider"
+                    style="-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;"
+                    onAction="#onViderPanier"/>
+            <Button text="🛒 Commander"
+                    fx:id="btnCommander"
+                    style="-fx-background-color: #5cb85c; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;"
+                    onAction="#onCommander"/>
+        </HBox>
+
+        <!-- Bouton Retour -->
+        <HBox alignment="CENTER" spacing="15" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+            <Button text="↩ Retour"
+                    fx:id="btnRetour"
+                    style="-fx-background-color: #0275d8; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px; -fx-background-radius: 5px; -fx-border-radius: 5px;"
+                    onAction="#onRetourListeProduits"/>
+        </HBox>
+    </VBox>
 </AnchorPane>

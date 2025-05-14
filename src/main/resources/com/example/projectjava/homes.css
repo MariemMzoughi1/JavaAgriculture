@@ -1,0 +1,56 @@
+/* 🌌 Fond principal bleu-gris élégant */
+.main-background {
+    -fx-background-color: #34495e;
+}
+
+/* 📦 Sidebar sombre et épurée */
+.sidebar {
+    -fx-background-color: #2c3e50;
+    -fx-padding: 20;
+    -fx-spacing: 12;
+    -fx-pref-width: 240;
+}
+
+/* 🏷️ Titre du menu */
+.sidebar-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ecf0f1;
+    -fx-padding: 0 0 10 0;
+}
+
+/* ✅ Boutons blancs, style moderne */
+.sidebar-button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 18;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0.3, 0, 1);
+}
+
+/* 🖱️ Survol doux */
+.sidebar-button:hover {
+    -fx-background-color: #f1f1f1;
+}
+
+/* 📄 Contenu central contrasté */
+.main-content {
+    -fx-padding: 30;
+    -fx-background-color: #ecf0f1;
+    -fx-border-radius: 12;
+}
+
+/* 📰 Titre zone actu */
+.news-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.news-list {
+    -fx-spacing: 12;
+    -fx-padding: 10;
+}

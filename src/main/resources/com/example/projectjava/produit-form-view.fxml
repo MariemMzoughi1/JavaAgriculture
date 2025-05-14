@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.ProduitFormController"
+      spacing="15" alignment="CENTER" style="-fx-padding: 30; -fx-background-color: #fdfefe;">
+
+    <Label text="📝 Formulaire Produit" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <TextField fx:id="nomField" promptText="Nom"/>
+    <TextField fx:id="descriptionField" promptText="Description"/>
+    <TextField fx:id="categorieField" promptText="Catégorie"/>
+    <TextField fx:id="prixField" promptText="Prix Unitaire"/>
+    <TextField fx:id="stockField" promptText="Quantité en stock"/>
+    <TextField fx:id="imageField" promptText="Chemin image"/>
+    <Button text="💾 Enregistrer" onAction="#handleSave"
+            style="-fx-background-color: #2980b9; -fx-text-fill: white;" />
+
+    <Button text="🔙 Retour" onAction="#handleRetour"
+            style="-fx-background-color: #95a5a6; -fx-text-fill: white;" />
+</VBox>

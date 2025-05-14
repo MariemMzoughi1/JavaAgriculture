@@ -1,53 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.ModifierParcelleController"
-            prefWidth="500" prefHeight="600"
-            stylesheets="@ModifierParcelle.css">
+            prefWidth="600" prefHeight="700"
+            style="-fx-background-color: linear-gradient(to bottom right, #e0f2f1, #ffffff);">
 
     <children>
-        <VBox alignment="CENTER" spacing="12.0" layoutX="75.0" layoutY="30.0"
-              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" style="-fx-padding: 20;">
+        <VBox spacing="20" alignment="CENTER" layoutX="30" layoutY="20" prefWidth="540"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 20;
+                     -fx-padding: 30;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
 
-            <!-- Titre -->
-            <Label text="Modifier une Parcelle" styleClass="label-title"/>
+            <!-- 📝 Titre -->
+            <Label text="✏️ Modifier une Parcelle"
+                   style="-fx-font-size: 26px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #2c3e50;"/>
 
-            <!-- Champ ID caché pour la modification -->
-            <TextField fx:id="tfId" promptText="ID Parcelle"
-                       styleClass="text-field" visible="false" managed="false"/>
+            <!-- 🔒 ID caché -->
+            <TextField fx:id="tfId" promptText="ID" visible="false" managed="false" editable="false"/>
 
+            <!-- 🧾 Champ Culture ID -->
+            <TextField fx:id="tfCultureId" promptText="ID Culture (non modifiable)"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;" editable="false"/>
 
-            <!-- Champs du formulaire -->
-            <TextField fx:id="tfCultureId"
-                       promptText="ID Culture"
-                       styleClass="text-field"
-                       editable="false" focusTraversable="false"/>
-            <TextField fx:id="tfDescription" promptText="Description" styleClass="text-field"/>
-            <TextField fx:id="tfZone" promptText="Zone" styleClass="text-field"/>
-            <TextField fx:id="tfSuperficie" promptText="Superficie" styleClass="text-field"/>
-            <TextField fx:id="tfPrix" promptText="Prix de Location" styleClass="text-field"/>
+            <!-- 📝 Description -->
+            <TextField fx:id="tfDescription" promptText="Description"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
 
-            <DatePicker fx:id="dpDateLocation" promptText="Date de Location" styleClass="date-picker"/>
-            <DatePicker fx:id="dpDateFinLocation" promptText="Date Fin Location" styleClass="date-picker"/>
+            <!-- 🌍 Zone -->
+            <TextField fx:id="tfZone" promptText="Zone"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
 
-            <TextField fx:id="tfEtat" promptText="État" styleClass="text-field"/>
-            <TextField fx:id="tfTypeSol" promptText="Type de Sol" styleClass="text-field"/>
+            <!-- 📐 Superficie et 💰 Prix -->
             <HBox spacing="10" alignment="CENTER">
-                <TextField fx:id="tfImage" promptText="URL de l'image" styleClass="text-field" />
-                <Button text="Parcourir" onAction="#parcourirImage" />
+                <TextField fx:id="tfSuperficie" promptText="Superficie (m²)"
+                           style="-fx-background-color: #ecf0f1;
+                                  -fx-background-radius: 12;
+                                  -fx-padding: 10;"/>
+                <TextField fx:id="tfPrix" promptText="Prix de Location (DT)"
+                           style="-fx-background-color: #ecf0f1;
+                                  -fx-background-radius: 12;
+                                  -fx-padding: 10;"/>
             </HBox>
 
-            <!-- Bouton Modifier -->
-            <Button text="Modifier"
-                    onMouseClicked="#modifierParcelle"
-                    styleClass="button"/>
-            <Button text="⬅ Retour"
-                    layoutX="20" layoutY="20"
-                    onAction="#retourAfficherParcelle"
-                    style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+            <!-- 📅 Dates -->
+            <HBox spacing="10" alignment="CENTER">
+                <DatePicker fx:id="dpDateLocation" promptText="📅 Début Location"
+                            style="-fx-background-color: #ecf0f1;
+                                   -fx-background-radius: 12;
+                                   -fx-padding: 10;"/>
+                <DatePicker fx:id="dpDateFinLocation" promptText="📅 Fin Location"
+                            style="-fx-background-color: #ecf0f1;
+                                   -fx-background-radius: 12;
+                                   -fx-padding: 10;"/>
+            </HBox>
+
+            <!-- ⚙️ État et 🧱 Type de Sol -->
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="tfEtat" promptText="État"
+                           style="-fx-background-color: #ecf0f1;
+                                  -fx-background-radius: 12;
+                                  -fx-padding: 10;"/>
+                <TextField fx:id="tfTypeSol" promptText="Type de Sol"
+                           style="-fx-background-color: #ecf0f1;
+                                  -fx-background-radius: 12;
+                                  -fx-padding: 10;"/>
+            </HBox>
+
+            <!-- 🖼 Image -->
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="tfImage" promptText="Lien de l'image"
+                           style="-fx-background-color: #ecf0f1;
+                                  -fx-background-radius: 12;
+                                  -fx-padding: 10;"/>
+                <Button text="📂" onAction="#parcourirImage"
+                        style="-fx-background-color: #3498db;
+                               -fx-text-fill: white;
+                               -fx-background-radius: 12;
+                               -fx-font-weight: bold;
+                               -fx-cursor: hand;"/>
+            </HBox>
+
+            <!-- 🎛️ Boutons -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="⬅ Retour"
+                        onAction="#retourAfficherParcelle"
+                        style="-fx-background-color: #7b8d93;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 20;
+                               -fx-padding: 10 20;
+                               -fx-cursor: hand;"/>
+                <Button text="💾 Enregistrer"
+                        onMouseClicked="#modifierParcelle"
+                        style="-fx-background-color: linear-gradient(to right, #00b09b, #96c93d);
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 20;
+                               -fx-padding: 10 20;
+                               -fx-cursor: hand;"/>
+            </HBox>
+
         </VBox>
     </children>
 </AnchorPane>

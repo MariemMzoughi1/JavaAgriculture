@@ -9,15 +9,19 @@ import java.util.List;
 
 public class ParcelleService {
 
-    private Connection connection;
+    private final Connection connection;
 
     public ParcelleService() {
-        connection = DbConnection.getInstance().getConn();
+        connection = DbConnection.getInstance().getConn(); // ou DataSource.getInstance().getConnection()
     }
 
-    public void ajouter(Parcelle parcelle) {
-        String sql = "INSERT INTO parcelle (culture_actuelle_id, description, zone, superficie, prix_de_location, date_de_location, date_de_fin_location, etat, type_sol, image) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // 🔼 Ajouter une parcelle
+    public boolean ajouter(Parcelle parcelle) {
+        String sql = """
+            INSERT INTO parcelle (culture_actuelle_id, description, zone, superficie, prix_de_location, 
+                                  date_de_location, date_de_fin_location, etat, type_sol, image)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, parcelle.getCultureActuelleId());
             ps.setString(2, parcelle.getDescription());
@@ -33,28 +37,17 @@ public class ParcelleService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
+    // 📋 Afficher toutes les parcelles
     public List<Parcelle> afficher() {
         List<Parcelle> list = new ArrayList<>();
         String sql = "SELECT * FROM parcelle";
         try (Statement st = connection.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
-                Parcelle p = new Parcelle(
-                        rs.getInt("id"),
-                        rs.getInt("culture_actuelle_id"),
-                        rs.getString("description"),
-                        rs.getString("zone"),
-                        rs.getDouble("superficie"),
-                        rs.getDouble("prix_de_location"),
-                        rs.getDate("date_de_location").toLocalDate(),
-                        rs.getDate("date_de_fin_location").toLocalDate(),
-                        rs.getString("etat"),
-                        rs.getString("type_sol"),
-                        rs.getString("image")
-                );
-                list.add(p);
+                list.add(mapParcelle(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,8 +55,14 @@ public class ParcelleService {
         return list;
     }
 
+    // ✏️ Modifier une parcelle
     public void modifier(Parcelle parcelle) {
-        String sql = "UPDATE parcelle SET culture_actuelle_id=?, description=?, zone=?, superficie=?, prix_de_location=?, date_de_location=?, date_de_fin_location=?, etat=?, type_sol=?, image=? WHERE id=?";
+        String sql = """
+            UPDATE parcelle 
+            SET culture_actuelle_id=?, description=?, zone=?, superficie=?, prix_de_location=?, 
+                date_de_location=?, date_de_fin_location=?, etat=?, type_sol=?, image=?
+            WHERE id=?
+            """;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, parcelle.getCultureActuelleId());
             ps.setString(2, parcelle.getDescription());
@@ -82,6 +81,7 @@ public class ParcelleService {
         }
     }
 
+    // ❌ Supprimer une parcelle
     public void supprimer(int id) {
         String sql = "DELETE FROM parcelle WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -91,6 +91,8 @@ public class ParcelleService {
             e.printStackTrace();
         }
     }
+
+    // 🔍 Rechercher des parcelles par état
     public List<Parcelle> rechercherParEtat(String etat) {
         List<Parcelle> list = new ArrayList<>();
         String sql = "SELECT * FROM parcelle WHERE etat LIKE ?";
@@ -98,20 +100,7 @@ public class ParcelleService {
             ps.setString(1, "%" + etat + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Parcelle p = new Parcelle(
-                        rs.getInt("id"),
-                        rs.getInt("culture_actuelle_id"),
-                        rs.getString("description"),
-                        rs.getString("zone"),
-                        rs.getDouble("superficie"),
-                        rs.getDouble("prix_de_location"),
-                        rs.getDate("date_de_location").toLocalDate(),
-                        rs.getDate("date_de_fin_location").toLocalDate(),
-                        rs.getString("etat"),
-                        rs.getString("type_sol"),
-                        rs.getString("image")
-                );
-                list.add(p);
+                list.add(mapParcelle(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,4 +108,35 @@ public class ParcelleService {
         return list;
     }
 
+    // ⏳ Parcelles avec fin proche
+    public List<Parcelle> getParcellesEnFinDeLocation() {
+        List<Parcelle> list = new ArrayList<>();
+        String sql = "SELECT * FROM parcelle WHERE DATEDIFF(date_de_fin_location, CURDATE()) <= 7";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapParcelle(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // 🔁 Méthode utilitaire pour éviter duplication
+    private Parcelle mapParcelle(ResultSet rs) throws SQLException {
+        return new Parcelle(
+                rs.getInt("id"),
+                rs.getInt("culture_actuelle_id"),
+                rs.getString("description"),
+                rs.getString("zone"),
+                rs.getDouble("superficie"),
+                rs.getDouble("prix_de_location"),
+                rs.getDate("date_de_location").toLocalDate(),
+                rs.getDate("date_de_fin_location").toLocalDate(),
+                rs.getString("etat"),
+                rs.getString("type_sol"),
+                rs.getString("image")
+        );
+    }
 }

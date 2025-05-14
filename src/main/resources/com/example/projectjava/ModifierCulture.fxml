@@ -2,43 +2,110 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.ModifierCultureController"
-            prefWidth="600" prefHeight="600"
-            style="-fx-background-color: #f8f9fa;"
-            stylesheets="@style-modifier.css">
+            prefWidth="650" prefHeight="680"
+            style="-fx-background-color: linear-gradient(to bottom, #e0eafc, #cfdef3);">
 
     <children>
-        <VBox spacing="15" alignment="CENTER" layoutX="50" layoutY="20" prefWidth="500">
-            <Label text="✏️ Modifier une Culture" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #343a40;"/>
 
-            <TextField fx:id="tfId" promptText="ID" editable="false" styleClass="input-field"/>
+        <VBox spacing="20" alignment="CENTER"
+              layoutX="40" layoutY="20" prefWidth="570"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 20;
+                     -fx-padding: 30;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
 
-            <TextField fx:id="tfNom" promptText="Nom" styleClass="input-field"/>
-            <TextField fx:id="tfDescription" promptText="Description" styleClass="input-field"/>
+            <!-- 🖋 Titre -->
+            <Label text="✏️ Modifier une Culture"
+                   style="-fx-font-size: 26px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #2c3e50;"/>
+
+            <!-- 🔐 ID non modifiable -->
+            <TextField fx:id="tfId" promptText="ID (non modifiable)" editable="false"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
+
+            <!-- 📛 Nom -->
+            <TextField fx:id="tfNom" promptText="Nom de la Culture"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
+
+            <!-- 📜 Description -->
+            <TextField fx:id="tfDescription" promptText="Description"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
+
+            <!-- 🖼 Image -->
             <HBox spacing="10" alignment="CENTER">
-                <TextField fx:id="tfImage" promptText="URL de l'image" styleClass="input-field" />
-                <Button text="Parcourir" onAction="#parcourirImage" />
+                <TextField fx:id="tfImage" promptText="Lien de l'image"
+                           style="-fx-background-color: #ecf0f1;
+                                  -fx-background-radius: 12;
+                                  -fx-padding: 10;"/>
+                <Button text="📂" onAction="#parcourirImage"
+                        style="-fx-background-color: #3498db;
+                               -fx-text-fill: white;
+                               -fx-background-radius: 12;
+                               -fx-padding: 8 16;
+                               -fx-cursor: hand;"/>
             </HBox>
 
-            <HBox spacing="10">
-                <DatePicker fx:id="dpDatePlantation" promptText="Date de plantation" styleClass="input-field"/>
-                <DatePicker fx:id="dpDateRecolte" promptText="Date de récolte" styleClass="input-field"/>
+            <!-- 📆 Dates -->
+            <HBox spacing="10" alignment="CENTER">
+                <DatePicker fx:id="dpDatePlantation" promptText="📅 Plantation"
+                            style="-fx-background-color: #ecf0f1;
+                                   -fx-background-radius: 12;
+                                   -fx-padding: 10;"/>
+                <DatePicker fx:id="dpDateRecolte" promptText="📅 Récolte"
+                            style="-fx-background-color: #ecf0f1;
+                                   -fx-background-radius: 12;
+                                   -fx-padding: 10;"/>
             </HBox>
 
-            <TextField fx:id="tfSaison" promptText="Saison" styleClass="input-field"/>
-            <TextField fx:id="tfQuantite" promptText="Quantité (kg)" styleClass="input-field"/>
-            <TextField fx:id="tfCategorie" promptText="Catégorie" styleClass="input-field"/>
+            <!-- 🌦 Saison -->
+            <TextField fx:id="tfSaison" promptText="Saison (printemps, été...)"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
 
-            <Button text="💾 Modifier"
-                    onAction="#modifierCulture"
-                    styleClass="primary-button"/>
-            <Button text="⬅ Retour"
-                    layoutX="20" layoutY="20"
-                    onAction="#retourAfficherParcelle"
-                    style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+            <!-- ⚖ Quantité -->
+            <TextField fx:id="tfQuantite" promptText="Quantité (en kg)"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
+
+            <!-- 🏷️ Catégorie -->
+            <TextField fx:id="tfCategorie" promptText="Catégorie"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 12;
+                              -fx-padding: 10;"/>
+
+            <!-- 🚀 Boutons -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="⬅ Retour"
+                        onAction="#retourAfficherParcelle"
+                        style="-fx-background-color: #95a5a6;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 20;
+                               -fx-padding: 10 20;
+                               -fx-cursor: hand;"/>
+                <Button text="💾 Enregistrer"
+                        onAction="#modifierCulture"
+                        style="-fx-background-color: linear-gradient(to right, #00c6ff, #0072ff);
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 20;
+                               -fx-padding: 10 20;
+                               -fx-cursor: hand;"/>
+            </HBox>
+
         </VBox>
     </children>
 </AnchorPane>

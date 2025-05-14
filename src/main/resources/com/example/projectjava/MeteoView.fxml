@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.MeteoController"
+      spacing="20" alignment="CENTER"
+      style="-fx-padding: 20; -fx-background-color: linear-gradient(to bottom right, #f5f9ff, #d8e4ff);">
+
+    <!-- Titre -->
+    <Label text="Prévisions météo par région"
+           style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1a237e;" />
+
+    <!-- ComboBox amélioré -->
+    <ComboBox fx:id="regionComboBox" onAction="#changerRegion"
+              prefWidth="260" promptText="Choisissez une région"
+              style="
+                -fx-font-size: 15px;
+                -fx-background-color: linear-gradient(to right, #e0f7fa, #b2ebf2);
+                -fx-border-color: #4dd0e1;
+                -fx-border-radius: 15;
+                -fx-background-radius: 15;
+                -fx-padding: 8 12;
+                -fx-text-fill: #00796b;
+                -fx-font-weight: bold;
+              " />
+
+    <!-- Scroll météo -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 10;">
+        <content>
+            <HBox fx:id="weatherContainer" spacing="20" alignment="CENTER" style="-fx-padding: 10;"/>
+        </content>
+    </ScrollPane>
+
+    <!-- Bouton Actualiser -->
+    <Button onAction="#rafraichirMeteo"
+            style="-fx-background-color: linear-gradient(to right, #3a7bd5, #00d2ff);
+                   -fx-text-fill: white;
+                   -fx-font-weight: bold;
+                   -fx-font-size: 14px;
+                   -fx-padding: 8 16;
+                   -fx-background-radius: 20;">
+        <graphic>
+            <ImageView fitWidth="16" fitHeight="16">
+                <Image url="/images/refresh.png"/>
+            </ImageView>
+        </graphic>
+        Actualiser
+    </Button>
+</VBox>

@@ -7,24 +7,24 @@ public class Commande {
 
     private Long id;
     private String etat;
-    private LocalDateTime dateCommande;
+    private LocalDateTime datecommande;
     private double total;
 
     // --- Constructeur vide ---
     public Commande() {}
 
     // --- Constructeur complet ---
-    public Commande(Long id, String etat, LocalDateTime dateCommande, double total) {
+    public Commande(Long id, String etat, LocalDateTime datecommande, double total) {
         this.id = id;
         this.etat = etat;
-        this.dateCommande = dateCommande;
+        this.datecommande = datecommande;
         this.total = total;
     }
 
     // --- Constructeur simplifié (sans id) ---
-    public Commande(String etat, LocalDateTime dateCommande, double total) {
+    public Commande(String etat, LocalDateTime datecommande, double total) {
         this.etat = etat;
-        this.dateCommande = dateCommande;
+        this.datecommande = datecommande;
         this.total = total;
     }
 
@@ -46,9 +46,14 @@ public class Commande {
     }
 
 
+    public LocalDateTime getDatecommande() {
+        return datecommande;
+    }
+
+
 
     public void setDateCommande(LocalDateTime dateCommande) {
-        this.dateCommande = dateCommande;
+        this.datecommande = datecommande;
     }
 
     public double getTotal() {
@@ -65,7 +70,7 @@ public class Commande {
         return "Commande{" +
                 "id=" + id +
                 ", etat='" + etat + '\'' +
-                ", dateCommande=" + dateCommande +
+                ", datecommande=" + datecommande +
                 ", total=" + total +
                 '}';
     }
@@ -78,11 +83,13 @@ public class Commande {
         return Double.compare(commande.total, total) == 0 &&
                 Objects.equals(id, commande.id) &&
                 Objects.equals(etat, commande.etat) &&
-                Objects.equals(dateCommande, commande.dateCommande);
+                Objects.equals(datecommande, commande.datecommande);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, etat, dateCommande, total);
+        return Objects.hash(id, etat, datecommande, total);
     }
+
+
 }

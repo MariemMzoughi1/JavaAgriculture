@@ -1,0 +1,47 @@
+.chart {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+/* Ligne de la courbe */
+.chart-series-line {
+    -fx-stroke: #3498db; /* Bleu moderne */
+    -fx-stroke-width: 2px;
+}
+
+/* Symboles (points) sur la ligne */
+.chart-line-symbol {
+    -fx-background-color: #3498db, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Axes */
+.axis {
+    -fx-tick-label-fill: #555555;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Grille */
+.chart-horizontal-grid-lines,
+.chart-vertical-grid-lines {
+    -fx-stroke: #e0e0e0;
+}
+
+/* Barres du BarChart */
+.default-color0.chart-bar {
+    -fx-bar-fill: #2ecc71; /* Vert pastel */
+}
+
+/* Titre du graphique */
+.chart-title {
+    -fx-text-fill: #333333;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}

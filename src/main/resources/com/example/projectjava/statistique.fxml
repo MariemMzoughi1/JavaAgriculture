@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.StatistiqueController" spacing="20" alignment="CENTER" style="-fx-padding: 20;">
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="btnSwitcherData" text="Afficher Prix" />
+        <Button fx:id="btnSwitcherChartType" text="Passer en BarChart" />
+
+    </HBox>
+
+    <StackPane fx:id="chartContainer" prefHeight="500" prefWidth="700" />
+
+</VBox>

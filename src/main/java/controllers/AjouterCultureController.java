@@ -5,11 +5,15 @@ import services.CultureService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.Arrays;
 
@@ -23,8 +27,13 @@ public class AjouterCultureController {
     @FXML private TextField tfQuantite;
     @FXML private ComboBox<String> cbSaison;
     @FXML private ComboBox<String> cbCategorie;
+    @FXML private ImageView imagePreview; // 🔁 Assure-toi que ce champ existe dans ton FXML
 
-    private CultureService cultureService = new CultureService();
+    private final CultureService cultureService = new CultureService();
+    private File selectedImageFile;
+
+    // 🔁 Chemin vers dossier Symfony
+    private static final String SYMFONY_UPLOAD_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/images/";
 
     private Runnable onAjoutSuccess;
 
@@ -43,14 +52,12 @@ public class AjouterCultureController {
         try {
             String nom = tfNom.getText();
             String description = tfDescription.getText();
-            String image = tfImage.getText();
             LocalDate datePlantation = dpDatePlantation.getValue();
             LocalDate dateRecolte = dpDateRecolte.getValue();
             String saison = cbSaison.getValue();
             String categorie = cbCategorie.getValue();
 
-            // Contrôle de saisie
-            if (nom.isEmpty() || description.isEmpty() || image.isEmpty()
+            if (nom.isEmpty() || description.isEmpty() || selectedImageFile == null
                     || datePlantation == null || dateRecolte == null
                     || saison == null || categorie == null
                     || tfQuantite.getText().isEmpty()) {
@@ -79,26 +86,56 @@ public class AjouterCultureController {
                 return;
             }
 
-            Culture culture = new Culture(nom, description, image, datePlantation, dateRecolte, saison, quantite, categorie);
+            // 🔁 Copie image dans Symfony
+            String imageFileName = selectedImageFile.getName();
+            File destFile = new File(SYMFONY_UPLOAD_DIR + imageFileName);
+            Files.copy(selectedImageFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            // 🔁 Création de la culture
+            Culture culture = new Culture(nom, description, imageFileName, datePlantation, dateRecolte, saison, quantite, categorie);
             cultureService.ajouter(culture);
 
             showAlert(Alert.AlertType.INFORMATION, "✅ Culture ajoutée avec succès !");
-
             clearFields();
+
             if (onAjoutSuccess != null) onAjoutSuccess.run();
 
-            Stage stage = (Stage) tfNom.getScene().getWindow();
-            stage.close();
+            ((Stage) tfNom.getScene().getWindow()).close();
 
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Quantité invalide. Veuillez saisir un nombre.");
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    @FXML
+    private void parcourirImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        File file = fileChooser.showOpenDialog(tfNom.getScene().getWindow());
+        if (file != null) {
+            selectedImageFile = file;
+            tfImage.setText(file.getName()); // 👈 seulement le nom du fichier
+            imagePreview.setImage(new Image(file.toURI().toString()));
+        }
+    }
+
+    @FXML
+    private void retourAfficherParcelle(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
     private void showAlert(Alert.AlertType type, String message) {
-        Alert alert = new Alert(type, message);
+        Alert alert = new Alert(type);
+        alert.setContentText(message);
+        alert.setHeaderText(null);
         alert.show();
     }
 
@@ -111,27 +148,6 @@ public class AjouterCultureController {
         tfQuantite.clear();
         cbSaison.setValue(null);
         cbCategorie.setValue(null);
-    }
-
-    @FXML
-    private void retourAfficherParcelle(ActionEvent event) {
-        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    private void parcourirImage(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Sélectionner une image");
-
-        // Filtre pour images seulement
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
-        );
-
-        File selectedFile = fileChooser.showOpenDialog(tfNom.getScene().getWindow());
-        if (selectedFile != null) {
-            tfImage.setText(selectedFile.toURI().toString()); // important : utiliser URI pour chargement JavaFX Image
-        }
+        imagePreview.setImage(null);
     }
 }

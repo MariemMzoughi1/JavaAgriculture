@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="780.0" style="-fx-background-color: #e8f5e9;" stylesheets="@ListeZonesUser.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ListeZonesUser">
+
+    <!-- 🌿 Titre -->
+    <Text layoutX="230.0" layoutY="30.0" style="-fx-font-size: 24px; -fx-fill: #2e7d32;" text="🌿 Liste des Zones 🌿" />
+
+    <!-- 🔍 Recherche -->
+    <TextField fx:id="searchField" layoutX="35.0" layoutY="60.0" onKeyReleased="#rechercherZones" prefWidth="700.0" promptText="Rechercher une zone..." />
+
+    <!-- 📋 ScrollPane avec les cards en FlowPane -->
+    <ScrollPane layoutX="24.0" layoutY="130.0" prefHeight="380.0" prefWidth="730.0" style="-fx-background: transparent;" fitToWidth="true" hbarPolicy="NEVER">
+        <content>
+            <FlowPane fx:id="zoneContainer" prefWidth="710.0" hgap="25" vgap="25" alignment="CENTER">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+            </FlowPane>
+        </content>
+    </ScrollPane>
+
+    <!-- 🔽 Boutons de tri -->
+    <Button layoutX="35.0" layoutY="100.0" mnemonicParsing="false" onAction="#trierParNom"
+            style="-fx-background-color: #4caf50; -fx-text-fill: white;" text="Trier par Nom" />
+    <Button layoutX="180.0" layoutY="100.0" mnemonicParsing="false" onAction="#trierParSuperficie"
+            style="-fx-background-color: #4caf50; -fx-text-fill: white;" text="Trier par Superficie" />
+
+    <!-- ➕ Boutons bas -->
+    <Button fx:id="ajouterBtn" layoutX="51.0" layoutY="530.0" onAction="#ajouterZone"
+            style="-fx-background-color: #66bb6a; -fx-text-fill: white; -fx-font-weight: bold;" text="Ajouter" />
+
+    <Button layoutX="490.0" layoutY="530.0" onAction="#exporterCSV"
+            style="-fx-background-color: #f5d505; -fx-text-fill: white;" text="Exporter en CSV" />
+    <Button layoutX="620.0" layoutY="530.0" onAction="#exporterPDF"
+            style="-fx-background-color: #f4022f; -fx-text-fill: white; -fx-font-weight: bold;" text="Exporter PDF" />
+
+</AnchorPane>

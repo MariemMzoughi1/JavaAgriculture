@@ -35,7 +35,7 @@ public class RegisterViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        roleComboBox.getItems().addAll( "Agriculteur", "Fournisseur", "Client");
+        roleComboBox.getItems().addAll( "ROLE_AGRICULTEUR", "Fournisseur", "Client","Admin");
     }
 
     @FXML
@@ -49,16 +49,19 @@ public class RegisterViewController implements Initializable {
             return;
         }
 
-        // Check if email already exists
+        // Vérifier si l'utilisateur existe déjà
         if (userService.getUserByEmail(email) != null) {
             statusLabel.setText("❌ Email already registered. Please use a different email.");
             return;
         }
-        User newUser = new User(email, password, role, null);
 
-        String hashedPassword = PasswordUtils.hashPassword(newUser.getPassword());
-        newUser.setPassword(hashedPassword);
+        // Hachage du mot de passe avec BCrypt
+        String hashedPassword = PasswordUtils.hashPassword(password);
 
+        // Création de l'utilisateur
+        User newUser = new User(email, hashedPassword, role, null);
+
+        // Enregistrement
         if (userService.addUser(newUser)) {
             statusLabel.setText("✅ Registration successful!");
             clearFields();

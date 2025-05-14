@@ -75,12 +75,15 @@ public class MachineEditController {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             try {
-                File destDir = new File("images");
-                if (!destDir.exists()) destDir.mkdir();
+                // 📁 Dossier cible Symfony
+                File destDir = new File("C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/images");
+                if (!destDir.exists()) destDir.mkdirs();
 
+                // 📝 Nom unique
                 String fileName = System.currentTimeMillis() + "_" + selectedFile.getName();
                 File destFile = new File(destDir, fileName);
 
+                // 📤 Copier le fichier dans Symfony
                 try (FileInputStream fis = new FileInputStream(selectedFile);
                      FileOutputStream fos = new FileOutputStream(destFile)) {
                     byte[] buffer = new byte[1024];
@@ -90,7 +93,8 @@ public class MachineEditController {
                     }
                 }
 
-                relativeImagePath = "images/" + fileName;
+                // ✅ Enregistrer le nom pour la base
+                relativeImagePath = fileName;
                 imageLabel.setText(fileName);
                 imagePreview.setImage(new Image(destFile.toURI().toString()));
 
@@ -100,6 +104,7 @@ public class MachineEditController {
             }
         }
     }
+
 
     @FXML
     private void handleAddMachine(ActionEvent event) {

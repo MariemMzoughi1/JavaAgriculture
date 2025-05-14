@@ -18,31 +18,29 @@ import javafx.stage.Stage;
 import services.Session;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
-import java.util.Objects;
 
 public class AjouterForum {
 
-    @FXML
-    private TextField titreField;
-
-    @FXML
-    private TextArea contenuField;
-
-    @FXML
-    private TextField imageField;
-
-    @FXML
-    private ImageView imagePreview;
+    @FXML private TextField titreField;
+    @FXML private TextArea contenuField;
+    @FXML private TextField imageField;
+    @FXML private ImageView imagePreview;
 
     private final PostService postService = new PostService();
     private File selectedImageFile;
+
+    // ⚠️ Chemin absolu vers le dossier public de Symfony (adapter selon ta machine)
+    private static final String SYMFONY_UPLOAD_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/posts/";
 
     @FXML
     void parcourirImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir une image");
-        fileChooser.getExtensionFilters().addAll(
+        fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
         );
 
@@ -56,35 +54,22 @@ public class AjouterForum {
 
     @FXML
     void ajouterPost(ActionEvent event) {
-        if (!isValidInput()) {
-            return;
-        }
+        if (!isValidInput()) return;
 
         String titre = titreField.getText().trim();
         String contenu = contenuField.getText().trim();
-        String imagePath = imageField.getText().trim();
 
         try {
-
-            if (GeminiAPIService.contientBadWords(titre)) {
-                showAlert(Alert.AlertType.ERROR, "Le titre contient des propos inappropriés. Veuillez corriger votre titre.");
-                return;
-            }
-            if (!GeminiAPIService.estLieAAgriculture(titre)) {
-                showAlert(Alert.AlertType.ERROR, "Le titre n'est pas lié à l'agriculture. Veuillez respecter le thème du forum.");
-                return;
-            }
-            if (GeminiAPIService.contientBadWords(contenu)) {
-                showAlert(Alert.AlertType.ERROR, "Le contenu contient des propos inappropriés. Veuillez corriger votre texte.");
+            if (GeminiAPIService.contientBadWords(titre) || GeminiAPIService.contientBadWords(contenu)) {
+                showAlert(Alert.AlertType.ERROR, "Titre ou contenu contient des propos inappropriés.");
                 return;
             }
 
-            if (!GeminiAPIService.estLieAAgriculture(contenu)) {
-                showAlert(Alert.AlertType.ERROR, "Le contenu n'est pas lié à l'agriculture. Veuillez respecter le thème du forum.");
+            if (!GeminiAPIService.estLieAAgriculture(titre) || !GeminiAPIService.estLieAAgriculture(contenu)) {
+                showAlert(Alert.AlertType.ERROR, "Titre ou contenu non lié à l'agriculture.");
                 return;
             }
 
-            // Récupération de l'utilisateur connecté
             User currentUser = Session.getCurrentUser();
             if (currentUser == null) {
                 showAlert(Alert.AlertType.ERROR, "Aucun utilisateur connecté !");
@@ -95,16 +80,23 @@ public class AjouterForum {
             post.setDate(new Date());
             post.setLikes(0);
             post.setDislikes(0);
-            post.setAuteurId(currentUser.getId()); // Association de l'auteur
+            post.setAuteurId(currentUser.getId());
 
-            if (!imagePath.isEmpty()) {
-                post.setImage(imagePath);
+            if (selectedImageFile != null) {
+                String imageFileName = selectedImageFile.getName();
+                File destination = new File(SYMFONY_UPLOAD_DIR + imageFileName);
+
+                // Copier l'image dans Symfony
+                Files.copy(selectedImageFile.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                // Enregistrer uniquement le nom de l'image
+                post.setImage(imageFileName);
             }
 
             postService.add(post);
             showAlert(Alert.AlertType.INFORMATION, "Post ajouté avec succès !");
 
-            // Fermer la fenêtre actuelle et ouvrir la liste
+            // Redirection vers la liste des posts
             Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             stage.close();
 
@@ -114,53 +106,32 @@ public class AjouterForum {
             newStage.setScene(new Scene(loader.load()));
             newStage.show();
 
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur d'enregistrement de l'image : " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur lors de l'ajout du post : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-
-
     @FXML
     void retour(ActionEvent event) {
         try {
-            // Fermer la fenêtre actuelle
             ((Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow()).close();
-
-            // Charger la vue de la liste des forums
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/ListeForum.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Liste des Forums");
             stage.setScene(new Scene(loader.load()));
             stage.show();
-
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur lors du retour : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-
-    private void clearFields() {
-        titreField.clear();
-        contenuField.clear();
-        imageField.clear();
-        imagePreview.setImage(null);
-    }
-
-    private void showAlert(Alert.AlertType type, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle("Information");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     private boolean isValidInput() {
         boolean isValid = true;
-
-        // Reset styles
         titreField.setStyle("");
         contenuField.setStyle("");
 
@@ -179,18 +150,14 @@ public class AjouterForum {
             isValid = false;
         }
 
-        if (!imageField.getText().trim().isEmpty()) {
-            String lowerPath = imageField.getText().toLowerCase();
-            if (!(lowerPath.endsWith(".png") || lowerPath.endsWith(".jpg") || lowerPath.endsWith(".jpeg"))) {
-                imageField.setStyle("-fx-border-color: red;");
-                showAlert(Alert.AlertType.WARNING, "Le fichier sélectionné n'est pas une image valide.");
-                isValid = false;
-            } else {
-                imageField.setStyle("");
-            }
-        }
-
         return isValid;
     }
 
+    private void showAlert(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

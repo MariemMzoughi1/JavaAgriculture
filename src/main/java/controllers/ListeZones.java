@@ -2,26 +2,30 @@ package controllers;
 
 import entities.Zone;
 import services.ZoneService;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import utils.ExportCSV;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ListeZones implements Initializable {
 
@@ -32,109 +36,111 @@ public class ListeZones implements Initializable {
     private Button btnRetour;
 
     @FXML
-    private Button modifierBtn;
+    private VBox zoneContainer;
 
     @FXML
-    private Button supprimerBtn;
+    private javafx.scene.control.TextField searchField;
 
-
-
-    @FXML
-    private TableColumn<Zone, String> nomZoneColumn;
-
-    @FXML
-    private TableColumn<Zone, String> superficieZoneColumn;
-
-    @FXML
-    private TableColumn<Zone, String> localisationZoneColumn;
-
-    @FXML
-    private TableView<Zone> zoneTable;
 
     private ZoneService zoneService = new ZoneService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        superficieZoneColumn.setCellValueFactory(new PropertyValueFactory<>("superficie_zone"));
-        nomZoneColumn.setCellValueFactory(new PropertyValueFactory<>("nom_zone"));
-        localisationZoneColumn.setCellValueFactory(new PropertyValueFactory<>("localisation_zone"));
-
-
         List<Zone> zones = zoneService.find();
-        ObservableList<Zone> observableList = FXCollections.observableArrayList(zones);
-        zoneTable.setItems(observableList);
+        for (Zone zone : zones) {
+            HBox box = createZoneBox(zone);
+            zoneContainer.getChildren().add(box);
+        }
+
+        // 🔍 Ajout de l'écouteur de recherche
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            rechercherZones();
+        });
     }
 
 
+    private HBox createZoneBox(Zone zone) {
+        HBox box = new HBox(10);
+        box.setStyle("-fx-padding: 10px; -fx-background-color: #ffffff; -fx-border-color: #c8e6c9;");
+        box.setAlignment(Pos.CENTER_LEFT);
+
+        Text nom = new Text("Nom: " + zone.getNom_zone());
+        Text superficie = new Text("Superficie: " + zone.getSuperficie_zone() + " ha");
+        Text localisation = new Text("Localisation: " + zone.getLocalisation_zone());
+
+        Button modifierBtn = new Button("Modifier");
+        modifierBtn.setStyle("-fx-background-color: #42a5f5; -fx-text-fill: white;");
+        modifierBtn.setOnAction(e -> modifierZone(zone));
+
+        Button supprimerBtn = new Button("Supprimer");
+        supprimerBtn.setStyle("-fx-background-color: #ef5350; -fx-text-fill: white;");
+        supprimerBtn.setOnAction(e -> supprimerZone(zone, box));
+
+        // ✅ Nouveau bouton "Consulter"
+        Button consulterBtn = new Button("Consulter");
+        consulterBtn.setStyle("-fx-background-color: #388e3c; -fx-text-fill: white;");
+        consulterBtn.setOnAction(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherZone.fxml"));
+                Parent root = loader.load();
+
+                // Transfert de la zone au contrôleur AfficherZone
+                controllers.AfficherZone controller = loader.getController();
+                controller.setZone(zone);  // Passer la zone au contrôleur
+
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Détails de la Zone");
+                stage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        box.getChildren().addAll(nom, superficie, localisation, modifierBtn, supprimerBtn, consulterBtn);
+        return box;
+    }
+
+
+
     @FXML
-    private void ajouterZone(ActionEvent event) {
+    void ajouterZone(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterZone.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Ajouter une Grange");
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void modifierZone(Zone zone) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/AjouterZone.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierZone.fxml"));
             Parent root = loader.load();
 
+            ModifierZone controller = loader.getController();
+            controller.setZone(zone);
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Ajouter une zone");
+            Stage stage = new Stage();
+            stage.setTitle("Modifier une Zone");
+            stage.setScene(new Scene(root));
             stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     @FXML
-    private void modifierZone() {
-        Zone zoneSelectionnee = zoneTable.getSelectionModel().getSelectedItem();
-
-        if (zoneSelectionnee != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/ModifierZone.fxml"));
-                Parent root = loader.load();
-
-                ModifierZone controller = loader.getController();
-                controller.setZone(zoneSelectionnee);
-
-                Stage stage = new Stage();
-                stage.setTitle("Modifier une Zone");
-                stage.setScene(new Scene(root));
-                stage.show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Aucune sélection");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez sélectionner une zone à modifier.");
-            alert.showAndWait();
-        }
-    }
-
-
-    @FXML
-    private void supprimerZone() {
-        Zone selectedZone = zoneTable.getSelectionModel().getSelectedItem();
-        if (selectedZone != null) {
-            zoneService.delete(selectedZone);
-            zoneTable.getItems().remove(selectedZone);
+    private void supprimerZone(Zone zone, HBox box) {
+        try {
+            zoneService.delete(zone);
+            zoneContainer.getChildren().remove(box);
             showAlert("Zone supprimée", "La zone a été supprimée avec succès.");
-        } else {
-            showAlert("Aucune zone sélectionnée", "Veuillez sélectionner une zone à supprimer.");
+        } catch (RuntimeException e) {
+            showAlert("Erreur de suppression", e.getMessage());
         }
     }
 
-    @FXML
-    private void retourAccueil(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/com/example/projectjava/Acceuil.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
 
 
     private void showAlert(String title, String message) {
@@ -144,4 +150,74 @@ public class ListeZones implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    private void rechercherZones() {
+        String keyword = searchField.getText().toLowerCase();
+        List<Zone> zones = zoneService.find();
+
+        zoneContainer.getChildren().clear();
+
+        for (Zone zone : zones) {
+            if (zone.getNom_zone().toLowerCase().contains(keyword) ||
+                    zone.getLocalisation_zone().toLowerCase().contains(keyword) ||
+                    String.valueOf(zone.getSuperficie_zone()).contains(keyword)) {
+
+                HBox box = createZoneBox(zone);
+                zoneContainer.getChildren().add(box);
+            }
+        }
+    }
+
+    @FXML
+    private void trierParNom(ActionEvent event) {
+        List<Zone> zonesTriees = zoneService.find().stream()
+                .sorted(Comparator.comparing(Zone::getNom_zone))
+                .collect(Collectors.toList());
+
+        zoneContainer.getChildren().clear();
+        zonesTriees.forEach(zone -> {
+            HBox box = createZoneBox(zone);
+            zoneContainer.getChildren().add(box);
+        });
+    }
+
+    @FXML
+    private void trierParSuperficie(ActionEvent event) {
+        List<Zone> zonesTriees = zoneService.find().stream()
+                .sorted(Comparator.comparingDouble(Zone::getSuperficie_zone))
+                .collect(Collectors.toList());
+
+        zoneContainer.getChildren().clear();
+        zonesTriees.forEach(zone -> {
+            HBox box = createZoneBox(zone);
+            zoneContainer.getChildren().add(box);
+        });
+    }
+
+    @FXML
+    private void exporterCSV(ActionEvent event) {
+        List<Zone> zones = zoneService.find();
+        ExportCSV.exportZonesToCSV(zones);
+    }
+    @FXML
+    private void exporterPDF(ActionEvent event) {
+        List<Zone> zones = zoneService.find();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le PDF");
+        fileChooser.setInitialFileName("zones.pdf");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+
+        File selectedFile = fileChooser.showSaveDialog(((Node) event.getSource()).getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                utils.ExportPDF.exporterZonesEnPDF(zones, selectedFile.getAbsolutePath());
+                showAlert("Succès", "Exportation PDF réussie !");
+            } catch (Exception e) {
+                showAlert("Erreur", "Erreur lors de l'exportation : " + e.getMessage());
+            }
+        }
+    }
+
 }

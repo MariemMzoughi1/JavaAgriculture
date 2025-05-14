@@ -28,7 +28,6 @@ import java.util.Optional;
 
 public class DetailsForum {
 
-    // Composants FXML
     @FXML private Label titreLabel;
     @FXML private Label auteurDateLabel;
     @FXML private TextArea contenuArea;
@@ -39,16 +38,17 @@ public class DetailsForum {
     @FXML private Button likeBtn;
     @FXML private Button dislikeBtn;
 
-    // Services
     private final PostService postService = new PostService();
     private final CommentaireService commentaireService = new CommentaireService();
     private final UserService userService = new UserService();
 
     private Post post;
 
+    // 🔁 Chemin local vers Symfony (à adapter selon ton projet)
+    private static final String SYMFONY_IMAGE_DIR = "C:/Users/DAMIANO/pidevvvvvvvvv/DevHarvest-forum/public/uploads/posts/";
+
     @FXML
     public void initialize() {
-        // Configuration initiale si nécessaire
         contenuArea.setWrapText(true);
     }
 
@@ -63,14 +63,13 @@ public class DetailsForum {
     private void loadPostData() {
         titreLabel.setText(post.getTitre());
 
-        String email = userService.getEmailById(post.getAuteurId()); // 👈 Utilisation de l'email
+        String email = userService.getEmailById(post.getAuteurId());
         String dateStr = post.getDate() != null ? post.getDate().toString() : "Date inconnue";
         auteurDateLabel.setText("Publié par " + email + " • " + dateStr);
 
         contenuArea.setText(post.getContenu());
         updateLikeDislikeButtons();
     }
-
 
     private void setupModifierButton() {
         User currentUser = Session.getCurrentUser();
@@ -80,22 +79,22 @@ public class DetailsForum {
     private void loadImage() {
         if (post.getImage() != null && !post.getImage().isEmpty()) {
             try {
-                File file = new File(post.getImage());
+                File file = new File(SYMFONY_IMAGE_DIR + post.getImage());
                 if (file.exists()) {
                     Image image = new Image(file.toURI().toString(), 600, 400, true, true);
                     imageView.setImage(image);
-
-                    // Optionnel: ajustement supplémentaire si nécessaire
                     imageView.setPreserveRatio(true);
                     imageView.setFitWidth(600);
                     imageView.setFitHeight(400);
+                } else {
+                    System.out.println("Image introuvable à : " + file.getAbsolutePath());
+                    imageView.setVisible(false);
                 }
             } catch (Exception e) {
                 System.out.println("Erreur de chargement de l'image: " + e.getMessage());
-                // Optionnel: afficher une image par défaut ou un placeholder
+                imageView.setVisible(false);
             }
         } else {
-            // Cacher l'ImageView s'il n'y a pas d'image
             imageView.setVisible(false);
         }
     }
@@ -134,7 +133,6 @@ public class DetailsForum {
 
     private void afficherCommentaires() {
         commentairesBox.getChildren().clear();
-
         List<Commentaire> commentaires = commentaireService.getCommentairesParPostId(post.getId());
         User currentUser = Session.getCurrentUser();
 
@@ -149,41 +147,29 @@ public class DetailsForum {
         card.getStyleClass().add("comment-card");
         card.setPadding(new javafx.geometry.Insets(12));
 
-        // En-tête du commentaire
         HBox headerBox = new HBox(10);
         String username = userService.getEmailById(commentaire.getAuteurId());
         Label authorLabel = new Label(username);
-        authorLabel.getStyleClass().add("comment-author");
-
-        String dateStr = commentaire.getDate() != null ? commentaire.getDate().toString() : "";
-        Label dateLabel = new Label(dateStr);
-        dateLabel.getStyleClass().add("comment-date");
+        Label dateLabel = new Label(commentaire.getDate() != null ? commentaire.getDate().toString() : "");
 
         headerBox.getChildren().addAll(authorLabel, dateLabel);
 
-        // Contenu du commentaire
         Label contentLabel = new Label(commentaire.getContenu());
-        contentLabel.getStyleClass().add("comment-content");
         contentLabel.setWrapText(true);
 
-        // Boutons d'action
         HBox actionBox = new HBox(10);
         if (currentUser != null && currentUser.getId() == commentaire.getAuteurId()) {
             Button editBtn = new Button("Modifier");
-            editBtn.getStyleClass().add("action-button");
-            editBtn.setOnAction(e -> handleEditComment(commentaire, contentLabel));
-
             Button deleteBtn = new Button("Supprimer");
-            deleteBtn.getStyleClass().add("secondary-button");
+
+            editBtn.setOnAction(e -> handleEditComment(commentaire, contentLabel));
             deleteBtn.setOnAction(e -> handleDeleteComment(commentaire));
 
             actionBox.getChildren().addAll(editBtn, deleteBtn);
         }
 
         Button translateBtn = new Button("Traduire");
-        translateBtn.getStyleClass().add("action-button");
         translateBtn.setOnAction(e -> handleTranslateComment(contentLabel, commentaire.getContenu()));
-
         actionBox.getChildren().add(translateBtn);
 
         card.getChildren().addAll(headerBox, contentLabel, actionBox);
@@ -214,7 +200,7 @@ public class DetailsForum {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer ce commentaire ?");
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer ce commentaire ?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -236,7 +222,7 @@ public class DetailsForum {
                 String translatedText = translateText(originalText, "fr", targetLang);
                 targetLabel.setText(translatedText);
             } catch (IOException e) {
-                showAlert("Erreur de traduction", "Impossible de traduire le texte: " + e.getMessage(), Alert.AlertType.ERROR);
+                showAlert("Erreur", "Erreur de traduction : " + e.getMessage(), Alert.AlertType.ERROR);
             }
         });
     }
@@ -251,23 +237,18 @@ public class DetailsForum {
 
         User currentUser = Session.getCurrentUser();
         if (currentUser == null) {
-            showAlert("Connexion requise", "Vous devez être connecté pour commenter", Alert.AlertType.WARNING);
+            showAlert("Connexion requise", "Vous devez être connecté", Alert.AlertType.WARNING);
             return;
         }
 
-        Commentaire newComment = new Commentaire(
-                post.getId(),
-                content,
-                currentUser.getId(),
-                new Date()
-        );
+        Commentaire commentaire = new Commentaire(post.getId(), content, currentUser.getId(), new Date());
 
         try {
-            commentaireService.ajouterCommentaire(newComment);
+            commentaireService.ajouterCommentaire(commentaire);
             champCommentaire.clear();
             afficherCommentaires();
         } catch (IllegalArgumentException e) {
-            showAlert("Contenu inapproprié", "Votre commentaire contient des mots inappropriés", Alert.AlertType.WARNING);
+            showAlert("Inapproprié", "Votre commentaire contient des mots inappropriés", Alert.AlertType.WARNING);
         }
     }
 
@@ -279,14 +260,10 @@ public class DetailsForum {
             stage.setScene(new Scene(loader.load()));
             stage.setTitle("Forum");
 
-            // Fermer la fenêtre actuelle
-            Stage currentStage = (Stage) titreLabel.getScene().getWindow();
-            currentStage.close();
-
+            ((Stage) titreLabel.getScene().getWindow()).close();
             stage.show();
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger la liste des posts", Alert.AlertType.ERROR);
-            e.printStackTrace();
+            showAlert("Erreur", "Chargement échoué : " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -300,15 +277,11 @@ public class DetailsForum {
             ModifierPost controller = loader.getController();
             controller.setPost(post);
 
-            // Fermer la fenêtre actuelle
-            Stage currentStage = (Stage) titreLabel.getScene().getWindow();
-            currentStage.close();
-
+            ((Stage) titreLabel.getScene().getWindow()).close();
             stage.setTitle("Modifier le post");
             stage.show();
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible d'ouvrir l'éditeur de post", Alert.AlertType.ERROR);
-            e.printStackTrace();
+            showAlert("Erreur", "Chargement échoué : " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -329,12 +302,11 @@ public class DetailsForum {
                 contenuArea.setText(translatedContent);
                 titreLabel.setText(translatedTitle);
             } catch (IOException e) {
-                showAlert("Erreur de traduction", "Impossible de traduire le contenu: " + e.getMessage(), Alert.AlertType.ERROR);
+                showAlert("Erreur", "Erreur de traduction : " + e.getMessage(), Alert.AlertType.ERROR);
             }
         });
     }
 
-    // Méthodes utilitaires
     private String translateText(String text, String sourceLang, String targetLang) throws IOException {
         String encodedText = encodeURIComponent(text);
         String apiUrl = "https://lingva.ml/api/v1/" + sourceLang + "/" + targetLang + "/" + encodedText;
@@ -359,12 +331,7 @@ public class DetailsForum {
     private String encodeURIComponent(String s) {
         try {
             return java.net.URLEncoder.encode(s, StandardCharsets.UTF_8.toString())
-                    .replaceAll("\\+", "%20")
-                    .replaceAll("%21", "!")
-                    .replaceAll("%27", "'")
-                    .replaceAll("%28", "(")
-                    .replaceAll("%29", ")")
-                    .replaceAll("%7E", "~");
+                    .replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
             return s;
         }

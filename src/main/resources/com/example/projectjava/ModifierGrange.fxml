@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="445.0" prefWidth="453.0" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ModifierGrange">
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Modifier Grange" />
+
+    <TextField fx:id="typeGrangeField" promptText="Type de grange" />
+    <TextField fx:id="capaciteField" promptText="Capacité" />
+
+    <ComboBox fx:id="zoneComboBox" promptText="Sélectionnez une zone" />
+
+    <Label fx:id="messageErreur" style="-fx-text-fill: red;" />
+
+    <HBox prefHeight="25.0" prefWidth="178.0" spacing="10">
+        <Button onAction="#modifierGrange" text="Modifier" />
+        <Button onAction="#fermerFenetre" text="Annuler" />
+    </HBox>
+</VBox>

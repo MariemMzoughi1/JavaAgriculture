@@ -1,59 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.CommandeController"
-            style="-fx-background-color: #f4f4f9;">
+            prefWidth="900" prefHeight="700"
+            style="-fx-background-color: linear-gradient(to bottom right, #f4f4f9, #ffffff);">
 
-    <!-- En-tête avec bouton retour et titre -->
-    <HBox alignment="CENTER_LEFT" spacing="20" layoutX="20" layoutY="20">
-        <!-- Bouton Retour -->
-        <Button fx:id="btnRetour" text="↩ Retour"
-                onAction="#retourAfficherProduit"
-                style="-fx-background-color: #3498db;
-                       -fx-text-fill: white;
-                       -fx-font-weight: bold;
-                       -fx-padding: 6px 12px;
-                       -fx-background-radius: 15;
-                       -fx-cursor: hand;
-                       -fx-font-size: 13px;" />
+    <VBox spacing="20" layoutX="20" layoutY="20" prefWidth="860">
 
-        <Label fx:id="labelTitre"
-               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
-               text="📦 Liste des Produits" />
-        <Region HBox.hgrow="ALWAYS" />
-    </HBox>
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
 
-    <!-- Bouton Panier en haut à droite -->
-    <Button fx:id="btnPanier" text="🛒 Panier" layoutX="700" layoutY="20" onAction="#ouvrirPanier" style="
-        -fx-background-color: #FF5722;
-        -fx-text-fill: white;
-        -fx-padding: 8px 16px;
-        -fx-background-radius: 20px;
-        -fx-font-size: 14px;
-        -fx-font-weight: bold;
-        -fx-cursor: hand;
-        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2);
-    "/>
+            <Label fx:id="labelTitre"
+                   text="📦 Liste des Produits"
+                   style="-fx-font-size: 24px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #2c3e50;" />
 
-    <!-- Zone défilante contenant les cartes produit -->
-    <FlowPane fx:id="produitsContainer" layoutX="20" layoutY="70" hgap="20" vgap="20" prefWidth="800" style="-fx-alignment: center;">
-        <!-- Les cartes produit seront ajoutées dynamiquement ici -->
-    </FlowPane>
+            <Region HBox.hgrow="ALWAYS" />
 
-    <!-- Message si le panier est vide ou s'il contient des produits -->
-    <Label fx:id="panierMessage" layoutX="20" layoutY="650" text="Panier vide !" visible="false" style="
-        -fx-font-size: 14px;
-        -fx-font-family: 'Arial', sans-serif;
-        -fx-text-fill: #FF5722;
-        -fx-font-weight: bold;">
-    </Label>
+            <!-- Panier Button -->
+            <Button fx:id="btnPanier"
+                    text="🛒 Panier"
+                    onAction="#ouvrirPanier"
+                    style="-fx-background-color: #FF5722;
+                           -fx-text-fill: white;
+                           -fx-font-size: 14px;
+                           -fx-font-weight: bold;
+                           -fx-padding: 8 18;
+                           -fx-background-radius: 20;
+                           -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0.2, 0, 2);" />
+        </HBox>
+
+        <!-- Filtres -->
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label text="Filtrer par catégorie :"
+                   style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;" />
+
+            <ComboBox fx:id="categorieFilter"
+                      promptText="Choisir catégorie"
+                      prefWidth="200"
+                      style="-fx-background-radius: 10;
+                             -fx-border-color: #ccc;
+                             -fx-font-size: 13px;
+                             -fx-padding: 5;" />
+
+            <Label text="Trier par prix :"
+                   style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;" />
+
+            <ComboBox fx:id="prixSort"
+                      promptText="Trier par prix"
+                      style="-fx-background-radius: 10;
+                             -fx-border-color: #ccc;
+                             -fx-padding: 5 10;">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Prix croissant"/>
+                        <String fx:value="Prix décroissant"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Button text="Appliquer"
+                    onAction="#appliquerFiltres"
+                    style="-fx-background-color: #27ae60;
+                           -fx-text-fill: white;
+                           -fx-font-weight: bold;
+                           -fx-background-radius: 10;
+                           -fx-cursor: hand;
+                           -fx-padding: 6 15;
+                           -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0.2, 0, 2);" />
+        </HBox>
+
+        <!-- Liste des Produits -->
+        <ScrollPane prefHeight="500" prefWidth="860"
+                    style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <Label fx:id="noProductLabel"
+                   text="Aucun produit disponible pour ce filtre."
+                   visible="false"
+                   style="-fx-font-size: 16px; -fx-text-fill: #bdc3c7; -fx-font-style: italic;" />
+
+            <FlowPane fx:id="produitsContainer"
+                      hgap="20" vgap="20"
+                      prefWrapLength="800"
+                      style="-fx-alignment: center;">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </FlowPane>
+        </ScrollPane>
+
+        <!-- Message Panier -->
+        <Label fx:id="panierMessage"
+               text="Panier vide !"
+               visible="false"
+               style="-fx-font-size: 15px;
+                      -fx-text-fill: #FF5722;
+                      -fx-font-weight: bold;" />
+    </VBox>
+
 </AnchorPane>

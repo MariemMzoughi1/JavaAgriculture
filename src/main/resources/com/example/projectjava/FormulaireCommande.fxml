@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.FormulaireCommandeController" stylesheets="@formulaire.css">
+    <children>
+        <VBox fx:id="formulaireView" layoutX="0" layoutY="0" prefWidth="500" prefHeight="600" alignment="TOP_CENTER" spacing="20">
+            <children>
+
+                <Label text="Détails de facturation" styleClass="title-label" />
+
+                <VBox spacing="10" alignment="CENTER_LEFT" prefWidth="400">
+                    <Label text="Nom :" styleClass="field-label" />
+                    <TextField fx:id="nomField" promptText="Entrez votre nom" styleClass="input-field" />
+                </VBox>
+
+                <VBox spacing="10" alignment="CENTER_LEFT" prefWidth="400">
+                    <Label text="Téléphone :" styleClass="field-label" />
+                    <TextField fx:id="telephoneField" promptText="+216" styleClass="input-field" />
+                </VBox>
+
+                <VBox spacing="10" alignment="CENTER_LEFT" prefWidth="400">
+                    <Label text="Adresse :" styleClass="field-label" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="gouvernoratComboBox" promptText="Gouvernorat" prefWidth="180" styleClass="input-field" />
+                        <TextField fx:id="adresseDetailField" promptText="Adresse détaillée" prefWidth="200" styleClass="input-field" />
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="10" alignment="CENTER_LEFT" prefWidth="400">
+                    <Label text="Email :" styleClass="field-label" />
+                    <TextField fx:id="emailField" promptText="Entrez votre adresse email" styleClass="input-field" />
+                </VBox>
+
+                <Button text="Confirmer" onAction="#onConfirmer" prefWidth="180" styleClass="confirm-button" />
+
+            </children>
+            <padding>
+                <Insets top="30" right="20" bottom="20" left="20" />
+            </padding>
+        </VBox>
+    </children>
+</AnchorPane>

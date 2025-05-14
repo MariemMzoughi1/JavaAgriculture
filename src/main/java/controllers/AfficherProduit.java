@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -20,19 +21,12 @@ import java.time.LocalDate;
 
 public class AfficherProduit {
 
-    @FXML
-    private TableView<Produit> tableProduits;
+    @FXML private TableView<Produit> tableProduits;
+    @FXML private TableColumn<Produit, String> colNom;
+    @FXML private TableColumn<Produit, LocalDate> colDate;
+    @FXML private Button btnAjouter;
 
-    @FXML
-    private TableColumn<Produit, String> colNom;
-
-    @FXML
-    private TableColumn<Produit, LocalDate> colDate;
-
-    @FXML
-    private Button btnAjouter;
-
-    ProduitService produitService = new ProduitService();
+    private final ProduitService produitService = new ProduitService();
 
     @FXML
     public void initialize() {
@@ -66,6 +60,66 @@ public class AfficherProduit {
 
         chargerProduits();
     }
+
+    private void chargerProduits() {
+        ObservableList<Produit> produits = FXCollections.observableArrayList(produitService.find());
+        tableProduits.setItems(produits);
+    }
+
+    private void onInfoClicked(Produit produit) {
+        if (produit != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/AfficherInfoProduit.fxml"));
+                Parent root = loader.load();
+
+                AfficherInfoProduit controller = loader.getController();
+                controller.initialize(produit);
+                controller.setProduitUpdateListener(this::chargerProduits);
+
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Informations du produit");
+                stage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void onDeleteClicked(Produit produit) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText(null);
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer ce produit ?");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                produitService.delete(produit);
+                chargerProduits();
+                new Alert(Alert.AlertType.INFORMATION, "Produit supprimé avec succès !").show();
+            } else {
+                new Alert(Alert.AlertType.INFORMATION, "Suppression annulée.").show();
+            }
+        });
+    }
+
+    @FXML
+    private void ajouterProduit() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/AjouterProduit.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Ajouter un produit");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void ouvrirCommandes(ActionEvent event) {
         try {
@@ -82,72 +136,15 @@ public class AfficherProduit {
         }
     }
 
-
-
-    // ✅ Méthode pour recharger les données de la table
-    private void chargerProduits() {
-        ObservableList<Produit> produits = FXCollections.observableArrayList(produitService.find());
-        tableProduits.setItems(produits);
-    }
-
-    // ✅ Méthode affichant les informations du produit
-    private void onInfoClicked(Produit produit) {
-        if (produit != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/AfficherInfoProduit.fxml"));
-                Parent root = loader.load();
-
-                AfficherInfoProduit controller = loader.getController();
-                controller.initialize(produit);
-
-                // Rafraîchir la table si modification depuis la fenêtre info
-                controller.setProduitUpdateListener(() -> chargerProduits());
-
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Informations du produit");
-                stage.show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // ✅ Méthode de suppression
-    private void onDeleteClicked(Produit produit) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText(null);
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer ce produit ?");
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                produitService.delete(produit);
-                chargerProduits(); // Rafraîchir la table
-                System.out.println("Produit supprimé : " + produit.getNom());
-
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setContentText("Produit supprimé avec succès !");
-                successAlert.show();
-            } else {
-                Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
-                infoAlert.setContentText("Suppression annulée.");
-                infoAlert.show();
-            }
-        });
-    }
-
-    // ✅ Méthode pour ajouter un nouveau produit
     @FXML
-    private void ajouterProduit() {
+    private void ouvrirStatistiques() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/AjouterProduit.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/projectjava/statistique.fxml"));
+            Parent content = loader.load();
 
             Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Ajouter un produit");
+            stage.setTitle("Statistiques");
+            stage.setScene(new Scene(content));
             stage.show();
 
         } catch (IOException e) {
